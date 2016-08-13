@@ -25,7 +25,7 @@
       <UniqueIdentifier>{2368b359-b726-4631-aac2-d992fc5a0c20}</UniqueIdentifier>
     </Filter>
     <Filter Include="Threading">
-      <UniqueIdentifier>{8a3e05c2-0027-473a-9d52-b542ed257c14}</UniqueIdentifier>
+      <UniqueIdentifier>{e91895e4-7eec-4911-b3b5-a556e2ed5dc0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
