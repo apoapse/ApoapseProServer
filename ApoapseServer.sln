@@ -4,6 +4,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ApoapseServer", "ApoapseServer\ApoapseServer.vcxproj", "{FFED83BA-CAA4-4F9C-943A-157B4418672A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4715FBC8-8F7A-45A4-9DF6-5EFF6899418C} = {4715FBC8-8F7A-45A4-9DF6-5EFF6899418C}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Apoapse.Core", "Apoapse.core\Apoapse.core.vcxproj", "{4715FBC8-8F7A-45A4-9DF6-5EFF6899418C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BDD902D7-505C-4425-A5F4-74613F82ED39}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,12 +22,20 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{FFED83BA-CAA4-4F9C-943A-157B4418672A}.Debug|x64.ActiveCfg = Debug|x64
 		{FFED83BA-CAA4-4F9C-943A-157B4418672A}.Debug|x64.Build.0 = Debug|x64
-		{FFED83BA-CAA4-4F9C-943A-157B4418672A}.Debug|x86.ActiveCfg = Debug|Win32
-		{FFED83BA-CAA4-4F9C-943A-157B4418672A}.Debug|x86.Build.0 = Debug|Win32
+		{FFED83BA-CAA4-4F9C-943A-157B4418672A}.Debug|x86.ActiveCfg = Debug|x64
+		{FFED83BA-CAA4-4F9C-943A-157B4418672A}.Debug|x86.Build.0 = Debug|x64
 		{FFED83BA-CAA4-4F9C-943A-157B4418672A}.Release|x64.ActiveCfg = Release|x64
 		{FFED83BA-CAA4-4F9C-943A-157B4418672A}.Release|x64.Build.0 = Release|x64
 		{FFED83BA-CAA4-4F9C-943A-157B4418672A}.Release|x86.ActiveCfg = Release|Win32
 		{FFED83BA-CAA4-4F9C-943A-157B4418672A}.Release|x86.Build.0 = Release|Win32
+		{4715FBC8-8F7A-45A4-9DF6-5EFF6899418C}.Debug|x64.ActiveCfg = Debug|x64
+		{4715FBC8-8F7A-45A4-9DF6-5EFF6899418C}.Debug|x64.Build.0 = Debug|x64
+		{4715FBC8-8F7A-45A4-9DF6-5EFF6899418C}.Debug|x86.ActiveCfg = Debug|x64
+		{4715FBC8-8F7A-45A4-9DF6-5EFF6899418C}.Debug|x86.Build.0 = Debug|x64
+		{4715FBC8-8F7A-45A4-9DF6-5EFF6899418C}.Release|x64.ActiveCfg = Release|x64
+		{4715FBC8-8F7A-45A4-9DF6-5EFF6899418C}.Release|x64.Build.0 = Release|x64
+		{4715FBC8-8F7A-45A4-9DF6-5EFF6899418C}.Release|x86.ActiveCfg = Release|Win32
+		{4715FBC8-8F7A-45A4-9DF6-5EFF6899418C}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,6 @@
+{
+  "general": {
+    "test_string": "str value",
+    "test_int":  -18
+  }
+}
