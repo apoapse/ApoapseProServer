@@ -1,11 +1,13 @@
 #include "stdafx.h"
+#include "Platforms.h"
 #include "SettingsManager.h"
+#include "Common.h"
+#include <boost\property_tree\json_parser.hpp>
+#include <boost\algorithm\string.hpp>
 
-using namespace ApoapseCore;
 
 SettingsManager::SettingsManager()
 {
-	
 }
 
 void SettingsManager::Init(const string& configFilePath)
@@ -13,6 +15,8 @@ void SettingsManager::Init(const string& configFilePath)
 	m_configFilePath = configFilePath;
 
 	LoadConfigFile();
+
+	Log("SettingsManager initialized");
 }
 
 void SettingsManager::LoadConfigFile()
@@ -30,7 +34,7 @@ void SettingsManager::LoadConfigFile()
 
 template <typename U> void SettingsManager::RegisterConfigVar(const string& configVarName, const U& defaultValue)
 {
-	//TODO: assert
+	//TODO: assert if already exist
 	m_registeredConfigs.push_back(ConfigVariable<U>(configVarName, defaultValue));
 }
 
@@ -47,9 +51,8 @@ template <typename U> U SettingsManager::ReadConfigValue(const string& configVar
 	}
 	catch (const boost::property_tree::ptree_error e)
 	{
-		//TODO: Debug LOG
+		Log("Can't find the value in the config file. Use the default value from the registered variable instead.", LogSeverity::debug);
 
-		//	Can't find the value in the config file. Use the default value from the registered variable instead.
 		ConfigVariable<U> registedVariable = GetRegisteredConfigVariableByName<U>(configVarName);
 		return registedVariable.defaultValue;
 	}

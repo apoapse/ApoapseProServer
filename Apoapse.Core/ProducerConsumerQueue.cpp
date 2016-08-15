@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "Common.h"
 #include "ProducerConsumerQueue.h"
 
 ProducerConsumerQueue::ProducerConsumerQueue(size_t nbConsumerThreads, const char* name, size_t queueInitialCapacity) : m_tasksInQueueCount(0), m_name(name), m_queueCapacity(0)

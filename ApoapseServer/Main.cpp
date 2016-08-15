@@ -1,17 +1,29 @@
 #include "stdafx.h"
-#include "SettingsManager.h"
-#include "ConfigVariable.h"
+#include "Common.h"
+#include "Logger.h"
+#include <boost/dll/import.hpp>
+#include "ILoadCoreDLLAPI.h"
 
-int main()
+Global* global = Global::CreateGlobal();
+
+int main(int argc, char* argv[])
 {
-	auto settingsManager = ApoapseCore::SettingsManager::Create();
-	settingsManager.Init("config.json");
-	settingsManager.RegisterConfigVar<string>("general.test_string", "AAaA");
 
-	printf(settingsManager.ReadConfigValue<string>("general.test_string").c_str());
+	boost::shared_ptr<ILoadCoreDLLAPI> coreDLL;
+	try
+	{
+		coreDLL = boost::dll::import<ILoadCoreDLLAPI>("Apoapse.Core", "core_dll", boost::dll::load_mode::append_decorations);
+	}
+	catch (const std::exception& e)
+	{
+		printf(e.what());	//FATAL ERROR
+	}
 
-	//auto val = settingsManager.ReadConfigValue<int>("dzd");
+	coreDLL->Start(global);
 
+	global->settings->RegisterConfigVar<string>("general.test_string", "AAaA");
+	global->logger->Log(global->settings->ReadConfigValue<string>("general.test_string"), LogSeverity::debug);
+	
 	string inputstr;
 	getline(std::cin, inputstr);
 

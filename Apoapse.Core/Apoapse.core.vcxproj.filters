@@ -7,6 +7,16 @@
     <ClCompile Include="ProducerConsumerQueue.cpp">
       <Filter>Threading</Filter>
     </ClCompile>
+    <ClCompile Include="LogMessage.cpp">
+      <Filter>Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="Common.cpp">
+      <Filter>SharedAndGlobals</Filter>
+    </ClCompile>
+    <ClCompile Include="ApoapseCore.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -19,6 +29,28 @@
     <ClInclude Include="ProducerConsumerQueue.h">
       <Filter>Threading</Filter>
     </ClInclude>
+    <ClInclude Include="LogMessage.h">
+      <Filter>Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="Platforms.h">
+      <Filter>SharedAndGlobals</Filter>
+    </ClInclude>
+    <ClInclude Include="Diagnostics.h">
+      <Filter>SharedAndGlobals</Filter>
+    </ClInclude>
+    <ClInclude Include="Common.h">
+      <Filter>SharedAndGlobals</Filter>
+    </ClInclude>
+    <ClInclude Include="ILogger.h">
+      <Filter>Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="ApoapseCore.h" />
+    <ClInclude Include="ILoadCoreDLLAPI.h">
+      <Filter>CoreDLLSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Settings">
@@ -26,6 +58,15 @@
     </Filter>
     <Filter Include="Threading">
       <UniqueIdentifier>{e91895e4-7eec-4911-b3b5-a556e2ed5dc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logger">
+      <UniqueIdentifier>{68b93324-54aa-4c97-b8b9-a3c4f61a1f6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SharedAndGlobals">
+      <UniqueIdentifier>{105bdf6a-270b-416e-bfd9-2661ab7b7e17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CoreDLLSystem">
+      <UniqueIdentifier>{a6c3456b-7830-4068-ba9e-37af55f1aeff}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

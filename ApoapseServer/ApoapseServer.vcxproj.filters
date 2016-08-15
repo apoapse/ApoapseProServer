@@ -6,4 +6,7 @@
   <ItemGroup>
     <None Include="config.json" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+  </ItemGroup>
 </Project>

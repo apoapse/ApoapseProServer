@@ -1,8 +1,7 @@
 #pragma once
-#include <boost\thread.hpp>
-#define _ENABLE_ATOMIC_ALIGNMENT_FIX
 #include <boost\lockfree\queue.hpp>
 #include <boost\atomic.hpp>
+#include <boost\thread.hpp>
 
 #define DEFAULT_QUEUE_CAPACITY 16
 

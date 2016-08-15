@@ -1,29 +1,19 @@
 #pragma once
+#ifdef ENABLE_PROCOMPILED_HEADERS
 
-//	SHARED PRECOMPILED HEADERS FILE
-
+//	STD
 #include <string>
 #include <iostream>
-//#include <map>
 #include <memory>
 #include <vector>
 
-#include <boost\property_tree\ptree.hpp>
-#include <boost\property_tree\json_parser.hpp>
-#include <boost\any.hpp>
-#include <boost\none.hpp>
+//	BOOST
 #include <boost\algorithm\string.hpp>
+#include <boost\thread.hpp>
+#include <boost\thread\mutex.hpp>
+#include <boost\atomic.hpp>
 
-using string = std::string;
+//	INTERNAL
+#include "Platforms.h"
 
-#define ASSERT(_exp)	BOOST_ASSERT(_exp, _msg)
-//#define ASSERT_MSG(_exp, _msg)	BOOST_ASSERT_MSG(_exp, _msg)
-
-#define ASSERT_MSG(_exp, _msg) {\
-        if(!(_exp))\
-        {\
-            std::stringstream str;\
-            str << _msg;\
-            BOOST_ASSERT_MSG(_exp, str.str().c_str());\
-        }\
-    }
+#endif // ENABLE_PROCOMPILER_HEADERS

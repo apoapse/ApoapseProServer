@@ -1,47 +1,41 @@
 #pragma once
 #include "ConfigVariable.h"
+#include <vector>
+#include <boost\property_tree\ptree.hpp>
+#include "Diagnostics.h"
 
-#ifdef DLL_EXPORT
-#define SETTINGS_MANAGER __declspec(dllexport) 
-#else
-#define SETTINGS_MANAGER __declspec(dllimport) 
-#endif
-
-namespace ApoapseCore
+class SettingsManager
 {
-	class SettingsManager
+	std::string m_configFilePath;
+	boost::property_tree::ptree m_propertyTree;
+	std::vector<boost::any> m_registeredConfigs;
+
+public:
+	SettingsManager();
+	void Init(const std::string&);
+	static SettingsManager Create()
 	{
-		std::string m_configFilePath;
-		boost::property_tree::ptree m_propertyTree;
-		std::vector<boost::any> m_registeredConfigs;
+		return SettingsManager();
+	}
 
-	public:
-		SettingsManager();
-		SETTINGS_MANAGER void Init(const std::string&);
-		SETTINGS_MANAGER static SettingsManager Create()
-		{
-			return SettingsManager();
-		}
+	template <typename U> DLL_API void RegisterConfigVar(const std::string&, const U&);
+	template <typename U> DLL_API U ReadConfigValue(const std::string&);
+private:
+	void LoadConfigFile();
+	template <typename U> ConfigVariable<U> GetRegisteredConfigVariableByName(const std::string&);
 
-		template <typename U> SETTINGS_MANAGER void RegisterConfigVar(const string&, const U&);
-		template <typename U> SETTINGS_MANAGER U ReadConfigValue(const std::string&);
-	private:
-		void LoadConfigFile();
-		template <typename U> ConfigVariable<U> GetRegisteredConfigVariableByName(const std::string&);
+	void ForceExplicitTemplateInstanciation()	// Explicitely instanciate for the compiler all the supported types
+	{
+		ASSERT_MSG(false, "This function should never be called");
 
-		void ForceExplicitTemplateInstanciation()	// Explicitely instanciate for the compiler all the supported types
-		{
-			ASSERT_MSG(false, "This function should never be called");
+		RegisterConfigVar<std::string>(NULL, NULL);
+		RegisterConfigVar<int>(NULL, NULL);
+		RegisterConfigVar<unsigned int>(NULL, NULL);
+		RegisterConfigVar<bool>(NULL, NULL);
 
-			RegisterConfigVar<std::string>(NULL, NULL);
-			RegisterConfigVar<int>(NULL, NULL);
-			RegisterConfigVar<unsigned int>(NULL, NULL);
-			RegisterConfigVar<bool>(NULL, NULL);
-
-			ReadConfigValue<std::string>(NULL);
-			ReadConfigValue<int>(NULL);
-			ReadConfigValue<unsigned int>(NULL);
-			ReadConfigValue<bool>(NULL);
-		}
-	};
-}
+		ReadConfigValue<std::string>(NULL);
+		ReadConfigValue<int>(NULL);
+		ReadConfigValue<unsigned int>(NULL);
+		ReadConfigValue<bool>(NULL);
+	}
+};
