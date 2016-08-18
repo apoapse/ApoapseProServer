@@ -21,13 +21,16 @@ Logger::~Logger()
 	delete m_threadQueue;
 }
 
-void Logger::Log(const string& msg, LogSeverity severity)
+void Logger::Log(const string& msg, LogSeverity severity, bool asyncLogToFile)
 {
 	std::shared_ptr<LogMessage> log = std::make_shared<LogMessage>(msg, severity);
 	log->LogToConsole();
 
 	//	Log to file
-	m_threadQueue->Push([log] { log->LogToFile(); });
+	if (asyncLogToFile)
+		m_threadQueue->Push([log] { log->LogToFile(); });
+	else
+		log->LogToFile();
 }
 
 string Logger::GetCurrentLogFileName()

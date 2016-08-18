@@ -9,7 +9,7 @@ public:
 	Logger();
 	~Logger();
 	void Init(const std::string&);
-	void Log(const std::string&, LogSeverity = LogSeverity::normal);
+	void Log(const std::string&, LogSeverity = LogSeverity::normal, bool asyncLogToFile = true);
 	std::string GetCurrentLogFileName();
 	void WriteToLogFileRaw(const std::string&);
 

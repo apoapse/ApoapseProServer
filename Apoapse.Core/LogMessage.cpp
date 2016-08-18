@@ -46,6 +46,10 @@ void LogMessage::LogToFile() const
 	case LogSeverity::error:
 		severityPrefix = "ERROR: ";
 		break;
+
+	case LogSeverity::fatalError:
+		severityPrefix = "FATAL ERROR: ";
+		break;
 	}
 
 	ASSERT(global->logger);
@@ -63,7 +67,7 @@ WORD LogMessage::GetConsoleColorBySeverity(LogSeverity severity) const
 	case LogSeverity::warning:
 		return 14;															//	Yellow
 
-	case LogSeverity::error:
+	case LogSeverity::error | LogSeverity::fatalError:
 		return FOREGROUND_RED | FOREGROUND_INTENSITY;						// Red
 
 	default:

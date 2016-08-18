@@ -157,7 +157,8 @@
     <ClInclude Include="ApoapseCore.h" />
     <ClInclude Include="Diagnostics.h" />
     <ClInclude Include="Common.h" />
-    <ClInclude Include="ILoadCoreDLLAPI.h" />
+    <ClInclude Include="InternalLibraryLoader.h" />
+    <ClInclude Include="InternalLibraryLoadingAPI.h" />
     <ClInclude Include="ILogger.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="LogMessage.h" />

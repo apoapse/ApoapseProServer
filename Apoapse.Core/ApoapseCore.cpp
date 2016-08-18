@@ -3,6 +3,8 @@
 
 void ApoapseCore::Start(Global* inputGlobal)
 {
+	ASSERT(global == nullptr);
+
 	global = inputGlobal;
 	ASSERT(global);
 

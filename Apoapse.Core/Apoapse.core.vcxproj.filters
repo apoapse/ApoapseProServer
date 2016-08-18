@@ -48,8 +48,11 @@
       <Filter>Logger</Filter>
     </ClInclude>
     <ClInclude Include="ApoapseCore.h" />
-    <ClInclude Include="ILoadCoreDLLAPI.h">
-      <Filter>CoreDLLSystem</Filter>
+    <ClInclude Include="InternalLibraryLoader.h">
+      <Filter>DLLSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="InternalLibraryLoadingAPI.h">
+      <Filter>DLLSystem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -65,7 +68,7 @@
     <Filter Include="SharedAndGlobals">
       <UniqueIdentifier>{105bdf6a-270b-416e-bfd9-2661ab7b7e17}</UniqueIdentifier>
     </Filter>
-    <Filter Include="CoreDLLSystem">
+    <Filter Include="DLLSystem">
       <UniqueIdentifier>{a6c3456b-7830-4068-ba9e-37af55f1aeff}</UniqueIdentifier>
     </Filter>
   </ItemGroup>

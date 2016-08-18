@@ -25,23 +25,21 @@ void SettingsManager::LoadConfigFile()
 	{
 		boost::property_tree::read_json(m_configFilePath, m_propertyTree);
 	}
-	catch (const std::exception& e)
+	catch (const std::exception&)
 	{
-		//TODO: Handle excepetion -> fatal error
-		printf(e.what());
+		FatalError("Unable to load the config file " + m_configFilePath);
 	}
 }
 
 template <typename U> void SettingsManager::RegisterConfigVar(const string& configVarName, const U& defaultValue)
 {
-	//TODO: assert if already exist
 	m_registeredConfigs.push_back(ConfigVariable<U>(configVarName, defaultValue));
 }
 
 template <typename U> U SettingsManager::ReadConfigValue(const string& configVarName)
 {
 #ifdef DEBUG
-	//	In debug mode, check if the varible is registered even if it is already implemented in the config file
+	//	In debug mode, we check if the variable is registered even if it is already implemented in the config file
 	GetRegisteredConfigVariableByName<U>(configVarName);
 #endif
 
@@ -73,6 +71,6 @@ template <typename U> ConfigVariable<U> SettingsManager::GetRegisteredConfigVari
 		return boost::any_cast<ConfigVariable<U>>(m_registeredConfigs.at(index));
 	}
 
-	ASSERT_MSG(false, "The config variable: " << configVarName << " is not registered");
-	throw "Unregistered config variable";
+	ASSERT_MSG(false, "The config variable: " + configVarName + " is not registered");
+	throw "The config variable: " + configVarName + " is not registered";
 }

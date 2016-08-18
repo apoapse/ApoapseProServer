@@ -31,3 +31,10 @@ inline void Log(const string& msg, const LogSeverity severity = LogSeverity::nor
 		global->logger->Log(msg, severity);
 }
 
+inline void FatalError(const string& msg)
+{
+	if (global && global->logger)
+		global->logger->Log(msg, LogSeverity::fatalError, false);
+
+	std::abort();
+}

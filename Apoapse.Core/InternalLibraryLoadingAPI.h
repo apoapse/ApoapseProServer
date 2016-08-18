@@ -1,7 +1,7 @@
 #pragma once
 #include "Common.h"
 
-struct ILoadCoreDLLAPI
+struct InternalLibraryLoadingAPI
 {
 	virtual void Start(Global*) = 0;
 };

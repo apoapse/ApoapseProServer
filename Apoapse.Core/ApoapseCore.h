@@ -1,8 +1,8 @@
 #pragma once
-#include "ILoadCoreDLLAPI.h"
+#include "InternalLibraryLoadingAPI.h"
 #include <boost/config.hpp>
 
-class ApoapseCore : public ILoadCoreDLLAPI
+class ApoapseCore : public InternalLibraryLoadingAPI
 {
 public:
 	ApoapseCore()
@@ -15,5 +15,5 @@ private:
 
 };
 
-extern "C" BOOST_SYMBOL_EXPORT ApoapseCore core_dll;
-ApoapseCore core_dll;
+extern "C" BOOST_SYMBOL_EXPORT ApoapseCore apoapse_internal_dll;
+ApoapseCore apoapse_internal_dll;
