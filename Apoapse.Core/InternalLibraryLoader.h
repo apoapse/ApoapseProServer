@@ -11,7 +11,7 @@ struct InternalLibraryLoader
 		{
 			coreDLL = boost::dll::import<InternalLibraryLoadingAPI>(libraryName, "apoapse_internal_dll", boost::dll::load_mode::append_decorations);
 		}
-		catch (const std::exception& e)
+		catch (const std::exception&)
 		{
 			FatalError("Unable to load the dynamic library " + string(libraryName));
 		}

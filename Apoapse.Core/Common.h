@@ -11,8 +11,8 @@ using string = std::string;
 
 struct Global
 {
-	ILogger* logger;
 	SettingsManager* settings;
+	ILogger* logger;
 
 	Global();
 
@@ -21,20 +21,7 @@ struct Global
 		return new Global();
 	}
 };
-
 extern Global* global;
 
-
-inline void Log(const string& msg, const LogSeverity severity = LogSeverity::normal)
-{
-	if (global && global->logger)
-		global->logger->Log(msg, severity);
-}
-
-inline void FatalError(const string& msg)
-{
-	if (global && global->logger)
-		global->logger->Log(msg, LogSeverity::fatalError, false);
-
-	std::abort();
-}
+inline DLL_API void Log(const string& msg, const LogSeverity severity = LogSeverity::normal);
+inline DLL_API void FatalError(const string& msg);

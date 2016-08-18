@@ -1,5 +1,5 @@
 #pragma once
-#ifdef ENABLE_PROCOMPILED_HEADERS
+#ifdef ENABLE_PRECOMPILED_HEADERS
 
 //	STD
 #include <string>
@@ -15,5 +15,6 @@
 
 //	INTERNAL
 #include "Platforms.h"
+#include "Common.h"
 
-#endif // ENABLE_PROCOMPILER_HEADERS
+#endif // ENABLE_PRECOMPILED_HEADERS
