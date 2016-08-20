@@ -1,0 +1,10 @@
+{
+  "system": {
+    "JobManager_nb_threads":  16
+  },
+
+  "general": {
+    "test_string": "str value",
+    "test_int": -18
+  }
+}

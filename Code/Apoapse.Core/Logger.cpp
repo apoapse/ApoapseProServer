@@ -11,14 +11,12 @@ Logger::Logger()
 void Logger::Init(const string& logFileLocation)
 {
 	m_logFileLocation = logFileLocation;
-	m_threadQueue = new ProducerConsumerQueue(1, "Logger");	// TODO: Use job system
 
 	Log("Logger initialized");
 }
 
 Logger::~Logger()
 {
-	delete m_threadQueue;
 }
 
 void Logger::Log(const string& msg, LogSeverity severity, bool asyncLogToFile)
@@ -28,7 +26,7 @@ void Logger::Log(const string& msg, LogSeverity severity, bool asyncLogToFile)
 
 	//	Log to file
 	if (asyncLogToFile)
-		m_threadQueue->Push([log] { log->LogToFile(); });
+		global->jobManager->Push([log] { log->LogToFile(); });
 	else
 		log->LogToFile();
 }

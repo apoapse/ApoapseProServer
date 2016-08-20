@@ -1,6 +1,5 @@
 #pragma once
 #include "LogMessage.h"
-#include "ProducerConsumerQueue.h"
 #include <boost\thread\mutex.hpp>
 
 class Logger : public ILogger
@@ -15,6 +14,5 @@ public:
 
 private:
 	std::string m_logFileLocation;
-	ProducerConsumerQueue* m_threadQueue;
 	boost::mutex m_mutex;
 };

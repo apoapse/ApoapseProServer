@@ -5,11 +5,6 @@
 
 Global* global = nullptr;
 
-Global::Global() : settings(nullptr), logger(nullptr)
-{
-
-}
-
 inline void Log(const string& msg, const LogSeverity severity)
 {
 	if (global && global->logger)

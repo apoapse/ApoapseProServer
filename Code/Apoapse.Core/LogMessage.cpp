@@ -53,7 +53,8 @@ void LogMessage::LogToFile() const
 	}
 
 	ASSERT(global->logger);
-	global->logger->WriteToLogFileRaw(m_logFormatedDateTime + " - " + severityPrefix + message);
+	string finalMsg = m_logFormatedDateTime + " - " + severityPrefix + message;
+	global->logger->WriteToLogFileRaw(std::ref(finalMsg));
 }
 
 #ifdef WINDOWS

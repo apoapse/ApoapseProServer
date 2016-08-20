@@ -5,7 +5,6 @@
 #include <boost\property_tree\json_parser.hpp>
 #include <boost\algorithm\string.hpp>
 
-
 SettingsManager::SettingsManager()
 {
 }
@@ -24,6 +23,8 @@ void SettingsManager::LoadConfigFile()
 	try
 	{
 		boost::property_tree::read_json(m_configFilePath, m_propertyTree);
+
+		ASSERT(m_propertyTree.size() > 0);
 	}
 	catch (const std::exception&)
 	{
@@ -33,11 +34,14 @@ void SettingsManager::LoadConfigFile()
 
 template <typename U> void SettingsManager::RegisterConfigVar(const string& configVarName, const U& defaultValue)
 {
+	boost::lock_guard<boost::mutex> lock(m_mutex);
 	m_registeredConfigs.push_back(ConfigVariable<U>(configVarName, defaultValue));
 }
 
 template <typename U> U SettingsManager::ReadConfigValue(const string& configVarName)
 {
+	boost::lock_guard<boost::mutex> lock(m_mutex);
+
 #ifdef DEBUG
 	//	In debug mode, we check if the variable is registered even if it is already implemented in the config file
 	GetRegisteredConfigVariableByName<U>(configVarName);
@@ -45,7 +49,7 @@ template <typename U> U SettingsManager::ReadConfigValue(const string& configVar
 
 	try
 	{
-		return m_propertyTree.get<U>(configVarName);
+		return m_propertyTree.get<U>(configVarName);	// #TODO What happen if the value in the config file is not of the right type?
 	}
 	catch (const boost::property_tree::ptree_error e)
 	{
@@ -60,8 +64,15 @@ template <typename U> ConfigVariable<U> SettingsManager::GetRegisteredConfigVari
 {
 	auto itr = std::find_if(m_registeredConfigs.begin(), m_registeredConfigs.end(), [&configVarName](const boost::any& obj)
 	{
-		ConfigVariable<U> configVar = boost::any_cast<ConfigVariable<U>>(obj);
-		return boost::iequals(configVar.name, configVarName);
+		try
+		{
+			ConfigVariable<U> configVar = boost::any_cast<ConfigVariable<U>>(obj);
+			return boost::iequals(configVar.name, configVarName);
+		}
+		catch (std::exception&)	// In case the cast fail, iterate to the next item
+		{
+			return false;
+		}
 	});
 
 	if (itr != m_registeredConfigs.end())

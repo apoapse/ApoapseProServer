@@ -4,9 +4,6 @@
     <ClCompile Include="SettingsManager.cpp">
       <Filter>Settings</Filter>
     </ClCompile>
-    <ClCompile Include="ProducerConsumerQueue.cpp">
-      <Filter>Threading</Filter>
-    </ClCompile>
     <ClCompile Include="LogMessage.cpp">
       <Filter>Logger</Filter>
     </ClCompile>
@@ -17,6 +14,9 @@
       <Filter>SharedAndGlobals</Filter>
     </ClCompile>
     <ClCompile Include="ApoapseCore.cpp" />
+    <ClCompile Include="JobManager.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -25,9 +25,6 @@
     </ClInclude>
     <ClInclude Include="ConfigVariable.h">
       <Filter>Settings</Filter>
-    </ClInclude>
-    <ClInclude Include="ProducerConsumerQueue.h">
-      <Filter>Threading</Filter>
     </ClInclude>
     <ClInclude Include="LogMessage.h">
       <Filter>Logger</Filter>
@@ -53,6 +50,12 @@
     </ClInclude>
     <ClInclude Include="InternalLibraryLoadingAPI.h">
       <Filter>DLLSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="JobManager.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="IJobManager.h">
+      <Filter>Threading</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

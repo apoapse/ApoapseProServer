@@ -6,15 +6,19 @@
 #include <memory>
 using string = std::string;
 
-#include "ILogger.h"
 #include "SettingsManager.h"
+#include "IJobManager.h"
+#include "ILogger.h"
 
 struct Global
 {
 	SettingsManager* settings;
+	IJobManager* jobManager;
 	ILogger* logger;
 
-	Global();
+	Global() : settings(nullptr), jobManager(nullptr), logger(nullptr)
+	{
+	}
 
 	DLL_API static Global* CreateGlobal()
 	{

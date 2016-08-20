@@ -3,20 +3,18 @@
 #include <vector>
 #include <boost\property_tree\ptree.hpp>
 #include "Diagnostics.h"
+#include <boost\thread\mutex.hpp>
 
 class SettingsManager
 {
 	std::string m_configFilePath;
 	boost::property_tree::ptree m_propertyTree;
 	std::vector<boost::any> m_registeredConfigs;
+	boost::mutex m_mutex;
 
 public:
 	SettingsManager();
 	void Init(const std::string&);
-	static SettingsManager Create()
-	{
-		return SettingsManager();
-	}
 
 	template <typename U> DLL_API void RegisterConfigVar(const std::string&, const U&);
 	template <typename U> DLL_API U ReadConfigValue(const std::string&);
