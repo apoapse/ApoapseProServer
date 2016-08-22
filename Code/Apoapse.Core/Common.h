@@ -6,13 +6,13 @@
 #include <memory>
 using string = std::string;
 
-#include "SettingsManager.h"
+#include "ISettingsManager.h"
 #include "IJobManager.h"
 #include "ILogger.h"
 
 struct Global
 {
-	SettingsManager* settings;
+	ISettingsManager* settings;
 	IJobManager* jobManager;
 	ILogger* logger;
 

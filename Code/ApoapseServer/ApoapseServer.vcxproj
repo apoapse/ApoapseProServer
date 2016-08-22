@@ -179,6 +179,9 @@
     <ProjectReference Include="..\Apoapse.core\Apoapse.core.vcxproj">
       <Project>{4715fbc8-8f7a-45a4-9df6-5eff6899418c}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\Apoapse.Network\Apoapse.Network.vcxproj">
+      <Project>{450a8f4d-aa8f-4433-89d9-27859c711718}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

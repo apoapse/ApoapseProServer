@@ -7,9 +7,11 @@ Global* global = Global::CreateGlobal();
 int main(int argc, char* argv[])
 {
 	InternalLibraryLoader::LoadInternalLibrary(global, "Apoapse.Core");
+	InternalLibraryLoader::LoadInternalLibrary(global, "Apoapse.Network");
 
-	global->settings->RegisterConfigVar<string>("general.test_string", "AAaA");
-	Log(global->settings->ReadConfigValue<string>("general.test_string"), LogSeverity::debug);
+	global->settings->RegisterConfigVar_string("general.test_string", "AAaA");
+	auto test = global->settings->ReadConfigValue_string("general.test_string");
+	Log(test, LogSeverity::debug);
 
 	string inputstr;
 	getline(std::cin, inputstr);

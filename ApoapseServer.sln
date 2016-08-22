@@ -5,12 +5,15 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ApoapseServer", "Code\ApoapseServer\ApoapseServer.vcxproj", "{FFED83BA-CAA4-4F9C-943A-157B4418672A}"
 	ProjectSection(ProjectDependencies) = postProject
+		{450A8F4D-AA8F-4433-89D9-27859C711718} = {450A8F4D-AA8F-4433-89D9-27859C711718}
 		{4715FBC8-8F7A-45A4-9DF6-5EFF6899418C} = {4715FBC8-8F7A-45A4-9DF6-5EFF6899418C}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Apoapse.Core", "Code\Apoapse.core\Apoapse.core.vcxproj", "{4715FBC8-8F7A-45A4-9DF6-5EFF6899418C}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTests", "Code\UnitTests\UnitTests.vcxproj", "{F24D2A31-6FD2-4AEF-9618-922510C14368}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Apoapse.Network", "Code\Apoapse.Network\Apoapse.Network.vcxproj", "{450A8F4D-AA8F-4433-89D9-27859C711718}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,6 +47,14 @@ Global
 		{F24D2A31-6FD2-4AEF-9618-922510C14368}.Release|x64.Build.0 = Release|x64
 		{F24D2A31-6FD2-4AEF-9618-922510C14368}.Release|x86.ActiveCfg = Release|Win32
 		{F24D2A31-6FD2-4AEF-9618-922510C14368}.Release|x86.Build.0 = Release|Win32
+		{450A8F4D-AA8F-4433-89D9-27859C711718}.Debug|x64.ActiveCfg = Debug|x64
+		{450A8F4D-AA8F-4433-89D9-27859C711718}.Debug|x64.Build.0 = Debug|x64
+		{450A8F4D-AA8F-4433-89D9-27859C711718}.Debug|x86.ActiveCfg = Debug|Win32
+		{450A8F4D-AA8F-4433-89D9-27859C711718}.Debug|x86.Build.0 = Debug|Win32
+		{450A8F4D-AA8F-4433-89D9-27859C711718}.Release|x64.ActiveCfg = Release|x64
+		{450A8F4D-AA8F-4433-89D9-27859C711718}.Release|x64.Build.0 = Release|x64
+		{450A8F4D-AA8F-4433-89D9-27859C711718}.Release|x86.ActiveCfg = Release|Win32
+		{450A8F4D-AA8F-4433-89D9-27859C711718}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

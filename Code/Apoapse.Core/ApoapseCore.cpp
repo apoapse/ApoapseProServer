@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "ApoapseCore.h"
+#include "SettingsManager.h"
 #include "JobManager.h"
 #include "Logger.h"
 

@@ -18,11 +18,23 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Apoapse.core\Apoapse.core.vcxproj">
+      <Project>{4715fbc8-8f7a-45a4-9df6-5eff6899418c}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ApoapseNetwork.h" />
+    <ClInclude Include="stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ApoapseNetwork.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{4715FBC8-8F7A-45A4-9DF6-5EFF6899418C}</ProjectGuid>
+    <ProjectGuid>{450A8F4D-AA8F-4433-89D9-27859C711718}</ProjectGuid>
     <RootNamespace>Apoapsecore</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
-    <ProjectName>Apoapse.Core</ProjectName>
+    <ProjectName>Apoapse.Network</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -90,6 +102,7 @@
       <PrecompiledHeaderOutputFile>$(SolutionDir)vs_build\$(Configuration)\$(PlatformTarget)\$(ProjectName).pch</PrecompiledHeaderOutputFile>
       <PreprocessorDefinitions>LIB;COMPILE_DLL;ENABLE_PRECOMPILED_HEADERS;_ENABLE_ATOMIC_ALIGNMENT_FIX;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/Zm250 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Code\Apoapse.Core\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>C:\Program Files\boost\boost_1_61_0\lib64-msvc-14.0;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -104,6 +117,7 @@
       <PrecompiledHeaderOutputFile>$(SolutionDir)vs_build\$(Configuration)\$(PlatformTarget)\$(ProjectName).pch</PrecompiledHeaderOutputFile>
       <PreprocessorDefinitions>LIB;COMPILE_DLL;ENABLE_PRECOMPILED_HEADERS;_ENABLE_ATOMIC_ALIGNMENT_FIX;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/Zm250 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Code\Apoapse.Core\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>C:\Program Files\boost\boost_1_61_0\lib64-msvc-14.0;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -120,6 +134,7 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
       <PreprocessorDefinitions>LIB;COMPILE_DLL;ENABLE_PRECOMPILED_HEADERS;_ENABLE_ATOMIC_ALIGNMENT_FIX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/Zm250 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Code\Apoapse.Core\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -138,6 +153,7 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
       <PreprocessorDefinitions>LIB;COMPILE_DLL;ENABLE_PRECOMPILED_HEADERS;_ENABLE_ATOMIC_ALIGNMENT_FIX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/Zm250 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Code\Apoapse.Core\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -145,31 +161,6 @@
       <AdditionalLibraryDirectories>C:\Program Files\boost\boost_1_61_0\lib64-msvc-14.0;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="ApoapseCore.cpp" />
-    <ClCompile Include="Common.cpp" />
-    <ClCompile Include="Logger.cpp" />
-    <ClCompile Include="LogMessage.cpp" />
-    <ClCompile Include="JobManager.cpp" />
-    <ClCompile Include="SettingsManager.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="ApoapseCore.h" />
-    <ClInclude Include="Diagnostics.h" />
-    <ClInclude Include="Common.h" />
-    <ClInclude Include="InternalLibraryLoader.h" />
-    <ClInclude Include="InternalLibraryLoadingAPI.h" />
-    <ClInclude Include="ILogger.h" />
-    <ClInclude Include="IJobManager.h" />
-    <ClInclude Include="ISettingsManager.h" />
-    <ClInclude Include="Logger.h" />
-    <ClInclude Include="LogMessage.h" />
-    <ClInclude Include="Platforms.h" />
-    <ClInclude Include="JobManager.h" />
-    <ClInclude Include="SettingsManager.h" />
-    <ClInclude Include="ConfigVariable.h" />
-    <ClInclude Include="stdafx.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

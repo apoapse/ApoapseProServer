@@ -4,13 +4,13 @@
 
 JobManager::JobManager() : m_tasksInQueueCount(0), m_queueCapacity(0)
 {
-	global->settings->RegisterConfigVar<unsigned int>("system.JobManager_nb_threads", 16);
+	global->settings->RegisterConfigVar_uint("system.JobManager_nb_threads", 16);
 }
 
 void JobManager::Init()
 {
 	m_queueCapacity = INITIAL_QUEUE_CAPACITY;
-	int nbConsumerThreads = global->settings->ReadConfigValue<unsigned int>("system.JobManager_nb_threads");
+	int nbConsumerThreads = global->settings->ReadConfigValue_uint("system.JobManager_nb_threads");
 
 	for (size_t i = 0; i < nbConsumerThreads; i++)
 	{

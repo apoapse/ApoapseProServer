@@ -57,6 +57,9 @@
     <ClInclude Include="IJobManager.h">
       <Filter>Threading</Filter>
     </ClInclude>
+    <ClInclude Include="ISettingsManager.h">
+      <Filter>Settings</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Settings">

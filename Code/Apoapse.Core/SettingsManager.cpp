@@ -25,13 +25,46 @@ void SettingsManager::LoadConfigFile()
 	ASSERT(m_propertyTree.size() > 0);
 }
 
-template <typename U> void SettingsManager::RegisterConfigVar(const string& configVarName, const U& defaultValue)
+//////////////////////////////////////////////////////////////
+//	REGISTER
+//////////////////////////////////////////////////////////////
+template <typename U> void SettingsManager::InternalRegisterConfigVar(const string& configVarName, const U& defaultValue)
 {
 	boost::lock_guard<boost::mutex> lock(m_mutex);
-	m_registeredConfigs.push_back(ConfigVariable<U>(configVarName, defaultValue));
+	//m_registeredConfigs.insert(configVarName, defaultValue);
+	//m_registeredConfigs.push_back(ConfigVariable<U>(configVarName, defaultValue));
+
+	if (!m_registeredConfigs.insert(std::make_pair(configVarName, defaultValue)).second)
+	{
+		Log("SettingsManager::InternalRegisterConfigVar item " + configVarName + " is already registered", LogSeverity::warning);
+	}
 }
 
-template <typename U> U SettingsManager::ReadConfigValue(const string& configVarName)
+void SettingsManager::RegisterConfigVar_string(const std::string& configVarName, const string& defaultValue)
+{
+	InternalRegisterConfigVar<string>(configVarName, defaultValue);
+}
+
+void SettingsManager::RegisterConfigVar_int(const std::string& configVarName, const int defaultValue)
+{
+	InternalRegisterConfigVar<int>(configVarName, defaultValue);
+}
+
+void SettingsManager::RegisterConfigVar_uint(const std::string& configVarName, const unsigned int defaultValue)
+{
+	InternalRegisterConfigVar<unsigned int>(configVarName, defaultValue);
+}
+
+void SettingsManager::RegisterConfigVar_bool(const std::string& configVarName, const bool defaultValue)
+{
+	InternalRegisterConfigVar<bool>(configVarName, defaultValue);
+}
+
+
+//////////////////////////////////////////////////////////////
+//	READ
+//////////////////////////////////////////////////////////////
+template <typename U> U SettingsManager::InternalReadConfigValue(const string& configVarName)
 {
 	boost::lock_guard<boost::mutex> lock(m_mutex);
 
@@ -55,26 +88,38 @@ template <typename U> U SettingsManager::ReadConfigValue(const string& configVar
 
 template <typename U> ConfigVariable<U> SettingsManager::GetRegisteredConfigVariableByName(const std::string& configVarName)
 {
-	auto itr = std::find_if(m_registeredConfigs.begin(), m_registeredConfigs.end(), [&configVarName](const boost::any& obj)
-	{
-		try
-		{
-			ConfigVariable<U> configVar = boost::any_cast<ConfigVariable<U>>(obj);
-			return boost::iequals(configVar.name, configVarName);
-		}
-		catch (std::exception&)	// In case the cast fail, iterate to the next item
-		{
-			return false;
-		}
-	});
+	auto itr = m_registeredConfigs.find(configVarName);
 
 	if (itr != m_registeredConfigs.end())
 	{
-		auto index = std::distance(m_registeredConfigs.begin(), itr);
+		auto test = itr->second;
+		U defaultValue = boost::any_cast<U>(itr->second);	// #TODO: what happen if the conversion fail?
 
-		return boost::any_cast<ConfigVariable<U>>(m_registeredConfigs.at(index));
+		return ConfigVariable<U>(configVarName, defaultValue);
 	}
+	else
+	{
+		ASSERT_MSG(false, "The config variable: " + configVarName + " is not registered");
+		throw "The config variable: " + configVarName + " is not registered";
+	}
+}
 
-	ASSERT_MSG(false, "The config variable: " + configVarName + " is not registered");
-	throw "The config variable: " + configVarName + " is not registered";
+string SettingsManager::ReadConfigValue_string(const string& configVarName)
+{
+	return InternalReadConfigValue<string>(configVarName);
+}
+
+int SettingsManager::ReadConfigValue_int(const string& configVarName)
+{
+	return InternalReadConfigValue<int>(configVarName);
+}
+
+unsigned int SettingsManager::ReadConfigValue_uint(const string& configVarName)
+{
+	return InternalReadConfigValue<unsigned int>(configVarName);
+}
+
+bool SettingsManager::ReadConfigValue_bool(const string& configVarName)
+{
+	return InternalReadConfigValue<bool>(configVarName);
 }
