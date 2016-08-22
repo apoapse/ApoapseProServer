@@ -10,6 +10,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ApoapseServer", "Code\Apoap
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Apoapse.Core", "Code\Apoapse.core\Apoapse.core.vcxproj", "{4715FBC8-8F7A-45A4-9DF6-5EFF6899418C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTests", "Code\UnitTests\UnitTests.vcxproj", "{F24D2A31-6FD2-4AEF-9618-922510C14368}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -34,6 +36,14 @@ Global
 		{4715FBC8-8F7A-45A4-9DF6-5EFF6899418C}.Release|x64.Build.0 = Release|x64
 		{4715FBC8-8F7A-45A4-9DF6-5EFF6899418C}.Release|x86.ActiveCfg = Release|Win32
 		{4715FBC8-8F7A-45A4-9DF6-5EFF6899418C}.Release|x86.Build.0 = Release|Win32
+		{F24D2A31-6FD2-4AEF-9618-922510C14368}.Debug|x64.ActiveCfg = Debug|x64
+		{F24D2A31-6FD2-4AEF-9618-922510C14368}.Debug|x64.Build.0 = Debug|x64
+		{F24D2A31-6FD2-4AEF-9618-922510C14368}.Debug|x86.ActiveCfg = Debug|Win32
+		{F24D2A31-6FD2-4AEF-9618-922510C14368}.Debug|x86.Build.0 = Debug|Win32
+		{F24D2A31-6FD2-4AEF-9618-922510C14368}.Release|x64.ActiveCfg = Release|x64
+		{F24D2A31-6FD2-4AEF-9618-922510C14368}.Release|x64.Build.0 = Release|x64
+		{F24D2A31-6FD2-4AEF-9618-922510C14368}.Release|x86.ActiveCfg = Release|Win32
+		{F24D2A31-6FD2-4AEF-9618-922510C14368}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

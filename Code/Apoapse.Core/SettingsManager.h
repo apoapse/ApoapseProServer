@@ -14,13 +14,19 @@ class SettingsManager
 
 public:
 	SettingsManager();
-	void Init(const std::string&);
+	DLL_API void Init(const std::string& configFilePath);
 
-	template <typename U> DLL_API void RegisterConfigVar(const std::string&, const U&);
-	template <typename U> DLL_API U ReadConfigValue(const std::string&);
+	template <typename U> DLL_API void RegisterConfigVar(const std::string& configVarName, const U& defaultValue);
+	template <typename U> DLL_API U ReadConfigValue(const std::string& configVarName);
+
+	DLL_API static SettingsManager* Create()
+	{
+		return new SettingsManager();
+	}
+
 private:
 	void LoadConfigFile();
-	template <typename U> ConfigVariable<U> GetRegisteredConfigVariableByName(const std::string&);
+	template <typename U> ConfigVariable<U> GetRegisteredConfigVariableByName(const std::string& configVarName);
 
 	void ForceExplicitTemplateInstanciation()	// Explicitely instanciate for the compiler all the supported types
 	{

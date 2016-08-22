@@ -20,16 +20,9 @@ void SettingsManager::Init(const string& configFilePath)
 
 void SettingsManager::LoadConfigFile()
 {
-	try
-	{
-		boost::property_tree::read_json(m_configFilePath, m_propertyTree);
+	boost::property_tree::read_json(m_configFilePath, m_propertyTree);
 
-		ASSERT(m_propertyTree.size() > 0);
-	}
-	catch (const std::exception&)
-	{
-		FatalError("Unable to load the config file " + m_configFilePath);
-	}
+	ASSERT(m_propertyTree.size() > 0);
 }
 
 template <typename U> void SettingsManager::RegisterConfigVar(const string& configVarName, const U& defaultValue)

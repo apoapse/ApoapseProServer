@@ -1,0 +1,7 @@
+{
+  "test_values": {
+    "test_string": "text",
+    "test_int": -10,
+    "test_uint": 80
+  }
+}

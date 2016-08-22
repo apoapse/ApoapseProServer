@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Tests">
+      <UniqueIdentifier>{f6f0cd8c-76e5-4d94-b953-26e368a83bb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests\Apoapse.Core">
+      <UniqueIdentifier>{15d514a7-b8e7-41ec-bb3f-6a92aedf3d8f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="SettingsManager.cpp">
+      <Filter>Tests\Apoapse.Core</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="test_config.json" />
+  </ItemGroup>
+</Project>

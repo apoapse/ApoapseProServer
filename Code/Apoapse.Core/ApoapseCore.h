@@ -10,9 +10,7 @@ public:
 	}
 	~ApoapseCore();
 
-	void Start(Global*);
-private:
-
+	void Start(Global* outsideGlobalPtr);
 };
 
 extern "C" BOOST_SYMBOL_EXPORT ApoapseCore apoapse_internal_dll;

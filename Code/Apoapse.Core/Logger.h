@@ -7,10 +7,10 @@ class Logger : public ILogger
 public:
 	Logger();
 	~Logger();
-	void Init(const std::string&);
-	void Log(const std::string&, LogSeverity = LogSeverity::normal, bool asyncLogToFile = true);
+	void Init(const std::string& logFileLocation);
+	void Log(const std::string& msg, LogSeverity severity = LogSeverity::normal, bool asyncLogToFile = true);
 	std::string GetCurrentLogFileName();
-	void WriteToLogFileRaw(const std::string&);
+	void WriteToLogFileRaw(const std::string& text);
 
 private:
 	std::string m_logFileLocation;

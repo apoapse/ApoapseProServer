@@ -11,8 +11,8 @@ enum LogSeverity
 
 struct ILogger
 {
-	virtual void Init(const std::string&) = 0;
-	virtual void Log(const std::string&, LogSeverity = LogSeverity::normal, bool asyncLogToFile = true) = 0;
+	virtual void Init(const std::string& logFileLocation) = 0;
+	virtual void Log(const std::string& msg, LogSeverity severity = LogSeverity::normal, bool asyncLogToFile = true) = 0;
 	virtual std::string GetCurrentLogFileName() = 0;
-	virtual void WriteToLogFileRaw(const std::string&) = 0;
+	virtual void WriteToLogFileRaw(const std::string& text) = 0;
 };

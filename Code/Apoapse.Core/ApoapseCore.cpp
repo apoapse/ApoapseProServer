@@ -3,15 +3,23 @@
 #include "JobManager.h"
 #include "Logger.h"
 
-void ApoapseCore::Start(Global* inputGlobal)
+void ApoapseCore::Start(Global* outsideGlobalPtr)
 {
 	ASSERT(global == nullptr);
 
-	global = inputGlobal;
+	global = outsideGlobalPtr;
 	ASSERT(global);
 
 	global->settings = new SettingsManager();
-	global->settings->Init("config.json");
+	try
+	{
+		global->settings->Init("config.json");
+	}
+	catch (const std::exception&)
+	{
+		FatalError("Unable to load the config file config.json");
+	}
+	
 
 	global->jobManager = new JobManager();
 	global->jobManager->Init();
