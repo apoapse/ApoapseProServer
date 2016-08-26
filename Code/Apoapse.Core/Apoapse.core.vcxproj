@@ -88,7 +88,7 @@
       <SDLCheck>true</SDLCheck>
       <PrecompiledHeader>Create</PrecompiledHeader>
       <PrecompiledHeaderOutputFile>$(SolutionDir)vs_build\$(Configuration)\$(PlatformTarget)\$(ProjectName).pch</PrecompiledHeaderOutputFile>
-      <PreprocessorDefinitions>LIB;COMPILE_DLL;ENABLE_PRECOMPILED_HEADERS;_ENABLE_ATOMIC_ALIGNMENT_FIX;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>LIB;COMPILE_DLL;ENABLE_PRECOMPILED_HEADERS;_ENABLE_ATOMIC_ALIGNMENT_FIX;_SCL_SECURE_NO_WARNINGS;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/Zm250 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -102,7 +102,7 @@
       <SDLCheck>true</SDLCheck>
       <PrecompiledHeader>Create</PrecompiledHeader>
       <PrecompiledHeaderOutputFile>$(SolutionDir)vs_build\$(Configuration)\$(PlatformTarget)\$(ProjectName).pch</PrecompiledHeaderOutputFile>
-      <PreprocessorDefinitions>LIB;COMPILE_DLL;ENABLE_PRECOMPILED_HEADERS;_ENABLE_ATOMIC_ALIGNMENT_FIX;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>LIB;COMPILE_DLL;ENABLE_PRECOMPILED_HEADERS;_ENABLE_ATOMIC_ALIGNMENT_FIX;_SCL_SECURE_NO_WARNINGS;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/Zm250 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -118,7 +118,7 @@
       <SDLCheck>true</SDLCheck>
       <PrecompiledHeaderOutputFile>$(SolutionDir)vs_build\$(Configuration)\$(PlatformTarget)\$(ProjectName).pch</PrecompiledHeaderOutputFile>
       <PrecompiledHeader>Create</PrecompiledHeader>
-      <PreprocessorDefinitions>LIB;COMPILE_DLL;ENABLE_PRECOMPILED_HEADERS;_ENABLE_ATOMIC_ALIGNMENT_FIX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>LIB;COMPILE_DLL;ENABLE_PRECOMPILED_HEADERS;_ENABLE_ATOMIC_ALIGNMENT_FIX;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/Zm250 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -136,7 +136,7 @@
       <SDLCheck>true</SDLCheck>
       <PrecompiledHeaderOutputFile>$(SolutionDir)vs_build\$(Configuration)\$(PlatformTarget)\$(ProjectName).pch</PrecompiledHeaderOutputFile>
       <PrecompiledHeader>Create</PrecompiledHeader>
-      <PreprocessorDefinitions>LIB;COMPILE_DLL;ENABLE_PRECOMPILED_HEADERS;_ENABLE_ATOMIC_ALIGNMENT_FIX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>LIB;COMPILE_DLL;ENABLE_PRECOMPILED_HEADERS;_ENABLE_ATOMIC_ALIGNMENT_FIX;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/Zm250 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -152,6 +152,7 @@
     <ClCompile Include="LogMessage.cpp" />
     <ClCompile Include="JobManager.cpp" />
     <ClCompile Include="SettingsManager.cpp" />
+    <ClCompile Include="StringExtensions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ApoapseCore.h" />
@@ -169,6 +170,7 @@
     <ClInclude Include="SettingsManager.h" />
     <ClInclude Include="ConfigVariable.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="StringExtensions.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

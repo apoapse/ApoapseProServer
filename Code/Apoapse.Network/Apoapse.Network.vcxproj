@@ -24,10 +24,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ApoapseAddress.h" />
     <ClInclude Include="ApoapseNetwork.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ApoapseAddress.cpp" />
     <ClCompile Include="ApoapseNetwork.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -17,6 +17,9 @@
     <ClCompile Include="JobManager.cpp">
       <Filter>Threading</Filter>
     </ClCompile>
+    <ClCompile Include="StringExtensions.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -60,6 +63,9 @@
     <ClInclude Include="ISettingsManager.h">
       <Filter>Settings</Filter>
     </ClInclude>
+    <ClInclude Include="StringExtensions.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Settings">
@@ -76,6 +82,9 @@
     </Filter>
     <Filter Include="DLLSystem">
       <UniqueIdentifier>{a6c3456b-7830-4068-ba9e-37af55f1aeff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{cd859c0b-b279-4625-ba59-dff4fec2b370}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

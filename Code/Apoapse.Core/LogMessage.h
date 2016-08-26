@@ -18,6 +18,8 @@ struct LogMessage
 private:
 	std::string m_logFormatedDateTime;
 	std::string GenerateLocalDateTime() const;
+	std::string GetSeverityPrefix() const;
+	void Trace() const;
 
 #ifdef WINDOWS
 	WORD GetConsoleColorBySeverity(LogSeverity) const;

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "ApoapseNetwork.h"
+#include "ApoapseAddress.h"
 
 Global* global = nullptr;
 

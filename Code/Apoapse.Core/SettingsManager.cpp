@@ -4,6 +4,7 @@
 #include "Common.h"
 #include <boost\property_tree\json_parser.hpp>
 #include <boost\algorithm\string.hpp>
+#include <boost\thread.hpp>
 
 SettingsManager::SettingsManager()
 {
@@ -99,7 +100,7 @@ template <typename U> ConfigVariable<U> SettingsManager::GetRegisteredConfigVari
 	}
 	else
 	{
-		ASSERT_MSG(false, "The config variable: " + configVarName + " is not registered");
+		ASSERT_MSG(false, "The config variable is not registered");
 		throw "The config variable: " + configVarName + " is not registered";
 	}
 }

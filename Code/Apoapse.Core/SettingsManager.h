@@ -1,7 +1,6 @@
 #pragma once
 #include "ISettingsManager.h"
 #include "ConfigVariable.h"
-//#include <vector>
 #include <map>
 #include <boost\property_tree\ptree.hpp>
 #include "Diagnostics.h"
@@ -11,7 +10,6 @@ class SettingsManager : public ISettingsManager
 {
 	std::string m_configFilePath;
 	boost::property_tree::ptree m_propertyTree;
-	//std::vector<boost::any> m_registeredConfigs;
 	std::map<std::string, boost::any> m_registeredConfigs;	// config var name, default value
 	boost::mutex m_mutex;
 

@@ -10,10 +10,16 @@
     <Filter Include="Tests\Apoapse.Core">
       <UniqueIdentifier>{15d514a7-b8e7-41ec-bb3f-6a92aedf3d8f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Tests\Apoapse.Network">
+      <UniqueIdentifier>{ee361517-7381-452b-b891-a9e190716204}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SettingsManager.cpp">
       <Filter>Tests\Apoapse.Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ApoapseAddress.cpp">
+      <Filter>Tests\Apoapse.Network</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

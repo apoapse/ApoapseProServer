@@ -4,6 +4,9 @@
 #include "LogMessage.h"
 #include <iostream>
 #include <boost\date_time.hpp>
+#ifdef WINDOWS
+#include <WinBase.h>
+#endif
 
 LogMessage::LogMessage(const string& msg, LogSeverity severity) : message(msg), logSeverity(severity)
 {
@@ -12,6 +15,10 @@ LogMessage::LogMessage(const string& msg, LogSeverity severity) : message(msg), 
 
 void LogMessage::LogToConsole() const
 {
+#ifdef DEBUG
+	Trace();
+#endif
+
 #ifdef WINDOWS
 	auto color = GetConsoleColorBySeverity(logSeverity);
 
@@ -31,29 +38,9 @@ void LogMessage::LogToConsole() const
 
 void LogMessage::LogToFile() const
 {
-	string severityPrefix = "";
-
-	switch (logSeverity)
-	{
-	case LogSeverity::debug:
-		severityPrefix = "DEBUG: ";
-		break;
-
-	case LogSeverity::warning:
-		severityPrefix = "WARNING: ";
-		break;
-
-	case LogSeverity::error:
-		severityPrefix = "ERROR: ";
-		break;
-
-	case LogSeverity::fatalError:
-		severityPrefix = "FATAL ERROR: ";
-		break;
-	}
+	string finalMsg = m_logFormatedDateTime + " - " + GetSeverityPrefix() + message;
 
 	ASSERT(global->logger);
-	string finalMsg = m_logFormatedDateTime + " - " + severityPrefix + message;
 	global->logger->WriteToLogFileRaw(std::ref(finalMsg));
 }
 
@@ -90,6 +77,26 @@ string LogMessage::GetColorBySeverity(LogSeverity severity) const
 }
 #endif
 
+string LogMessage::GetSeverityPrefix() const
+{
+	switch (logSeverity)
+	{
+	case LogSeverity::debug:
+		return "DEBUG: ";
+
+	case LogSeverity::warning:
+		return "WARNING: ";
+
+	case LogSeverity::error:
+		return "ERROR: ";
+
+	case LogSeverity::fatalError:
+		return "FATAL ERROR: ";
+	}
+
+	return "";
+}
+
 string LogMessage::GenerateLocalDateTime() const
 {
 	using boost::posix_time::ptime;
@@ -105,4 +112,13 @@ string LogMessage::GenerateLocalDateTime() const
 	stream << date << currentDate.time_of_day();
 
 	return stream.str();
+}
+
+void LogMessage::Trace() const
+{
+#ifdef WINDOWS
+	std::wostringstream os_;
+	os_ << GetSeverityPrefix().c_str() << message.c_str() << '\n';
+	OutputDebugStringW(os_.str().c_str());
+#endif
 }

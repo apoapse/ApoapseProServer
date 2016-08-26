@@ -3,8 +3,19 @@
   <ItemGroup>
     <ClInclude Include="ApoapseNetwork.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="ApoapseAddress.h">
+      <Filter>Protocol</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ApoapseNetwork.cpp" />
+    <ClCompile Include="ApoapseAddress.cpp">
+      <Filter>Protocol</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Protocol">
+      <UniqueIdentifier>{57211b54-c36f-4269-963d-6acc77d8e4e2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
