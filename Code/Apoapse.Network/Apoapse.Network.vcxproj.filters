@@ -6,16 +6,43 @@
     <ClInclude Include="ApoapseAddress.h">
       <Filter>Protocol</Filter>
     </ClInclude>
+    <ClInclude Include="TCPServer.h">
+      <Filter>Sockets</Filter>
+    </ClInclude>
+    <ClInclude Include="Test.h">
+      <Filter>Sockets</Filter>
+    </ClInclude>
+    <ClInclude Include="TCPConnection_OLD.h">
+      <Filter>Sockets</Filter>
+    </ClInclude>
+    <ClInclude Include="TCPConnection.h">
+      <Filter>Sockets</Filter>
+    </ClInclude>
+    <ClInclude Include="TestConnection.h">
+      <Filter>Protocol</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ApoapseNetwork.cpp" />
     <ClCompile Include="ApoapseAddress.cpp">
       <Filter>Protocol</Filter>
     </ClCompile>
+    <ClCompile Include="TCPServer.cpp">
+      <Filter>Sockets</Filter>
+    </ClCompile>
+    <ClCompile Include="TCPConnection.cpp">
+      <Filter>Sockets</Filter>
+    </ClCompile>
+    <ClCompile Include="TestConnection.cpp">
+      <Filter>Protocol</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Protocol">
       <UniqueIdentifier>{57211b54-c36f-4269-963d-6acc77d8e4e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sockets">
+      <UniqueIdentifier>{7418e86c-cd9b-4031-b115-505cd6a274e8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
