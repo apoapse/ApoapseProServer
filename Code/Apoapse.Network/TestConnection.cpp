@@ -27,7 +27,7 @@ bool TestConnection::OnConnectedToServer(const boost::system::error_code& error)
 	}
 	else
 	{
-		Log(error.message(), LogSeverity::error);
+		Log("TestConnection::OnConnectedToServer " + error.message(), LogSeverity::error);
 		return false;
 	}
 }
@@ -48,7 +48,7 @@ bool TestConnection::OnReceivedPacket(const boost::system::error_code& error, si
 	}
 	else
 	{
-		Log(error.message(), LogSeverity::error);
+		Log("TestConnection::OnReceivedPacket " + error.message(), LogSeverity::error);
 		return false;
 	}
 }
@@ -57,7 +57,7 @@ bool TestConnection::OnSentPacket(const boost::system::error_code& error, size_t
 {
 	if (error)
 	{
-		Log(error.message(), LogSeverity::error);
+		Log("TestConnection::OnSentPacket " + error.message(), LogSeverity::error);
 		return false;
 	}
 	else
