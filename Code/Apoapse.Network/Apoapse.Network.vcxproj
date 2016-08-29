@@ -28,16 +28,12 @@
     <ClInclude Include="ApoapseNetwork.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TCPConnection.h" />
-    <ClInclude Include="TCPConnection_OLD.h" />
     <ClInclude Include="TCPServer.h" />
-    <ClInclude Include="Test.h" />
     <ClInclude Include="TestConnection.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ApoapseAddress.cpp" />
     <ClCompile Include="ApoapseNetwork.cpp" />
-    <ClCompile Include="TCPConnection.cpp" />
-    <ClCompile Include="TCPServer.cpp" />
     <ClCompile Include="TestConnection.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

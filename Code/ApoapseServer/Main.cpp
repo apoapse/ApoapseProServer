@@ -2,8 +2,6 @@
 #include "Apoapse.Core\Common.h"
 #include "Apoapse.Core\InternalLibraryLoader.h"
 
-#include "Apoapse.Network\Test.h"
-
 Global* global = Global::CreateGlobal();
 
 int main(int argc, char* argv[])

@@ -6,32 +6,20 @@
     <ClInclude Include="ApoapseAddress.h">
       <Filter>Protocol</Filter>
     </ClInclude>
-    <ClInclude Include="TCPServer.h">
-      <Filter>Sockets</Filter>
-    </ClInclude>
-    <ClInclude Include="Test.h">
-      <Filter>Sockets</Filter>
-    </ClInclude>
-    <ClInclude Include="TCPConnection_OLD.h">
-      <Filter>Sockets</Filter>
-    </ClInclude>
     <ClInclude Include="TCPConnection.h">
       <Filter>Sockets</Filter>
     </ClInclude>
     <ClInclude Include="TestConnection.h">
       <Filter>Protocol</Filter>
     </ClInclude>
+    <ClInclude Include="TCPServer.h">
+      <Filter>Sockets</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ApoapseNetwork.cpp" />
     <ClCompile Include="ApoapseAddress.cpp">
       <Filter>Protocol</Filter>
-    </ClCompile>
-    <ClCompile Include="TCPServer.cpp">
-      <Filter>Sockets</Filter>
-    </ClCompile>
-    <ClCompile Include="TCPConnection.cpp">
-      <Filter>Sockets</Filter>
     </ClCompile>
     <ClCompile Include="TestConnection.cpp">
       <Filter>Protocol</Filter>

@@ -3,7 +3,6 @@
 #include <boost\asio.hpp>
 #include <boost\enable_shared_from_this.hpp>
 #include <boost\bind.hpp>
-#include "TCPServer.h"
 
 #define SOCKET_READ_BUFFER_SIZE 1024	// #TODO: find the most relevant value
 
@@ -30,7 +29,8 @@ public:
 	{
 	}
 
-	template<typename T_CONNECTION> static pointer Create(boost::asio::io_service& io_service)
+	template<typename T_CONNECTION>
+	static pointer Create(boost::asio::io_service& io_service)
 	{
 		return pointer(new T_CONNECTION(io_service));
 	}
@@ -82,14 +82,9 @@ private:
 			Close();
 	}
 
-	void HandleAcceptedAsync()
+	void HandleAcceptedAsync(const boost::system::error_code& error)
 	{
-		m_isConnected = true;
-
-		if (this->OnAcceptedByServer())
-			ListenIncomingData();
-		else
-			Close();
+		HandleConnectAsync(error);
 	}
 
 	void HandleReadAsync(const boost::system::error_code& error, size_t bytesTransferred)
@@ -113,7 +108,6 @@ private:
 	}
 
 protected:
-	virtual bool OnAcceptedByServer() = 0;
 	virtual bool OnConnectedToServer(const boost::system::error_code& error) = 0;
 	virtual bool OnReceivedPacket(const boost::system::error_code& error, size_t bytesTransferred) = 0;
 	virtual bool OnSentPacket(const boost::system::error_code& error, size_t bytesTransferred) = 0;
