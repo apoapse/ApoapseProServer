@@ -55,7 +55,8 @@ WORD LogMessage::GetConsoleColorBySeverity(LogSeverity severity) const
 	case LogSeverity::warning:
 		return 14;															//	Yellow
 
-	case LogSeverity::error | LogSeverity::fatalError:
+	case LogSeverity::error:
+	case LogSeverity::fatalError:
 		return FOREGROUND_RED | FOREGROUND_INTENSITY;						// Red
 
 	default:
