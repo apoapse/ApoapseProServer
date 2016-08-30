@@ -26,6 +26,7 @@ void ApoapseNetwork::Start(Global* outsideGlobalPtr)
 	//client->Connect("127.0.0.1", 55056);
 
 	io_serviceGeneral.run();
+	Log("This sould never be called", LogSeverity::error);
 }
 
 ApoapseNetwork::~ApoapseNetwork()

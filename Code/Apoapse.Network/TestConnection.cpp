@@ -22,7 +22,8 @@ bool TestConnection::OnConnectedToServer(const boost::system::error_code& error)
 {
 	if (!error)
 	{
-		Log("TestConnection::OnConnectedToServer connected to port " + std::to_string(GetEndpoint().port()));
+		Log("TestConnection::OnConnectedToServer connected to/from port " + std::to_string(GetEndpoint().port()));
+		Send(boost::asio::buffer("SEND TEST"));
 		return true;
 	}
 	else
@@ -36,11 +37,12 @@ bool TestConnection::OnReceivedPacket(const boost::system::error_code& error, si
 {
 	if (!error)
 	{
-		std::string output(m_readBuffer, m_readBuffer + sizeof(m_readBuffer));
+		std::string output(m_readBuffer, bytesTransferred);
 
 		//	Remove empty chars and C null char from the buffer
 		auto pos = output.find_first_of('\r');	//TEST ONLY
-		output.resize(pos);
+		if (pos < 10000)	// Hack, make a real check if '\r' exist or not in the future
+			output.resize(pos);
 
 		Log(output);
 

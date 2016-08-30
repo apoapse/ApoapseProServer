@@ -1,5 +1,6 @@
 #pragma once
 #include <boost\asio.hpp>
+#include <memory>
 #include "TCPConnection.h"
 #include "Diagnostics.h"
 
@@ -8,7 +9,7 @@ class TCPServer
 	using boostTCP = boost::asio::ip::tcp;
 
 	boost::asio::io_service& m_ioservice;
-	boostTCP::acceptor* m_acceptor;	// #TODO Weak/unique pointer?
+	std::unique_ptr<boostTCP::acceptor> m_acceptor;
 
 public:
 	enum Protocol
@@ -17,28 +18,32 @@ public:
 		IP_v6
 	};
 
-	TCPServer(boost::asio::io_service& io_service, const unsigned short port, const Protocol IPProtocol = IP_v4) : m_acceptor(new boostTCP::acceptor(io_service)), m_ioservice(io_service)
+	TCPServer(boost::asio::io_service& io_service, const unsigned short port, const Protocol IPProtocol = IP_v4) : m_acceptor(std::make_unique<boostTCP::acceptor>(io_service)), m_ioservice(io_service)
 	{
+		boost::system::error_code error;
 		boostTCP::endpoint endpoint;
+
 		if (IPProtocol == Protocol::IP_v4)
 			endpoint = boostTCP::endpoint(boostTCP::v4(), port);
 
 		else if (IPProtocol == Protocol::IP_v6)
 			endpoint = boostTCP::endpoint(boostTCP::v6(), port);
 
-		try
+		m_acceptor->open(endpoint.protocol(), error);
+		m_acceptor->set_option(boostTCP::acceptor::reuse_address(true));
+
+		m_acceptor->bind(endpoint, error);
+
+		if (!error)
 		{
-			m_acceptor->open(endpoint.protocol());
+			#ifdef DEBUG
+			Log(Format("%1% server started at %2%, port %3%, protocol %4%", __FUNCTION__, endpoint.address(), endpoint.port(), endpoint.protocol().protocol()), LogSeverity::debug);
+			#endif
 
-			m_acceptor->set_option(boostTCP::acceptor::reuse_address(true));
-
-			m_acceptor->bind(endpoint);
 			m_acceptor->listen();
 		}
-		catch (const boost::system::system_error& error)
-		{
+		else
 			throw error;
-		}
 	}
 
 	~TCPServer()

@@ -156,6 +156,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ApoapseCore.h" />
+    <ClInclude Include="ByteUtils.h" />
     <ClInclude Include="Diagnostics.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="InternalLibraryLoader.h" />

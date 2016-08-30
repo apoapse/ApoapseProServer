@@ -66,6 +66,9 @@
     <ClInclude Include="StringExtensions.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="ByteUtils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Settings">
