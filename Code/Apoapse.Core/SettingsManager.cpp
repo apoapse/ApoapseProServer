@@ -32,8 +32,6 @@ void SettingsManager::LoadConfigFile()
 template <typename U> void SettingsManager::InternalRegisterConfigVar(const string& configVarName, const U& defaultValue)
 {
 	boost::lock_guard<boost::mutex> lock(m_mutex);
-	//m_registeredConfigs.insert(configVarName, defaultValue);
-	//m_registeredConfigs.push_back(ConfigVariable<U>(configVarName, defaultValue));
 
 	if (!m_registeredConfigs.insert(std::make_pair(configVarName, defaultValue)).second)
 	{
@@ -54,6 +52,11 @@ void SettingsManager::RegisterConfigVar_int(const std::string& configVarName, co
 void SettingsManager::RegisterConfigVar_uint(const std::string& configVarName, const unsigned int defaultValue)
 {
 	InternalRegisterConfigVar<unsigned int>(configVarName, defaultValue);
+}
+
+void SettingsManager::RegisterConfigVar_double(const std::string& configVarName, const double defaultValue)
+{
+	InternalRegisterConfigVar<double>(configVarName, defaultValue);
 }
 
 void SettingsManager::RegisterConfigVar_bool(const std::string& configVarName, const bool defaultValue)
@@ -78,7 +81,7 @@ template <typename U> U SettingsManager::InternalReadConfigValue(const string& c
 	{
 		return m_propertyTree.get<U>(configVarName);	// #TODO What happen if the value in the config file is not of the right type?
 	}
-	catch (const boost::property_tree::ptree_error e)
+	catch (const boost::property_tree::ptree_error e)	// #TODO find a better way that do not use exceptions
 	{
 		Log("Can't find the value in the config file. Use the default value from the registered variable instead.", LogSeverity::debug);
 
@@ -118,6 +121,11 @@ int SettingsManager::ReadConfigValue_int(const string& configVarName)
 unsigned int SettingsManager::ReadConfigValue_uint(const string& configVarName)
 {
 	return InternalReadConfigValue<unsigned int>(configVarName);
+}
+
+double SettingsManager::ReadConfigValue_double(const string& configVarName)
+{
+	return InternalReadConfigValue<double>(configVarName);
 }
 
 bool SettingsManager::ReadConfigValue_bool(const string& configVarName)
