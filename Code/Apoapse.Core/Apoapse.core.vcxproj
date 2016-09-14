@@ -172,6 +172,7 @@
     <ClInclude Include="ConfigVariable.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StringExtensions.h" />
+    <ClInclude Include="Types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
