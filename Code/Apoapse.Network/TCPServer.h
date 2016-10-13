@@ -2,7 +2,7 @@
 #include <boost\asio.hpp>
 #include <memory>
 #include "TCPConnection.h"
-#include "Diagnostics.h"
+#include "Apoapse.Core\Diagnostics.h"
 
 class TCPServer
 {

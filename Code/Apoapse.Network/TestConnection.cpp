@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "TestConnection.h"
-#include "Common.h"
+#include "Apoapse.Core\Common.h"
 
 TestConnection::TestConnection(boost::asio::io_service& io_service) : TCPConnection(io_service)
 {
@@ -33,26 +33,25 @@ bool TestConnection::OnConnectedToServer(const boost::system::error_code& error)
 	}
 }
 
-bool TestConnection::OnReceivedPacket(const boost::system::error_code& error, size_t bytesTransferred)
+bool TestConnection::OnReceivedPacket(const NetMessage* packet)
 {
-	if (!error)
-	{
-		std::string output(m_readBuffer, bytesTransferred);
+	//Log(packet->DataToString());
+	/*std::string output(m_readBuffer, bytesTransferred);
 
-		//	Remove empty chars and C null char from the buffer
-		auto pos = output.find_first_of('\r');	//TEST ONLY
-		if (pos < 10000)	// Hack, make a real check if '\r' exist or not in the future
-			output.resize(pos);
+	//	Remove empty chars and C null char from the buffer
+	auto pos = output.find_first_of('\r');	//TEST ONLY
+	if (pos < 10000)	// Hack, make a real check if '\r' exist or not in the future
+		output.resize(pos);
 
-		Log(output);
+	Log(output);*/
 
-		return true;
-	}
-	else
-	{
-		Log("TestConnection::OnReceivedPacket " + error.message(), LogSeverity::error);
-		return false;
-	}
+	return true;
+}
+
+bool TestConnection::OnReadError(const boost::system::error_code& error)
+{
+	Log("TestConnection::OnReadError " + error.message(), LogSeverity::error);
+	return false;
 }
 
 bool TestConnection::OnSentPacket(const boost::system::error_code& error, size_t bytesTransferred)

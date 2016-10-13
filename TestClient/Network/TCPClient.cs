@@ -83,7 +83,7 @@ class TCPClient
             int bytesSent = m_socket.EndSend(ar);
 
             if (m_lastMessage.UseApoapseTransportLayer)
-                Debug.Assert(bytesSent == m_lastMessage.ContentData.Length + 5);
+                Debug.Assert(bytesSent == m_lastMessage.ContentData.Length + NetMessage.HEADER_SIZE_BYTES);
             else
                 Debug.Assert(bytesSent == m_lastMessage.ContentData.Length);
 
@@ -119,7 +119,9 @@ class TCPClient
             StateObject state = (StateObject)ar.AsyncState;
             int bytesRead = m_socket.EndReceive(ar);
 
-            Debug.Assert(bytesRead > 0);
+            if (bytesRead == 0)
+                return;
+
             Debug.Assert(bytesRead <= StateObject.BufferSize, "The NetMessage is too big for the buffer");
 
             for (int i = 0; i < bytesRead; i++)
@@ -133,33 +135,7 @@ class TCPClient
 
             if (m_mainwindow.IsApoapseTransportProtocolUsed())
             {
-                NetMessage.MessageType messageType = NetMessage.MessageType.unknown;
-                string typeChar = Encoding.ASCII.GetString(SubArray(data, 4, 5));
-
-                switch (typeChar)
-                {
-                    case "C":
-                        messageType = NetMessage.MessageType.command;
-                        break;
-
-                    case "M":
-                        messageType = NetMessage.MessageType.message;
-                        break;
-
-                    case "A":
-                        messageType = NetMessage.MessageType.attachement;
-                        break;
-
-                    case "I":
-                        messageType = NetMessage.MessageType.info;
-                        break;
-
-                    case "E":
-                        messageType = NetMessage.MessageType.error;
-                        break;
-                }
-
-                message = new NetMessage(SubArray(data, 5, data.Length), NetMessage.Direction.received, true, messageType);
+                message = new NetMessage(SubArray(data, 1, data.Length), NetMessage.Direction.received, true);
             }
             else
                 message = new NetMessage(data, NetMessage.Direction.received, false);

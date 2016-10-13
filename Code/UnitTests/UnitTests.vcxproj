@@ -172,6 +172,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ApoapseAddress.cpp" />
+    <ClCompile Include="ByteConverter.cpp" />
+    <ClCompile Include="NetMessage.cpp" />
     <ClCompile Include="SettingsManager.cpp" />
   </ItemGroup>
   <ItemGroup>

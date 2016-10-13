@@ -20,82 +20,25 @@ public struct NetMessage
         received
     }
 
-    public enum MessageType
-    {
-        unknown,
-        command,
-        message,
-        attachement,
-        error,
-        info
-    }
+    public const int HEADER_SIZE_BYTES = 4;
 
     public byte[] ContentData { get; private set; }
     public Direction MsgDirection { get; private set; }
-    public MessageType MsgType { get; private set; }
     public bool UseApoapseTransportLayer { get; private set; }
 
-    public NetMessage(byte[] message, Direction direction, bool useApoapseTransportLayer, MessageType messageType = MessageType.unknown)
+    public NetMessage(byte[] message, Direction direction, bool useApoapseTransportLayer)
     {
         ContentData = message;
         MsgDirection = direction;
         UseApoapseTransportLayer = useApoapseTransportLayer;
-        MsgType = messageType;
     }
 
-    public string GetReadableType()
-    {
-        switch (MsgType)
-        {
-            case MessageType.command:
-                return "command";
-
-            case MessageType.message:
-                return "message";
-
-            case MessageType.attachement:
-                return "attachement";
-
-            case MessageType.error:
-                return "error";
-
-            case MessageType.info:
-                return "info";
-
-            default:
-                return "Unknown";
-        }
-    }
-
-    private string GetTypeSignature()
-    {
-        switch (MsgType)
-        {
-            case MessageType.command:
-                return "C";
-
-            case MessageType.message:
-                return "M";
-
-            case MessageType.attachement:
-                return "A";
-
-            case MessageType.error:
-                return "E";
-
-            case MessageType.info:
-                return "I";
-
-            default:
-                return "0";
-        }
-    }
 
     public byte[] GenerateHeader()
     {
         Debug.Assert(UseApoapseTransportLayer);
 
-        return TCPClient.CombineByteArrays(BitConverter.GetBytes((UInt32)ContentData.Length), Encoding.ASCII.GetBytes(GetTypeSignature()));
+        return BitConverter.GetBytes((UInt32)ContentData.Length);
     }
 
     public static byte[] EncodeString(NetMessageEncoding encoding, string data)

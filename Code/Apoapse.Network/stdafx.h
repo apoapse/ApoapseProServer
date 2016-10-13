@@ -5,5 +5,5 @@
 #include <vector>
 
 //	INTERNAL
-#include "Platforms.h"
-#include "Common.h"
+#include "Apoapse.Core\Platforms.h"
+#include "Apoapse.Core\Common.h"

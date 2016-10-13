@@ -1,11 +1,12 @@
 #pragma once
-#include "Diagnostics.h"
+#include "Apoapse.Core\Diagnostics.h"
 #include <boost\asio.hpp>
 #include <boost\enable_shared_from_this.hpp>
 #include <boost\bind.hpp>
-#include "Common.h"
-
-#define SOCKET_READ_BUFFER_SIZE 1024	// #TODO: find the most relevant value
+#include "NetMessage.h"
+#include "TransportProtocol.h"
+#include "Apoapse.Core\Common.h"
+#include "Apoapse.Core\ByteUtils.h"
 
 class TCPConnection : public boost::enable_shared_from_this<TCPConnection>
 {
@@ -17,12 +18,16 @@ private:
 	bool m_isConnected;
 
 protected:
-	char m_readBuffer[SOCKET_READ_BUFFER_SIZE];
+	boost::array<byte, SOCKET_READ_BUFFER_SIZE> m_readContentBuffer;
+	byte m_readHeaderBuffer[TransportProtocol::headerLength];
+	boost::asio::streambuf data_;
+	bool m_isNetMessageCreated;
+	NetMessage* m_tempNetMessage;
 
 public:
 	typedef boost::shared_ptr<TCPConnection> pointer;
 
-	TCPConnection(boost::asio::io_service& io_service) : m_socket(io_service), m_isConnected(false)
+	TCPConnection(boost::asio::io_service& io_service) : m_socket(io_service), m_isConnected(false), m_isNetMessageCreated(false)
 	{
 	}
 
@@ -51,7 +56,7 @@ public:
 
 	void Send(const boost::asio::const_buffer& inputBuffer)
 	{
-		auto handler = boost::bind(&TCPConnection::HandleWriteAsync, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred);	// #TODO: declare the handler in a member var instead of creating it at each call?
+		auto handler = boost::bind(&TCPConnection::HandleWriteAsync, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred);
 		boost::asio::async_write(m_socket, boost::asio::buffer(inputBuffer), handler);	// #TODO use transport layer
 	}
 
@@ -83,7 +88,7 @@ private:
 			Log(Format("%1% connected to %2%, port %3%", __FUNCTION__, GetEndpoint().address(), GetEndpoint().port()), LogSeverity::debug);
 			#endif
 
-			ListenIncomingData();
+			ListenIncomingNewMessages();
 		}
 		else
 			Close();
@@ -98,22 +103,67 @@ private:
 		HandleConnectAsync(error);
 	}
 
-	void ListenIncomingData()
+	void ListenIncomingNewMessages()
 	{
-		auto handler = boost::bind(&TCPConnection::HandleReadAsync, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred);	// #TODO: declare the handler in a member var instead of creating it at each call?
-		m_socket.async_receive(boost::asio::buffer(m_readBuffer), handler);
+		ASSERT(IsConnected());
+
+		auto handler = boost::bind(&TCPConnection::ReadReceivedHeader, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred);
+		boost::asio::async_read(m_socket, boost::asio::buffer(m_readHeaderBuffer), boost::asio::transfer_at_least(TransportProtocol::headerLength), handler);
 	}
 
-	void HandleReadAsync(const boost::system::error_code& error, size_t bytesTransferred)
+	void ListenIncomingMessageContent()
 	{
+		auto handler = boost::bind(&TCPConnection::ReadReceivedContent, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred);
+		boost::asio::async_read(m_socket, boost::asio::buffer(m_readContentBuffer), handler);
+	}
+
+	/*void HandleReadAsync(const boost::system::error_code& error, size_t bytesTransferred)
+	{
+		if (error)
+		{
+			if (!this->OnReadError(error))
+			{
+				Close();
+				return;
+			}
+		}
+		else
+			ReadReceivedContent(bytesTransferred);
+
+		ListenIncomingMessages();	// Needed for a persistent connection
+	}*/
+
+	void ReadReceivedHeader(const boost::system::error_code& error, size_t bytesTransferred)
+	{
+		ASSERT(bytesTransferred == TransportProtocol::headerLength);	//TODO
+
 		#ifdef DEBUG
 		Log(Format("%1% received %4% bytes from %2%, port %3%", __FUNCTION__, GetEndpoint().address(), GetEndpoint().port(), bytesTransferred), LogSeverity::debug);
 		#endif
 
-		if (this->OnReceivedPacket(error, bytesTransferred))
-			ListenIncomingData();	// Needed for a persistent connection
-		else
-			Close();
+		if (error)
+		{
+			if (!this->OnReadError(error))
+			{
+				Close();
+				return;
+			}
+		}
+
+		if (m_isNetMessageCreated)
+			ASSERT(false);	//TODO
+
+		//	Read header
+		UInt32 expectedContentSize = ByteConverter::ToUInt32(m_readHeaderBuffer);
+
+//		m_tempNetMessage = new NetMessage();
+	}
+
+	void ReadReceivedContent(const boost::system::error_code& error, size_t bytesTransferred)
+	{
+		#ifdef DEBUG
+		Log(Format("%1% received %4% bytes from %2%, port %3% (%5% bytes left)", __FUNCTION__, GetEndpoint().address(), GetEndpoint().port(), bytesTransferred, -1), LogSeverity::debug);//TODO
+		#endif
 	}
 
 	void HandleWriteAsync(const boost::system::error_code& error, size_t bytesTransferred)
@@ -128,6 +178,7 @@ private:
 
 protected:
 	virtual bool OnConnectedToServer(const boost::system::error_code& error) = 0;
-	virtual bool OnReceivedPacket(const boost::system::error_code& error, size_t bytesTransferred) = 0;
+	virtual bool OnReceivedPacket(const NetMessage* packet) = 0;
+	virtual bool OnReadError(const boost::system::error_code& error) = 0;
 	virtual bool OnSentPacket(const boost::system::error_code& error, size_t bytesTransferred) = 0;
 };

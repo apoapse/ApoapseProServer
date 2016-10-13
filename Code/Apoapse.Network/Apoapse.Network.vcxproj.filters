@@ -15,6 +15,15 @@
     <ClInclude Include="TCPServer.h">
       <Filter>Sockets</Filter>
     </ClInclude>
+    <ClInclude Include="Packet_OLD.h">
+      <Filter>Sockets</Filter>
+    </ClInclude>
+    <ClInclude Include="NetMessage.h">
+      <Filter>Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="TransportProtocol.h">
+      <Filter>Protocol</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ApoapseNetwork.cpp" />
@@ -22,6 +31,9 @@
       <Filter>Protocol</Filter>
     </ClCompile>
     <ClCompile Include="TestConnection.cpp">
+      <Filter>Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="NetMessage.cpp">
       <Filter>Protocol</Filter>
     </ClCompile>
   </ItemGroup>

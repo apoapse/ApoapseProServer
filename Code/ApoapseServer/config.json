@@ -1,5 +1,14 @@
 {
   "system": {
-    "JobManager_nb_threads":  16
+    "JobManager_nb_threads": 16
+  },
+  "server": {
+    "port":  3000
+  },
+  "messages": {
+    
+  },
+  "attachments": {
+    "max_attachement_size_mb": 50.0
   }
 }

@@ -23,10 +23,6 @@ namespace TestClient
             buttonDisconnect.Visible = false;
             mainList.FullRowSelect = true;
             connectButton.Select();
-            ApoapseMessageTypeSelector.Text = "Info";
-
-            byte[] test = BitConverter.GetBytes((UInt32)9);
-            uint test2 = BitConverter.ToUInt32(test, 0);
         }
 
         private void connectButton_Click(object sender, EventArgs e)
@@ -83,7 +79,7 @@ namespace TestClient
             else
                 direction = "Received";
 
-            string[] row = { time, direction, netMessage.GetReadableType(), bytesTransfered.ToString(), netMessage.DecodeData(NetMessageEncoding.UTF8), netMessage.DecodeData(NetMessageEncoding.hex) };
+            string[] row = { time, direction, bytesTransfered.ToString(), "", netMessage.DecodeData(NetMessageEncoding.UTF8), netMessage.DecodeData(NetMessageEncoding.hex) };
 
             mainList.Items.Insert(0, new ListViewItem(row));
             mainList.Items[0].Tag = netMessage;
@@ -116,35 +112,7 @@ namespace TestClient
                 encoding = NetMessageEncoding.ASCII;
 
 
-            NetMessage.MessageType messageType = NetMessage.MessageType.unknown;
-
-            if (IsApoapseTransportProtocolUsed())
-            {
-                switch (ApoapseMessageTypeSelector.Text)
-                {
-                    case "Command":
-                        messageType = NetMessage.MessageType.command;
-                        break;
-
-                    case "Message":
-                        messageType = NetMessage.MessageType.message;
-                        break;
-
-                    case "Attachment":
-                        messageType = NetMessage.MessageType.attachement;
-                        break;
-
-                    case "Info":
-                        messageType = NetMessage.MessageType.info;
-                        break;
-
-                    case "Error":
-                        messageType = NetMessage.MessageType.error;
-                        break;
-                }
-            }
-
-            NetMessage netMessage = new NetMessage(NetMessage.EncodeString(encoding, writeTextBox.Text), NetMessage.Direction.send, useApoapseTransportProtocol.Checked, messageType);
+            NetMessage netMessage = new NetMessage(NetMessage.EncodeString(encoding, writeTextBox.Text), NetMessage.Direction.send, useApoapseTransportProtocol.Checked);
 
             m_tcpClient.Send(netMessage);
             writeTextBox.Text = string.Empty;
@@ -192,16 +160,7 @@ namespace TestClient
 
         private void useApoapseTransportProtocol_CheckedChanged(object sender, EventArgs e)
         {
-            if (useApoapseTransportProtocol.Checked)
-            {
-                ApoapseMessageTypeSelector.Enabled = true;
-                labelApoapseMessageTypeSelector.Enabled = true;
-            }
-            else
-            {
-                ApoapseMessageTypeSelector.Enabled = false;
-                labelApoapseMessageTypeSelector.Enabled = false;
-            }
+
         }
 
         public bool IsApoapseTransportProtocolUsed()

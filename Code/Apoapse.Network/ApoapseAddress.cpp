@@ -1,14 +1,16 @@
 #include "stdafx.h"
 #include "ApoapseAddress.h"
-#include "Common.h"
-#include "Platforms.h"
+#include "Apoapse.Core\Common.h"
+#include "Apoapse.Core\Platforms.h"
 #include <boost\algorithm\string.hpp>
-#include "StringExtensions.h"
+#include "Apoapse.Core\StringExtensions.h"
 #include <vector>
 
 ApoapseAddress::ApoapseAddress(const std::string& rawAddress) : m_preValidated(true), m_domain(""), m_username("")
 {
 	ASSERT_MSG(rawAddress.length() <= FULL_ADDRESS_MAX_LENGTH, "The address length is too high. This must be checked before creating the object");
+
+	// #TODO Store the adress in lowercase to avoid any problem with comparaisons. Maybe not necessary in the consutructor
 
 	if (StringExtensions::CountOccurences(rawAddress, ':') == 1)
 	{
@@ -54,5 +56,5 @@ string ApoapseAddress::GetUsername() const
 
 bool ApoapseAddress::operator== (const ApoapseAddress& otherObj)
 {
-	return (boost::iequals(otherObj.m_username, this->m_username) && boost::iequals(otherObj.m_domain, this->m_domain));
+	return (otherObj.m_username == this->m_username) && (otherObj.m_domain == this->m_domain);
 }

@@ -21,6 +21,12 @@
     <ClCompile Include="ApoapseAddress.cpp">
       <Filter>Tests\Apoapse.Network</Filter>
     </ClCompile>
+    <ClCompile Include="NetMessage.cpp">
+      <Filter>Tests\Apoapse.Network</Filter>
+    </ClCompile>
+    <ClCompile Include="ByteConverter.cpp">
+      <Filter>Tests\Apoapse.Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="test_config.json" />

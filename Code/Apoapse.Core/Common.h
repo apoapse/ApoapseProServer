@@ -1,4 +1,5 @@
 #pragma once
+#include "Types.h"
 #include "Platforms.h"
 #include "Diagnostics.h"
 

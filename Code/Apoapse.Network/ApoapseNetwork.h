@@ -1,6 +1,6 @@
 #pragma once
-#include "Common.h"
-#include "InternalLibraryLoadingAPI.h"
+#include "Apoapse.Core\Common.h"
+#include "Apoapse.Core\InternalLibraryLoadingAPI.h"
 #include <boost/config.hpp>
 
 class ApoapseNetwork : public InternalLibraryLoadingAPI
