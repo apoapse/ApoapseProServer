@@ -12,9 +12,9 @@
 #include <boost\thread.hpp>
 #include <boost\thread\mutex.hpp>
 #include <boost\atomic.hpp>
+#include <boost\asio.hpp>
 
 //	INTERNAL
-#include "Platforms.h"
 #include "Common.h"
 
 #endif // ENABLE_PRECOMPILED_HEADERS

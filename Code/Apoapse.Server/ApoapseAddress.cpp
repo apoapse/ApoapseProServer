@@ -1,9 +1,7 @@
 #include "stdafx.h"
+#include "Common.h"
 #include "ApoapseAddress.h"
-#include "Apoapse.Core\Common.h"
-#include "Apoapse.Core\Platforms.h"
 #include <boost\algorithm\string.hpp>
-#include "Apoapse.Core\StringExtensions.h"
 #include <vector>
 
 ApoapseAddress::ApoapseAddress(const std::string& rawAddress) : m_preValidated(true), m_domain(""), m_username("")
@@ -12,7 +10,7 @@ ApoapseAddress::ApoapseAddress(const std::string& rawAddress) : m_preValidated(t
 
 	// #TODO Store the adress in lowercase to avoid any problem with comparaisons. Maybe not necessary in the consutructor
 
-	if (StringExtensions::CountOccurences(rawAddress, ':') == 1)
+	/*if (StringExtensions::CountOccurences(rawAddress, ':') == 1)
 	{
 		std::vector<string> tmpVector;
 
@@ -27,7 +25,7 @@ ApoapseAddress::ApoapseAddress(const std::string& rawAddress) : m_preValidated(t
 			m_preValidated = false;
 	}
 	else
-		m_preValidated = false;
+		m_preValidated = false;*/
 }
 
 bool ApoapseAddress::IsValid() const

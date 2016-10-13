@@ -1,12 +1,11 @@
 #pragma once
-#include "Apoapse.Core\Diagnostics.h"
+#include "ByteUtils.h"
 #include <boost\asio.hpp>
 #include <boost\enable_shared_from_this.hpp>
 #include <boost\bind.hpp>
-#include "NetMessage.h"
-#include "TransportProtocol.h"
-#include "Apoapse.Core\Common.h"
-#include "Apoapse.Core\ByteUtils.h"
+
+#define SOCKET_READ_BUFFER_SIZE 1024
+#define HEADER_LENGTH 1024
 
 class TCPConnection : public boost::enable_shared_from_this<TCPConnection>
 {
@@ -18,11 +17,10 @@ private:
 	bool m_isConnected;
 
 protected:
-	boost::array<byte, SOCKET_READ_BUFFER_SIZE> m_readContentBuffer;
-	byte m_readHeaderBuffer[TransportProtocol::headerLength];
+	std::array<byte, SOCKET_READ_BUFFER_SIZE> m_readContentBuffer;
+	byte m_readHeaderBuffer[HEADER_LENGTH];
 	boost::asio::streambuf data_;
 	bool m_isNetMessageCreated;
-	NetMessage* m_tempNetMessage;
 
 public:
 	typedef boost::shared_ptr<TCPConnection> pointer;
@@ -108,7 +106,7 @@ private:
 		ASSERT(IsConnected());
 
 		auto handler = boost::bind(&TCPConnection::ReadReceivedHeader, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred);
-		boost::asio::async_read(m_socket, boost::asio::buffer(m_readHeaderBuffer), boost::asio::transfer_at_least(TransportProtocol::headerLength), handler);
+		boost::asio::async_read(m_socket, boost::asio::buffer(m_readHeaderBuffer), boost::asio::transfer_at_least(HEADER_LENGTH), handler);
 	}
 
 	void ListenIncomingMessageContent()
@@ -135,7 +133,7 @@ private:
 
 	void ReadReceivedHeader(const boost::system::error_code& error, size_t bytesTransferred)
 	{
-		ASSERT(bytesTransferred == TransportProtocol::headerLength);	//TODO
+		ASSERT(bytesTransferred == HEADER_LENGTH);	//TODO
 
 		#ifdef DEBUG
 		Log(Format("%1% received %4% bytes from %2%, port %3%", __FUNCTION__, GetEndpoint().address(), GetEndpoint().port(), bytesTransferred), LogSeverity::debug);
@@ -178,7 +176,7 @@ private:
 
 protected:
 	virtual bool OnConnectedToServer(const boost::system::error_code& error) = 0;
-	virtual bool OnReceivedPacket(const NetMessage* packet) = 0;
+	virtual bool OnReceivedPacket(/*const NetMessage* netMessage*/) = 0;
 	virtual bool OnReadError(const boost::system::error_code& error) = 0;
 	virtual bool OnSentPacket(const boost::system::error_code& error, size_t bytesTransferred) = 0;
 };

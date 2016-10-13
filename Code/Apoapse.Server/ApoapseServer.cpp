@@ -1,10 +1,10 @@
 #include "stdafx.h"
-#include "ApoapseCore.h"
+#include "ApoapseServer.h"
 #include "SettingsManager.h"
 #include "JobManager.h"
 #include "Logger.h"
 
-void ApoapseCore::Start(Global* outsideGlobalPtr)
+void ApoapseServer::Start(Global* outsideGlobalPtr)
 {
 	ASSERT(global == nullptr);
 
@@ -20,7 +20,6 @@ void ApoapseCore::Start(Global* outsideGlobalPtr)
 	{
 		FatalError("Unable to load the config file config.json");
 	}
-	
 
 	global->jobManager = new JobManager();
 	global->jobManager->Init();
@@ -28,10 +27,10 @@ void ApoapseCore::Start(Global* outsideGlobalPtr)
 	global->logger = new Logger();
 	global->logger->Init("log.txt");
 
-	Log("ApoapseCore started");
+	Log("Apoapse.Server started");
 }
 
-ApoapseCore::~ApoapseCore()
+ApoapseServer::~ApoapseServer()
 {
 
 }

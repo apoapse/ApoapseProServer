@@ -13,9 +13,9 @@ using string = std::string;
 
 struct Global
 {
-	ISettingsManager* settings;
-	IJobManager* jobManager;
-	ILogger* logger;
+	ISettingsManager* settings = nullptr;
+	IJobManager* jobManager = nullptr;
+	ILogger* logger = nullptr;
 
 	Global() : settings(nullptr), jobManager(nullptr), logger(nullptr)
 	{

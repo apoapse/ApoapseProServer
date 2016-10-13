@@ -1,6 +1,6 @@
 #include "stdafx.h"
+#include "Common.h"
 #include "TestConnection.h"
-#include "Apoapse.Core\Common.h"
 
 TestConnection::TestConnection(boost::asio::io_service& io_service) : TCPConnection(io_service)
 {
@@ -33,7 +33,7 @@ bool TestConnection::OnConnectedToServer(const boost::system::error_code& error)
 	}
 }
 
-bool TestConnection::OnReceivedPacket(const NetMessage* packet)
+bool TestConnection::OnReceivedPacket(/*const NetMessage* packet*/)
 {
 	//Log(packet->DataToString());
 	/*std::string output(m_readBuffer, bytesTransferred);

@@ -20,8 +20,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FFED83BA-CAA4-4F9C-943A-157B4418672A}</ProjectGuid>
-    <RootNamespace>ApoapseServer</RootNamespace>
+    <RootNamespace>ServerConsole</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <ProjectName>ServerConsole</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -176,11 +177,8 @@
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Apoapse.core\Apoapse.core.vcxproj">
+    <ProjectReference Include="..\Apoapse.Server\Apoapse.Server.vcxproj">
       <Project>{4715fbc8-8f7a-45a4-9df6-5eff6899418c}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\Apoapse.Network\Apoapse.Network.vcxproj">
-      <Project>{450a8f4d-aa8f-4433-89d9-27859c711718}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

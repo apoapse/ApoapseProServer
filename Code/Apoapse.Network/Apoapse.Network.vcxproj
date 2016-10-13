@@ -24,21 +24,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ApoapseAddress.h" />
     <ClInclude Include="ApoapseNetwork.h" />
-    <ClInclude Include="Packet_OLD.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="TCPConnection.h" />
-    <ClInclude Include="TCPServer.h" />
-    <ClInclude Include="TestConnection.h" />
     <ClInclude Include="NetMessage.h" />
     <ClInclude Include="TransportProtocol.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ApoapseAddress.cpp" />
     <ClCompile Include="ApoapseNetwork.cpp" />
     <ClCompile Include="NetMessage.cpp" />
-    <ClCompile Include="TestConnection.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{450A8F4D-AA8F-4433-89D9-27859C711718}</ProjectGuid>

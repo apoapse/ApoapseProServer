@@ -10,7 +10,7 @@ public:
 private:
 	bool OnAcceptedByServer();
 	bool OnConnectedToServer(const boost::system::error_code& error);
-	bool OnReceivedPacket(const NetMessage* packet);
+	bool OnReceivedPacket(/*const NetMessage* netMessage*/);
 	bool OnReadError(const boost::system::error_code& error);
 	bool OnSentPacket(const boost::system::error_code& error, size_t bytesTransferred);
 };

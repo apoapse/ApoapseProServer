@@ -20,9 +20,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4715FBC8-8F7A-45A4-9DF6-5EFF6899418C}</ProjectGuid>
-    <RootNamespace>Apoapsecore</RootNamespace>
+    <RootNamespace>ApoapseServer</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
-    <ProjectName>Apoapse.Core</ProjectName>
+    <ProjectName>Apoapse.Server</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -146,7 +146,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ApoapseCore.cpp" />
+    <ClCompile Include="ApoapseAddress.cpp" />
+    <ClCompile Include="TCPConnection.cpp" />
+    <ClCompile Include="TestConnection.cpp" />
+    <ClCompile Include="ApoapseServer.cpp" />
     <ClCompile Include="Common.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="LogMessage.cpp" />
@@ -155,7 +158,11 @@
     <ClCompile Include="StringExtensions.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ApoapseCore.h" />
+    <ClInclude Include="ApoapseAddress.h" />
+    <ClInclude Include="TCPConnection.h" />
+    <ClInclude Include="TCPServer.h" />
+    <ClInclude Include="TestConnection.h" />
+    <ClInclude Include="ApoapseServer.h" />
     <ClInclude Include="ByteUtils.h" />
     <ClInclude Include="Diagnostics.h" />
     <ClInclude Include="Common.h" />

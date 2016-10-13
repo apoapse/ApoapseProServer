@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="SettingsManager.cpp">
+      <Filter>ServerSystems\Settings</Filter>
+    </ClCompile>
+    <ClCompile Include="LogMessage.cpp">
+      <Filter>ServerSystems\Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>ServerSystems\Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="Common.cpp">
+      <Filter>Globals</Filter>
+    </ClCompile>
+    <ClCompile Include="JobManager.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="ApoapseServer.cpp" />
+    <ClCompile Include="TestConnection.cpp">
+      <Filter>Network\Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="StringExtensions.cpp">
+      <Filter>Algorithms</Filter>
+    </ClCompile>
+    <ClCompile Include="ApoapseAddress.cpp">
+      <Filter>Network\Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="TCPConnection.cpp">
+      <Filter>Network\Socket</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="SettingsManager.h">
+      <Filter>ServerSystems\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="ConfigVariable.h">
+      <Filter>ServerSystems\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="LogMessage.h">
+      <Filter>ServerSystems\Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>ServerSystems\Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="Platforms.h">
+      <Filter>Globals</Filter>
+    </ClInclude>
+    <ClInclude Include="Diagnostics.h">
+      <Filter>Globals</Filter>
+    </ClInclude>
+    <ClInclude Include="Common.h">
+      <Filter>Globals</Filter>
+    </ClInclude>
+    <ClInclude Include="ILogger.h">
+      <Filter>ServerSystems\Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="InternalLibraryLoader.h">
+      <Filter>ServerSystems\DLLSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="InternalLibraryLoadingAPI.h">
+      <Filter>ServerSystems\DLLSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="JobManager.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="IJobManager.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="ISettingsManager.h">
+      <Filter>ServerSystems\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="Types.h">
+      <Filter>Globals</Filter>
+    </ClInclude>
+    <ClInclude Include="ApoapseServer.h" />
+    <ClInclude Include="TestConnection.h">
+      <Filter>Network\Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="TCPServer.h">
+      <Filter>Network\Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="TCPConnection.h">
+      <Filter>Network\Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="ByteUtils.h">
+      <Filter>Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="StringExtensions.h">
+      <Filter>Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="ApoapseAddress.h">
+      <Filter>Network\Protocol</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Threading">
+      <UniqueIdentifier>{e91895e4-7eec-4911-b3b5-a556e2ed5dc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network">
+      <UniqueIdentifier>{5791bc64-e0b8-4578-bdc2-b6b21931d54c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\Protocol">
+      <UniqueIdentifier>{fd82e11e-cfd2-4327-9522-18e468439811}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\Socket">
+      <UniqueIdentifier>{b306046f-3d26-4f7d-8c72-b59ce52f80e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Algorithms">
+      <UniqueIdentifier>{3c2daeed-824c-4470-9a30-dada018c5c2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ServerSystems">
+      <UniqueIdentifier>{4716473c-6be3-45c2-a84c-910b50ec48cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ServerSystems\DLLSystem">
+      <UniqueIdentifier>{a6c3456b-7830-4068-ba9e-37af55f1aeff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ServerSystems\Logger">
+      <UniqueIdentifier>{68b93324-54aa-4c97-b8b9-a3c4f61a1f6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ServerSystems\Settings">
+      <UniqueIdentifier>{2368b359-b726-4631-aac2-d992fc5a0c20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Globals">
+      <UniqueIdentifier>{105bdf6a-270b-416e-bfd9-2661ab7b7e17}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

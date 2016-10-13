@@ -3,21 +3,6 @@
   <ItemGroup>
     <ClInclude Include="ApoapseNetwork.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="ApoapseAddress.h">
-      <Filter>Protocol</Filter>
-    </ClInclude>
-    <ClInclude Include="TCPConnection.h">
-      <Filter>Sockets</Filter>
-    </ClInclude>
-    <ClInclude Include="TestConnection.h">
-      <Filter>Protocol</Filter>
-    </ClInclude>
-    <ClInclude Include="TCPServer.h">
-      <Filter>Sockets</Filter>
-    </ClInclude>
-    <ClInclude Include="Packet_OLD.h">
-      <Filter>Sockets</Filter>
-    </ClInclude>
     <ClInclude Include="NetMessage.h">
       <Filter>Protocol</Filter>
     </ClInclude>
@@ -27,12 +12,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ApoapseNetwork.cpp" />
-    <ClCompile Include="ApoapseAddress.cpp">
-      <Filter>Protocol</Filter>
-    </ClCompile>
-    <ClCompile Include="TestConnection.cpp">
-      <Filter>Protocol</Filter>
-    </ClCompile>
     <ClCompile Include="NetMessage.cpp">
       <Filter>Protocol</Filter>
     </ClCompile>
@@ -40,9 +19,6 @@
   <ItemGroup>
     <Filter Include="Protocol">
       <UniqueIdentifier>{57211b54-c36f-4269-963d-6acc77d8e4e2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sockets">
-      <UniqueIdentifier>{7418e86c-cd9b-4031-b115-505cd6a274e8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

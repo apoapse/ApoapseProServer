@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Platforms.h"
+/*#include "Platforms.h"
 #include "StringExtensions.h"
 #include <boost\algorithm\string.hpp>
 
@@ -23,4 +23,4 @@ inline std::vector<std::string> StringExtensions::RegexMatchAll(const std::regex
 	std::vector<std::string> output(std::sregex_token_iterator(inputText.begin(), inputText.end(), regexPattern), std::sregex_token_iterator());
 
 	return output;
-}
+}*/
