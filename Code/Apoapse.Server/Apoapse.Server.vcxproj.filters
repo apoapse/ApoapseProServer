@@ -29,6 +29,9 @@
     <ClCompile Include="TCPConnection.cpp">
       <Filter>Network\Socket</Filter>
     </ClCompile>
+    <ClCompile Include="UnitTestsSystem.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -93,6 +96,15 @@
     <ClInclude Include="ApoapseAddress.h">
       <Filter>Network\Protocol</Filter>
     </ClInclude>
+    <ClInclude Include="UnitTestsSystem.h">
+      <Filter>Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="UT_SettingsManager.h">
+      <Filter>Tests\UnitTests</Filter>
+    </ClInclude>
+    <ClInclude Include="UT_ByteConverter.h">
+      <Filter>Tests\UnitTests</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Threading">
@@ -125,5 +137,16 @@
     <Filter Include="Globals">
       <UniqueIdentifier>{105bdf6a-270b-416e-bfd9-2661ab7b7e17}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Tests">
+      <UniqueIdentifier>{9b145a4b-2d46-4070-a36d-d4dd9094f1c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests\UnitTests">
+      <UniqueIdentifier>{16306175-e663-4011-a66b-219789664755}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="test_config.json">
+      <Filter>Tests\UnitTests</Filter>
+    </None>
   </ItemGroup>
 </Project>

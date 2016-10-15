@@ -6,9 +6,11 @@
 
 Global* global = Global::CreateGlobal();
 
-int main(int argc, char* argv[])
+int main(int argcout, char* argv[])
 {
 	InternalLibraryLoader::LoadInternalLibrary(global, "Apoapse.Server");
+
+	//Log(string(argv[0]));
 
 	string inputstr;
 	getline(std::cin, inputstr);

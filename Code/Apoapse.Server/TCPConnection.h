@@ -29,7 +29,7 @@ public:
 	{
 	}
 
-	~TCPConnection()
+	virtual ~TCPConnection()
 	{
 	}
 

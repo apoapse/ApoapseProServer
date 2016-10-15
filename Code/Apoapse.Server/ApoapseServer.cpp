@@ -4,8 +4,17 @@
 #include "JobManager.h"
 #include "Logger.h"
 
+#ifdef UNIT_TESTS
+#include "UnitTestsSystem.h"
+#endif // UNIT_TESTS
+
 void ApoapseServer::Start(Global* outsideGlobalPtr)
 {
+#ifdef UNIT_TESTS
+	UnitTestsSystem::RegisterUnitTests();
+	UnitTestsSystem::RunTests();
+#endif // UNIT_TESTS
+
 	ASSERT(global == nullptr);
 
 	global = outsideGlobalPtr;

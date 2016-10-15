@@ -5,7 +5,7 @@
 
 Global* global = nullptr;
 
-inline void Log(const string& msg, const LogSeverity severity)
+void Log(const string& msg, const LogSeverity severity)
 {
 	if (global && global->logger)
 		global->logger->Log(msg, severity);
@@ -16,7 +16,7 @@ inline void Log(const string& msg, const LogSeverity severity)
 	}
 }
 
-inline void FatalError(const string & msg)
+void FatalError(const string & msg)
 {
 	if (global && global->logger)
 		global->logger->Log(msg, LogSeverity::fatalError, false);

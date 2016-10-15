@@ -23,9 +23,9 @@ private:
 
 public:
 	UNIT_TESTS_DLL_API TestsManager();
-	~TestsManager();
+	virtual UNIT_TESTS_DLL_API ~TestsManager();
 
-	UNIT_TESTS_DLL_API void StartTests(const char* testsPath = "");
+	UNIT_TESTS_DLL_API void RunTests(const char* testsPath = "");
 	UNIT_TESTS_DLL_API void RegisterTest(const UnitTest* test);
 
 private:

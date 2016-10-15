@@ -10,7 +10,7 @@ class JobManager : public IJobManager
 {
 public:
 	JobManager();
-	~JobManager();
+	virtual ~JobManager();
 	void Init();
 
 	void Push(LambdaFunction callback);

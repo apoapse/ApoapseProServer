@@ -71,15 +71,21 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>C:\Program Files\boost\boost_1_61_0;$(IncludePath)</IncludePath>
+    <IntDir>$(SolutionDir)vs_build\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>C:\Program Files\boost\boost_1_61_0;$(IncludePath)</IncludePath>
+    <IntDir>$(SolutionDir)vs_build\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>C:\Program Files\boost\boost_1_61_0;$(IncludePath)</IncludePath>
+    <IntDir>$(SolutionDir)vs_build\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>C:\Program Files\boost\boost_1_61_0;$(IncludePath)</IncludePath>
+    <IntDir>$(SolutionDir)vs_build\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -88,8 +94,9 @@
       <SDLCheck>true</SDLCheck>
       <PrecompiledHeader>Create</PrecompiledHeader>
       <PrecompiledHeaderOutputFile>$(SolutionDir)vs_build\$(Configuration)\$(PlatformTarget)\$(ProjectName).pch</PrecompiledHeaderOutputFile>
-      <PreprocessorDefinitions>LIB;COMPILE_DLL;ENABLE_PRECOMPILED_HEADERS;_ENABLE_ATOMIC_ALIGNMENT_FIX;_SCL_SECURE_NO_WARNINGS;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>LIB;COMPILE_DLL;ENABLE_PRECOMPILED_HEADERS;_ENABLE_ATOMIC_ALIGNMENT_FIX;_SCL_SECURE_NO_WARNINGS;_WIN32_WINNT=0x0501;DEBUG;UNIT_TESTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/Zm250 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Code\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>C:\Program Files\boost\boost_1_61_0\lib64-msvc-14.0;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -102,8 +109,9 @@
       <SDLCheck>true</SDLCheck>
       <PrecompiledHeader>Create</PrecompiledHeader>
       <PrecompiledHeaderOutputFile>$(SolutionDir)vs_build\$(Configuration)\$(PlatformTarget)\$(ProjectName).pch</PrecompiledHeaderOutputFile>
-      <PreprocessorDefinitions>LIB;COMPILE_DLL;ENABLE_PRECOMPILED_HEADERS;_ENABLE_ATOMIC_ALIGNMENT_FIX;_SCL_SECURE_NO_WARNINGS;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>LIB;COMPILE_DLL;ENABLE_PRECOMPILED_HEADERS;_ENABLE_ATOMIC_ALIGNMENT_FIX;_SCL_SECURE_NO_WARNINGS;_WIN32_WINNT=0x0501;DEBUG;UNIT_TESTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/Zm250 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Code\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>C:\Program Files\boost\boost_1_61_0\lib64-msvc-14.0;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -118,8 +126,9 @@
       <SDLCheck>true</SDLCheck>
       <PrecompiledHeaderOutputFile>$(SolutionDir)vs_build\$(Configuration)\$(PlatformTarget)\$(ProjectName).pch</PrecompiledHeaderOutputFile>
       <PrecompiledHeader>Create</PrecompiledHeader>
-      <PreprocessorDefinitions>LIB;COMPILE_DLL;ENABLE_PRECOMPILED_HEADERS;_ENABLE_ATOMIC_ALIGNMENT_FIX;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>LIB;COMPILE_DLL;ENABLE_PRECOMPILED_HEADERS;_ENABLE_ATOMIC_ALIGNMENT_FIX;_SCL_SECURE_NO_WARNINGS;_WIN32_WINNT=0x0501;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/Zm250 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Code\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -136,8 +145,9 @@
       <SDLCheck>true</SDLCheck>
       <PrecompiledHeaderOutputFile>$(SolutionDir)vs_build\$(Configuration)\$(PlatformTarget)\$(ProjectName).pch</PrecompiledHeaderOutputFile>
       <PrecompiledHeader>Create</PrecompiledHeader>
-      <PreprocessorDefinitions>LIB;COMPILE_DLL;ENABLE_PRECOMPILED_HEADERS;_ENABLE_ATOMIC_ALIGNMENT_FIX;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>LIB;COMPILE_DLL;ENABLE_PRECOMPILED_HEADERS;_ENABLE_ATOMIC_ALIGNMENT_FIX;_SCL_SECURE_NO_WARNINGS;_WIN32_WINNT=0x0501;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/Zm250 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Code\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -156,9 +166,11 @@
     <ClCompile Include="JobManager.cpp" />
     <ClCompile Include="SettingsManager.cpp" />
     <ClCompile Include="StringExtensions.cpp" />
+    <ClCompile Include="UnitTestsSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ApoapseAddress.h" />
+    <ClInclude Include="UT_ByteConverter.h" />
     <ClInclude Include="TCPConnection.h" />
     <ClInclude Include="TCPServer.h" />
     <ClInclude Include="TestConnection.h" />
@@ -180,6 +192,21 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StringExtensions.h" />
     <ClInclude Include="Types.h" />
+    <ClInclude Include="UnitTestsSystem.h" />
+    <ClInclude Include="UT_SettingsManager.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Apoapse.UnitTest\Apoapse.UnitTest.vcxproj">
+      <Project>{0eaaf367-eac1-435b-a90e-2e7c5ab666b9}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="test_config.json" />
+  </ItemGroup>
+    <ItemGroup>
+    <Content Include="test_config.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -7,14 +7,14 @@ struct ApoapseAddress
 
 	ApoapseAddress(const std::string& rawAddress);
 
-	DLL_API bool IsValid() const;
-	DLL_API std::string GetFullAddress() const;
-	DLL_API std::string GetDomain() const;
-	DLL_API std::string GetUsername() const;
+	bool IsValid() const;
+	std::string GetFullAddress() const;
+	std::string GetDomain() const;
+	std::string GetUsername() const;
 
-	DLL_API bool operator== (const ApoapseAddress& otherObj);
+	bool operator== (const ApoapseAddress& otherObj);
 
-	DLL_API static ApoapseAddress* Create(const std::string& rawAddress)
+	static ApoapseAddress* Create(const std::string& rawAddress)
 	{
 		return new ApoapseAddress(rawAddress);
 	}

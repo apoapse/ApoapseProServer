@@ -3,22 +3,23 @@
 #include <functional>
 #include <exception>
 
-#define UNIT_TEST(_name)	testsManager->RegisterTest(new UnitTest(_name, [] {
-#define UNIT_TEST_END	}));
+#define UNIT_TEST(_name)	testsManager->RegisterTest(new UnitTest(_name, []() -> void
+#define UNIT_TEST_END	));
 
+class SuccessException : public std::exception {};
 class FailException : public std::exception {
-	const char* m_errorMsg;
+	std::string m_errorMsgStr;
 public:
-	FailException(const char* msg = "") : m_errorMsg(msg)
+	FailException(const char* msg = "")
 	{
+		m_errorMsgStr = std::string(msg);
 	}
 
 	const char* what() const
 	{
-		return m_errorMsg;
+		return m_errorMsgStr.c_str();
 	}
 };
-class SuccessException : public std::exception {};
 
 class UnitTest
 {
@@ -26,14 +27,19 @@ class UnitTest
 	typedef std::function<void()> lamdba;
 
 	lamdba m_testCode;
-	const char* fullName;
+	const char* m_fullName;
 
 public:
-	UnitTest(const char* fullName, lamdba code) : fullName(fullName), m_testCode(code)
+	UnitTest(const char* fullName, lamdba code) : m_fullName(fullName), m_testCode(code)
 	{
 	}
 
-	bool Execute(char*& returnErrorMsg) const
+	virtual ~UnitTest()
+	{
+
+	}
+
+	bool Execute(std::string& returnErrorMsg) const
 	{
 		try
 		{
@@ -46,14 +52,19 @@ public:
 		}
 		catch (const FailException& e)
 		{
-			returnErrorMsg = const_cast<char*>(e.what());
+			returnErrorMsg = std::string(e.what());
 			return false;
 		}
+		catch (...)
+		{
+		}
+
+		return false;
 	}
 
 	const char* GetFullName() const
 	{
-		return fullName;
+		return m_fullName;
 	}
 
 	static void Fail(const char* msg = "")

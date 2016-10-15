@@ -14,21 +14,33 @@ TestsManager::~TestsManager()
 		delete m_registeredUnitTests.at(i);
 }
 
-void TestsManager::StartTests(const char* testsPath)	// #TODO support url type address to trigger specific tests or group of tests
+void TestsManager::RunTests(const char* testsPath)	// #TODO support url type address to trigger specific tests or group of tests
 {
-	Log("EXECUTING " + std::to_string(m_registeredUnitTests.size()) + " UNIT TESTS...");
+	int successCount = 0;
+	int errorsCount = 0;
+	int toExecuteTestsCount = (int)m_registeredUnitTests.size();
+
+	Log("EXECUTING " + std::to_string(toExecuteTestsCount) + " UNIT TESTS...");
 
 	for (size_t i = 0; i < m_registeredUnitTests.size(); i++)
 	{
-		char* errorMsg = "";
-		auto unitTest = m_registeredUnitTests.at(i);
-		const bool testResult = unitTest->Execute(errorMsg);
+		string errorMsg = "";
+		const UnitTest* unitTest = m_registeredUnitTests.at(i);
+		bool testResult = unitTest->Execute(errorMsg);
 
 		if (testResult)
+		{
 			Log("TEST " + std::string(unitTest->GetFullName()) + " -> SUCCESS", ConsoleColors::green);
+			++successCount;
+		}
 		else
-			Log("TEST " + std::string(unitTest->GetFullName()) + " -> ERROR " + string(errorMsg), ConsoleColors::red);
+		{
+			Log("TEST " + std::string(unitTest->GetFullName()) + " -> FAILURE " + errorMsg, ConsoleColors::red);
+			++errorsCount;
+		}
 	}
+
+	Log("EXECUTED " + std::to_string(toExecuteTestsCount) + " UNIT TESTS. " + std::to_string(successCount) + " successful, " + std::to_string(errorsCount) + " failed");
 }
 
 void TestsManager::RegisterTest(const UnitTest* test)

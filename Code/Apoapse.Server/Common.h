@@ -3,9 +3,7 @@
 #include "Platforms.h"
 #include "Diagnostics.h"
 
-#include <string>
 #include <boost/format.hpp>
-using string = std::string;
 
 #include "ISettingsManager.h"
 #include "IJobManager.h"
@@ -17,7 +15,7 @@ struct Global
 	IJobManager* jobManager = nullptr;
 	ILogger* logger = nullptr;
 
-	Global() : settings(nullptr), jobManager(nullptr), logger(nullptr)
+	Global()
 	{
 	}
 
@@ -28,8 +26,8 @@ struct Global
 };
 extern Global* global;
 
-inline DLL_API void Log(const string& msg, const LogSeverity severity = LogSeverity::normal);
-inline DLL_API void FatalError(const string& msg);
+DLL_API void Log(const string& msg, const LogSeverity severity = LogSeverity::normal);
+DLL_API void FatalError(const string& msg);
 
 template<typename... Arguments>
 string Format(const string& inputStr, Arguments&&... args)

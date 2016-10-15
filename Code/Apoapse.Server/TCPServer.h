@@ -46,7 +46,7 @@ public:
 			throw error;
 	}
 
-	~TCPServer()
+	virtual ~TCPServer()
 	{
 	}
 

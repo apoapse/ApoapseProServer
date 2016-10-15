@@ -7,7 +7,7 @@
 struct LogMessage
 {
 	LogMessage(const std::string& msg, LogSeverity severity);
-	~LogMessage() {}
+	virtual ~LogMessage() {}
 
 	const std::string message;
 	const LogSeverity logSeverity;
