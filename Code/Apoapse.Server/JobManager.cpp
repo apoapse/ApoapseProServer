@@ -4,7 +4,6 @@
 
 JobManager::JobManager() : m_tasksInQueueCount(0), m_queueCapacity(0)
 {
-	global->settings->RegisterConfigVar_uint("system.JobManager_nb_threads", 16);
 }
 
 void JobManager::Init()

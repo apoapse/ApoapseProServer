@@ -23,6 +23,9 @@ namespace TestClient
             buttonDisconnect.Visible = false;
             mainList.FullRowSelect = true;
             connectButton.Select();
+
+            //UInt32 test = 29626497;
+            //byte[] zd = BitConverter.GetBytes(test);
         }
 
         private void connectButton_Click(object sender, EventArgs e)

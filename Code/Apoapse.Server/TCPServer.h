@@ -2,7 +2,6 @@
 #include <boost\asio.hpp>
 #include <memory>
 #include "TCPConnection.h"
-#include "Apoapse.Core\Diagnostics.h"
 
 class TCPServer
 {
@@ -18,42 +17,10 @@ public:
 		IP_v6
 	};
 
-	TCPServer(boost::asio::io_service& io_service, const unsigned short port, const Protocol IPProtocol = IP_v4) : m_acceptor(std::make_unique<boostTCP::acceptor>(io_service)), m_ioservice(io_service)
-	{
-		boost::system::error_code error;
-		boostTCP::endpoint endpoint;
+	TCPServer(boost::asio::io_service& io_service, const UInt16 port, const Protocol IPProtocol = IP_v4);
+	virtual ~TCPServer();
 
-		if (IPProtocol == Protocol::IP_v4)
-			endpoint = boostTCP::endpoint(boostTCP::v4(), port);
-
-		else if (IPProtocol == Protocol::IP_v6)
-			endpoint = boostTCP::endpoint(boostTCP::v6(), port);
-
-		m_acceptor->open(endpoint.protocol(), error);
-		m_acceptor->set_option(boostTCP::acceptor::reuse_address(true));
-
-		m_acceptor->bind(endpoint, error);
-
-		if (!error)
-		{
-			#ifdef DEBUG
-			Log(Format("%1% server started at %2%, port %3%, protocol %4%", __FUNCTION__, endpoint.address(), endpoint.port(), endpoint.protocol().protocol()), LogSeverity::debug);
-			#endif
-
-			m_acceptor->listen();
-		}
-		else
-			throw error;
-	}
-
-	virtual ~TCPServer()
-	{
-	}
-
-	void Close()
-	{
-		m_acceptor->close();
-	}
+	void Close();
 
 	template <typename T_CONNECTION>
 	void StartAccept()

@@ -94,7 +94,7 @@
       <SDLCheck>true</SDLCheck>
       <PrecompiledHeader>Create</PrecompiledHeader>
       <PrecompiledHeaderOutputFile>$(SolutionDir)vs_build\$(Configuration)\$(PlatformTarget)\$(ProjectName).pch</PrecompiledHeaderOutputFile>
-      <PreprocessorDefinitions>LIB;COMPILE_DLL;ENABLE_PRECOMPILED_HEADERS;_ENABLE_ATOMIC_ALIGNMENT_FIX;_SCL_SECURE_NO_WARNINGS;_WIN32_WINNT=0x0501;DEBUG;UNIT_TESTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>LIB;COMPILE_DLL;ENABLE_PRECOMPILED_HEADERS;_ENABLE_ATOMIC_ALIGNMENT_FIX;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_WIN32_WINNT=0x0501;DEBUG;UNIT_TESTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/Zm250 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalIncludeDirectories>$(SolutionDir)Code\</AdditionalIncludeDirectories>
     </ClCompile>
@@ -109,7 +109,7 @@
       <SDLCheck>true</SDLCheck>
       <PrecompiledHeader>Create</PrecompiledHeader>
       <PrecompiledHeaderOutputFile>$(SolutionDir)vs_build\$(Configuration)\$(PlatformTarget)\$(ProjectName).pch</PrecompiledHeaderOutputFile>
-      <PreprocessorDefinitions>LIB;COMPILE_DLL;ENABLE_PRECOMPILED_HEADERS;_ENABLE_ATOMIC_ALIGNMENT_FIX;_SCL_SECURE_NO_WARNINGS;_WIN32_WINNT=0x0501;DEBUG;UNIT_TESTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>LIB;COMPILE_DLL;ENABLE_PRECOMPILED_HEADERS;_ENABLE_ATOMIC_ALIGNMENT_FIX;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_WIN32_WINNT=0x0501;DEBUG;UNIT_TESTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/Zm250 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalIncludeDirectories>$(SolutionDir)Code\</AdditionalIncludeDirectories>
     </ClCompile>
@@ -157,7 +157,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ApoapseAddress.cpp" />
+    <ClCompile Include="ConfigVars.cpp" />
+    <ClCompile Include="NetMessage.cpp" />
     <ClCompile Include="TCPConnection.cpp" />
+    <ClCompile Include="TCPServer.cpp" />
     <ClCompile Include="TestConnection.cpp" />
     <ClCompile Include="ApoapseServer.cpp" />
     <ClCompile Include="Common.cpp" />
@@ -170,6 +173,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ApoapseAddress.h" />
+    <ClInclude Include="ConfigVars.h" />
+    <ClInclude Include="NetMessage.h" />
     <ClInclude Include="UT_ByteConverter.h" />
     <ClInclude Include="TCPConnection.h" />
     <ClInclude Include="TCPServer.h" />
@@ -193,6 +198,7 @@
     <ClInclude Include="StringExtensions.h" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="UnitTestsSystem.h" />
+    <ClInclude Include="UT_NetMessage.h" />
     <ClInclude Include="UT_SettingsManager.h" />
   </ItemGroup>
   <ItemGroup>
@@ -203,7 +209,7 @@
   <ItemGroup>
     <None Include="test_config.json" />
   </ItemGroup>
-    <ItemGroup>
+  <ItemGroup>
     <Content Include="test_config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

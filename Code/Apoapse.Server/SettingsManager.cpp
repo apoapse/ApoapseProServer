@@ -35,7 +35,7 @@ template <typename U> void SettingsManager::InternalRegisterConfigVar(const stri
 
 	if (!m_registeredConfigs.insert(std::make_pair(configVarName, defaultValue)).second)
 	{
-		Log("SettingsManager::InternalRegisterConfigVar item " + configVarName + " is already registered", LogSeverity::warning);
+		Log(Format("%1% config variable %2% is already registered", __FUNCTION__, configVarName), LogSeverity::warning);
 	}
 }
 

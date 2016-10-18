@@ -23,14 +23,21 @@
     <ClCompile Include="StringExtensions.cpp">
       <Filter>Algorithms</Filter>
     </ClCompile>
-    <ClCompile Include="ApoapseAddress.cpp">
-      <Filter>Network\Protocol</Filter>
-    </ClCompile>
     <ClCompile Include="TCPConnection.cpp">
       <Filter>Network\Socket</Filter>
     </ClCompile>
     <ClCompile Include="UnitTestsSystem.cpp">
       <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="NetMessage.cpp">
+      <Filter>Network\Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="ApoapseAddress.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="ConfigVars.cpp" />
+    <ClCompile Include="TCPServer.cpp">
+      <Filter>Network\Socket</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -93,9 +100,6 @@
     <ClInclude Include="StringExtensions.h">
       <Filter>Algorithms</Filter>
     </ClInclude>
-    <ClInclude Include="ApoapseAddress.h">
-      <Filter>Network\Protocol</Filter>
-    </ClInclude>
     <ClInclude Include="UnitTestsSystem.h">
       <Filter>Tests</Filter>
     </ClInclude>
@@ -103,6 +107,16 @@
       <Filter>Tests\UnitTests</Filter>
     </ClInclude>
     <ClInclude Include="UT_ByteConverter.h">
+      <Filter>Tests\UnitTests</Filter>
+    </ClInclude>
+    <ClInclude Include="NetMessage.h">
+      <Filter>Network\Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="ApoapseAddress.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="ConfigVars.h" />
+    <ClInclude Include="UT_NetMessage.h">
       <Filter>Tests\UnitTests</Filter>
     </ClInclude>
   </ItemGroup>

@@ -26,6 +26,7 @@ struct Global
 };
 extern Global* global;
 
+
 DLL_API void Log(const string& msg, const LogSeverity severity = LogSeverity::normal);
 DLL_API void FatalError(const string& msg);
 

@@ -29,11 +29,6 @@ public:
 	DLL_API double ReadConfigValue_double(const std::string& configVarName);
 	DLL_API bool ReadConfigValue_bool(const std::string& configVarName);
 
-	/*DLL_API static SettingsManager* Create()
-	{
-		return new SettingsManager();
-	}*/
-
 private:
 	void LoadConfigFile();
 	template <typename U> ConfigVariable<U> GetRegisteredConfigVariableByName(const std::string& configVarName);

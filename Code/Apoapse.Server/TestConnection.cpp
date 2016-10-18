@@ -33,17 +33,9 @@ bool TestConnection::OnConnectedToServer(const boost::system::error_code& error)
 	}
 }
 
-bool TestConnection::OnReceivedPacket(/*const NetMessage* packet*/)
+bool TestConnection::OnReceivedPacket(std::shared_ptr<NetMessage> netMessage)
 {
-	//Log(packet->DataToString());
-	/*std::string output(m_readBuffer, bytesTransferred);
-
-	//	Remove empty chars and C null char from the buffer
-	auto pos = output.find_first_of('\r');	//TEST ONLY
-	if (pos < 10000)	// Hack, make a real check if '\r' exist or not in the future
-		output.resize(pos);
-
-	Log(output);*/
+	Log(Format("%1% %2%", __FUNCTION__, netMessage->GetDataStr()));
 
 	return true;
 }
