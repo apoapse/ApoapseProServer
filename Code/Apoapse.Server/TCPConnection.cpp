@@ -63,6 +63,11 @@ void TCPConnection::ListenIncomingMessageContent()
 
 void TCPConnection::ReadHeader(const boost::system::error_code& error, size_t bytesTransferred)
 {
+	if (bytesTransferred == 0)
+	{
+		Close();
+		return;
+	}
 	ASSERT(bytesTransferred == HEADER_LENGTH);	// #TODO
 
 	LOG_DEBUG_ONLY(Format("%1% received %4% bytes from %2%, port %3%", __FUNCTION__, GetEndpoint().address(), GetEndpoint().port(), bytesTransferred));
