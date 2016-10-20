@@ -42,9 +42,6 @@ void ApoapseServer::Start(Global* outsideGlobalPtr)
 	global->logger = new Logger();
 	global->logger->Init("log.txt");
 
-	Log("Apoapse.Server started");
-
-
 	NetMessage::SetMaxAllowedSize();
 	boost::asio::io_service io_serviceGeneral;
 
