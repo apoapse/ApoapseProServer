@@ -4,7 +4,7 @@
 #include <boost\thread.hpp>
 #include <fstream>
 
-Logger::Logger() : m_logLock(false), m_timedLogCount(-1)
+Logger::Logger() : m_logLock(false), m_lockedLogCount(0)
 {
 }
 
@@ -26,7 +26,6 @@ void Logger::Log(const string& msg, LogSeverity severity, bool asyncLogToFile)
 	SpamPreventionUpdate();
 	if (IsSpamPreventionEngaged())
 		return;
-
 #endif // ENABLE_SPAM_PREVENTION
 
 	std::shared_ptr<LogMessage> log = std::make_shared<LogMessage>(msg, severity);
@@ -59,42 +58,39 @@ void Logger::WriteToLogFileRaw(const string& text)
 void Logger::SpamPreventionUpdate()
 {
 #ifdef ENABLE_SPAM_PREVENTION
+
+	const UInt32 maxAllowedConsecutiveLogs = MAX_ALLOWED_CONSECUTIVE_LOGS;
+
 	const auto now = std::chrono::system_clock::now();
 	const std::chrono::milliseconds previousLogDifference = std::chrono::duration_cast<std::chrono::milliseconds>(now - m_previousLogRecord);
-	const std::chrono::milliseconds previousLockReleaseDifference = std::chrono::duration_cast<std::chrono::milliseconds>(now - m_previousLockRelease);
+	++m_lockedLogCount;
 
-	if ((previousLockReleaseDifference.count() > SPAM_PREVENTION_MAX_LOCK_DURATION) || m_timedLogCount == -1)
+	if (previousLogDifference.count() <= 160 && m_lockedLogCount >= maxAllowedConsecutiveLogs)
 	{
-		m_timedLogCount = 0;
-
-		if (m_logLock)
+		if (!m_logLock)
 		{
-			LogMessage warningMsg("Log spam prevention released", LogSeverity::normal);
+			LogMessage warningMsg("Log spam prevention engaged: too many log calls in a short period of time", LogSeverity::warning);
 			warningMsg.LogToConsole();
 			warningMsg.LogToFile();
-		}
 
-		m_logLock = false;
-		m_previousLockRelease = now;
+			m_logLock = true;
+		}
 	}
 	else
 	{
-		++m_timedLogCount;
-
-		if (m_timedLogCount >= 3 && previousLogDifference.count() < 150)	// lock if there was a log call less than 150 milliseconds ago but allow 3 logs to be displayed
+		if (m_logLock)
 		{
-			if (!m_logLock)
-			{
-				LogMessage warningMsg("Log spam prevention engaged: too many log calls in a short period of time", LogSeverity::warning);
-				warningMsg.LogToConsole();
-				warningMsg.LogToFile();
+			LogMessage warningMsg(Format("Log spam prevention released (approximately %1% log calls blocked)", (m_lockedLogCount - maxAllowedConsecutiveLogs)), LogSeverity::normal);
+			warningMsg.LogToConsole();
+			warningMsg.LogToFile();
 
-				m_logLock = true;
-			}
+			m_logLock = false;
+			m_lockedLogCount = 0;
 		}
 	}
 
-	m_previousLogRecord = std::chrono::system_clock::now();
+	m_previousLogRecord = now;
+
 #endif // ENABLE_SPAM_PREVENTION
 }
 

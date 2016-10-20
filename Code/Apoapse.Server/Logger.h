@@ -3,14 +3,15 @@
 #include <boost\thread\mutex.hpp>
 #include <chrono>
 
-#define SPAM_PREVENTION_MAX_LOCK_DURATION 1500
+#define ENABLE_SPAM_PREVENTION
+#define MAX_ALLOWED_CONSECUTIVE_LOGS 8	// #TODO: expose to the settings
 
 class Logger : public ILogger
 {
 	std::string m_logFileLocation;
 	boost::mutex m_mutex;
 	bool m_logLock;
-	int m_timedLogCount;	// Track the number of log calls for each SPAM_PREVENTION_MAX_LOCK_DURATION millisecond
+	int m_lockedLogCount;
 	std::chrono::system_clock::time_point m_previousLogRecord;
 	std::chrono::system_clock::time_point m_previousLockRelease;
 
