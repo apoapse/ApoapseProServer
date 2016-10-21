@@ -4,7 +4,7 @@
 
 struct InternalLibraryLoader
 {
-	static void LoadInternalLibrary(Global* globalPtr, const char* libraryName)
+	static void LoadInternalLibrary(Global* globalPtr, const char* libraryName, std::vector<std::string>& params)
 	{
 		boost::shared_ptr<InternalLibraryLoadingAPI> coreDLL;
 		try
@@ -16,7 +16,7 @@ struct InternalLibraryLoader
 			FatalError("Unable to load the dynamic library " + string(libraryName));
 		}
 
-		coreDLL->Start(global);
+		coreDLL->Start(global, params);
 
 		global = globalPtr;
 	}

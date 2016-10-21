@@ -13,11 +13,14 @@
 #include "UnitTestsSystem.h"
 #endif // UNIT_TESTS
 
-void ApoapseServer::Start(Global* outsideGlobalPtr)
+void ApoapseServer::Start(Global* outsideGlobalPtr, std::vector<std::string>& params)
 {
 #ifdef UNIT_TESTS
-	UnitTestsSystem::RegisterUnitTests();
-	UnitTestsSystem::RunTests();
+	if (std::find(params.begin(), params.end(), "-run_unit_tests") != params.end())
+	{
+		UnitTestsSystem::RegisterUnitTests();
+		UnitTestsSystem::RunTests();
+	}
 #endif // UNIT_TESTS
 
 	ASSERT(global == nullptr);

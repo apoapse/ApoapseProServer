@@ -3,5 +3,5 @@
 
 struct InternalLibraryLoadingAPI
 {
-	virtual void Start(Global*) = 0;
+	virtual void Start(Global*, std::vector<std::string>& params) = 0;
 };
