@@ -2,6 +2,8 @@
 #include "Common.h"
 #include "TestConnection.h"
 
+#include "UTF8.h"
+
 TestConnection::TestConnection(boost::asio::io_service& io_service) : TCPConnection(io_service)
 {
 
@@ -35,7 +37,9 @@ bool TestConnection::OnConnectedToServer(const boost::system::error_code& error)
 
 bool TestConnection::OnReceivedPacket(std::shared_ptr<NetMessage> netMessage)
 {
-	Log(Format("%1% %2%", __FUNCTION__, netMessage->GetDataStr()));
+	std::wstring unicodeMsg = netMessage->GetDataStr();
+
+	Log(Format("%1% (length: %3%) %2%", __FUNCTION__, UTF8::wstring_to_u8string(unicodeMsg), unicodeMsg.length()));
 
 	return true;
 }

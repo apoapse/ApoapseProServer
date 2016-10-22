@@ -27,6 +27,6 @@ public:
 	}
 
 	data_ptr GetData() const;
-	string GetDataStr() const;
+	std::wstring GetDataStr() const;
 	bool IsComplete() const;
 };

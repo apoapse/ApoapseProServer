@@ -175,6 +175,7 @@
     <ClInclude Include="ApoapseAddress.h" />
     <ClInclude Include="ConfigVars.h" />
     <ClInclude Include="NetMessage.h" />
+    <ClInclude Include="UTF8.h" />
     <ClInclude Include="UT_ByteConverter.h" />
     <ClInclude Include="TCPConnection.h" />
     <ClInclude Include="TCPServer.h" />

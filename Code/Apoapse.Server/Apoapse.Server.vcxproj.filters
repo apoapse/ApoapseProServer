@@ -119,6 +119,9 @@
     <ClInclude Include="UT_NetMessage.h">
       <Filter>Tests\UnitTests</Filter>
     </ClInclude>
+    <ClInclude Include="UTF8.h">
+      <Filter>Algorithms</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Threading">

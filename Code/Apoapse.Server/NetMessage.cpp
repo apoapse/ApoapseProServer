@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Common.h"
 #include "NetMessage.h"
+#include "UTF8.h"
 
 UInt64 NetMessage::maxAllowedSize = 0;
 
@@ -32,9 +33,9 @@ data_ptr NetMessage::GetData() const
 	return m_data;
 }
 
-string NetMessage::GetDataStr() const
+std::wstring NetMessage::GetDataStr() const
 {
-	return string(m_data->begin(), m_data->end());
+	return UTF8::utf8_to_wstring(string(m_data->begin(), m_data->end()));
 }
 
 bool NetMessage::IsComplete() const
