@@ -3,8 +3,7 @@
 #include <boost\thread\mutex.hpp>
 #include <chrono>
 
-#define ENABLE_SPAM_PREVENTION
-#define MAX_ALLOWED_CONSECUTIVE_LOGS 8	// #TODO: expose to the settings
+#define MAX_ALLOWED_CONSECUTIVE_LOGS 12	// #TODO: expose to the settings
 
 class Logger : public ILogger
 {
