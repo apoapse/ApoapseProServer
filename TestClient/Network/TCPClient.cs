@@ -135,13 +135,15 @@ class TCPClient
 
             if (m_mainwindow.IsApoapseTransportProtocolUsed())
             {
-                message = new NetMessage(SubArray(data, 1, data.Length), NetMessage.Direction.received, true);
+                var contentSize = BitConverter.ToUInt32(data, 0);
+                message = new NetMessage(SubArray(data, 4, (int)contentSize), NetMessage.Direction.received, true);
             }
             else
                 message = new NetMessage(data, NetMessage.Direction.received, false);
 
             m_mainwindow.AddNetMessageToUI(message, bytesRead);
 
+            state.bytes.Clear();
             Receive();
         }
         catch (Exception e)

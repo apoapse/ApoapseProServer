@@ -47,29 +47,41 @@ namespace TestClient
         {
             Debug.Assert(m_tcpClient.IsConnected);
 
-            buttonDisconnect.Visible = true;
-            ShowMessageSucess("Connected to " + m_tcpClient.RemoteEndPoint.Address + " port: " + m_tcpClient.RemoteEndPoint.Port);
+            Invoke(new Action(() =>
+            {
+                buttonDisconnect.Visible = true;
+                ShowMessageSucess("Connected to " + m_tcpClient.RemoteEndPoint.Address + " port: " + m_tcpClient.RemoteEndPoint.Port);
 
-            if (writeTextBox.Text.Length > 0)
-                sendButton.Enabled = true;
+                if (writeTextBox.Text.Length > 0)
+                    sendButton.Enabled = true;
+            }));
         }
 
         public void ShowError(string error)
         {
-            connectedStatus.Text = "Connection error: " + error;
-            connectedStatus.ForeColor = Color.Red;
+            Invoke(new Action(() =>
+            {
+                connectedStatus.Text = "Connection error: " + error;
+                connectedStatus.ForeColor = Color.Red;
+            }));
         }
 
         public void ShowMessage(string msg)
         {
-            connectedStatus.ForeColor = System.Drawing.SystemColors.ControlText;
-            connectedStatus.Text = msg;
+            Invoke(new Action(() =>
+            {
+                connectedStatus.ForeColor = System.Drawing.SystemColors.ControlText;
+                connectedStatus.Text = msg;
+            }));
         }
 
         public void ShowMessageSucess(string msg)
         {
-            connectedStatus.Text = msg;
-            connectedStatus.ForeColor = Color.Green;
+            Invoke(new Action(() =>
+            {
+                connectedStatus.Text = msg;
+                connectedStatus.ForeColor = Color.Green;
+            }));
         }
 
         public void AddNetMessageToUI(NetMessage netMessage, int bytesTransfered)
@@ -82,10 +94,13 @@ namespace TestClient
             else
                 direction = "Received";
 
-            string[] row = { time, direction, bytesTransfered.ToString(), "", netMessage.DecodeData(NetMessageEncoding.UTF8), netMessage.DecodeData(NetMessageEncoding.hex) };
+            string[] row = { time, direction, bytesTransfered.ToString(), netMessage.DecodeData(NetMessageEncoding.UTF8), netMessage.DecodeData(NetMessageEncoding.hex) };
 
-            mainList.Items.Insert(0, new ListViewItem(row));
-            mainList.Items[0].Tag = netMessage;
+            Invoke(new Action(() =>
+            {
+                mainList.Items.Insert(0, new ListViewItem(row));
+                mainList.Items[0].Tag = netMessage;
+            }));
         }
 
         private void buttonDisconnect_ButtonClick(object sender, EventArgs e)

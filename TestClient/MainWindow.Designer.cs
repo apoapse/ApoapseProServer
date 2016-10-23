@@ -55,7 +55,6 @@
             this.columnTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnDirection = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHex = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBox1.SuspendLayout();
@@ -343,7 +342,6 @@
             this.columnTime,
             this.columnDirection,
             this.columnSize,
-            this.columnType,
             this.columnText,
             this.columnHex});
             this.mainList.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -369,11 +367,6 @@
             // columnSize
             // 
             this.columnSize.Text = "Size";
-            // 
-            // columnType
-            // 
-            this.columnType.Text = "Type";
-            this.columnType.Width = 98;
             // 
             // columnText
             // 
@@ -440,7 +433,6 @@
         private System.Windows.Forms.TextBox writeTextBox;
         private System.Windows.Forms.ColumnHeader columnDirection;
         private System.Windows.Forms.CheckBox useApoapseTransportProtocol;
-        private System.Windows.Forms.ColumnHeader columnType;
     }
 }
 
