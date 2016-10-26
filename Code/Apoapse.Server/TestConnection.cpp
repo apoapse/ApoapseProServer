@@ -25,7 +25,15 @@ bool TestConnection::OnConnectedToServer(const boost::system::error_code& error)
 	if (!error)
 	{
 		Log("TestConnection::OnConnectedToServer connected to/from port " + std::to_string(GetEndpoint().port()));
-		Send(boost::asio::buffer("SEND TEST"));
+
+		string msg = "FROM SERVER!";
+		std::wstring wideMsg = UTF8::utf8_to_wstring(msg);
+
+
+	
+		//byte* p = reinterpret_cast<byte*>(&wideMsg[0]);
+
+		//Send(wideMsg);
 		return true;
 	}
 	else
@@ -40,7 +48,7 @@ bool TestConnection::OnReceivedPacket(std::shared_ptr<NetMessage> netMessage)
 	std::wstring unicodeMsg = netMessage->GetDataStr();
 
 	Log(Format("%1% (length: %3%) %2%", __FUNCTION__, UTF8::wstring_to_u8string(unicodeMsg), unicodeMsg.length()));
-
+	Send("From server: " + UTF8::wstring_to_u8string(unicodeMsg));
 	return true;
 }
 
@@ -50,13 +58,7 @@ bool TestConnection::OnReadError(const boost::system::error_code& error)
 	return false;
 }
 
-bool TestConnection::OnSentPacket(const boost::system::error_code& error, size_t bytesTransferred)
+bool TestConnection::OnSentPacket(const std::shared_ptr<NetMessage> netMessage, size_t bytesTransferred)
 {
-	if (error)
-	{
-		Log("TestConnection::OnSentPacket " + error.message(), LogSeverity::error);
-		return false;
-	}
-	else
-		return true;
+	return true;
 }

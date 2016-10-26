@@ -36,7 +36,7 @@ public:
 
 	virtual ~UnitTest()
 	{
-
+		delete m_fullName;
 	}
 
 	bool Execute(std::string& returnErrorMsg) const

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Common.h"
 #include "TCPConnection.h"
+#include "UTF8.h"
 
 void TCPConnection::Connect(const std::string& adress, const UInt16 port)
 {
@@ -21,20 +22,15 @@ void TCPConnection::Close()
 	m_socket.close();
 }
 
-void TCPConnection::Send(const boost::asio::const_buffer& inputBuffer)
-{
-	auto handler = boost::bind(&TCPConnection::HandleWriteAsync, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred);
-	boost::asio::async_write(m_socket, boost::asio::buffer(inputBuffer), handler);
-}
-
 void TCPConnection::HandleConnectAsync(const boost::system::error_code& error)
 {
+	LOG_DEBUG_ONLY(Format("%1% connected to %2%, port %3%", __FUNCTION__, GetEndpoint().address(), GetEndpoint().port()));
+
 	if (!error)
 		m_isConnected = true;
 
 	if (this->OnConnectedToServer(error))
 	{
-		LOG_DEBUG_ONLY(Format("%1% connected to %2%, port %3%", __FUNCTION__, GetEndpoint().address(), GetEndpoint().port()));
 		ListenIncomingNewMessages();
 	}
 	else
@@ -83,7 +79,7 @@ void TCPConnection::ReadHeader(const boost::system::error_code& error, size_t by
 
 	// Read header
 	UInt32 expectedContentSize = ByteConverter::ToUInt32(m_readHeaderBuffer);
-	m_currentNetMessage = std::make_shared<NetMessage>(expectedContentSize);
+	m_currentNetMessage = std::make_shared<NetMessage>(expectedContentSize, false);
 
 	ListenIncomingMessageContent();
 }
@@ -95,7 +91,7 @@ void TCPConnection::ReadReceivedContent(const boost::system::error_code& error, 
 
 	LOG_DEBUG_ONLY(Format("%1% received %4% bytes from %2%, port %3% (%5% bytes left)", __FUNCTION__, GetEndpoint().address(), GetEndpoint().port(), bytesTransferred, -1));//TODO
 
-	m_currentNetMessage->AppendData<byte, SOCKET_READ_BUFFER_SIZE>(m_readContentBuffer, bytesTransferred);
+	m_currentNetMessage->AppendData<SOCKET_READ_BUFFER_SIZE>(m_readContentBuffer, bytesTransferred);
 
 	if (m_currentNetMessage->IsComplete())
 	{
@@ -110,10 +106,54 @@ void TCPConnection::ReadReceivedContent(const boost::system::error_code& error, 
 	}
 }
 
+
+void TCPConnection::Send(const std::string& msg)
+{
+	// Create header
+	std::array<byte, HEADER_LENGTH> header;
+	const UInt32 contentSize = (UInt32)msg.length();
+	ASSERT(contentSize > 0);
+
+	ByteConverter::FromUInt32(header.data(), contentSize);
+	UInt32 test = ByteConverter::ToUInt32(header.data());
+
+	auto netMessage = std::make_shared<NetMessage>(contentSize + HEADER_LENGTH, true);
+	netMessage->AppendData<HEADER_LENGTH>(header, HEADER_LENGTH);
+	netMessage->AppendStr(msg);
+
+	m_socket.get_io_service().post(m_writeStrand.wrap([netMessage, currentObj=shared_from_this()] {	// #TODO make sure this is completely thread safe
+		currentObj->QueueSendNetMessage(netMessage);
+	}));
+}
+
+void TCPConnection::QueueSendNetMessage(const std::shared_ptr<NetMessage> netMessage)
+{
+	const bool writeInProgress = !m_sendQueue.empty();
+	m_sendQueue.push_back(netMessage);
+
+	if (!writeInProgress)
+		InternalSend();
+}
+
+void TCPConnection::InternalSend()
+{
+	auto handler = boost::bind(&TCPConnection::HandleWriteAsync, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred);
+	boost::asio::async_write(m_socket, boost::asio::buffer(m_sendQueue.front()->GetRawData()), handler);
+}
+
 void TCPConnection::HandleWriteAsync(const boost::system::error_code& error, size_t bytesTransferred)
 {
-	LOG_DEBUG_ONLY(Format("%1% send %4% bytes to %2%, port %3%", __FUNCTION__, GetEndpoint().address(), GetEndpoint().port(), bytesTransferred));
+	ASSERT(m_sendQueue.front()->GetRawData().size() == bytesTransferred);
 
-	if (!this->OnSentPacket(error, bytesTransferred))
-		Close();
+	if (!error)
+	{
+		LOG_DEBUG_ONLY(Format("%1% send successfully %4% bytes to %2%, port %3%", __FUNCTION__, GetEndpoint().address(), GetEndpoint().port(), bytesTransferred));
+
+		if (this->OnSentPacket(m_sendQueue.front(), bytesTransferred))
+			m_sendQueue.pop_front();
+		else
+			Close();
+	}
+	else
+		OnReadError(error);
 }

@@ -12,10 +12,5 @@ private:
 	bool OnConnectedToServer(const boost::system::error_code& error);
 	bool OnReceivedPacket(std::shared_ptr<NetMessage> netMessage);
 	bool OnReadError(const boost::system::error_code& error);
-	bool OnSentPacket(const boost::system::error_code& error, size_t bytesTransferred);
-
-	inline void decode_utf8(const std::string& bytes, std::wstring& wstr)
-	{
-		//utf8::utf8to32(bytes.begin(), bytes.end(), std::back_inserter(wstr));
-	}
+	bool OnSentPacket(const std::shared_ptr<NetMessage> netMessage, size_t bytesTransferred);
 };

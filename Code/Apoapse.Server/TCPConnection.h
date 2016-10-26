@@ -1,7 +1,6 @@
 #pragma once
 #include "ByteUtils.h"
 #include <boost\asio.hpp>
-#include <boost\enable_shared_from_this.hpp>
 #include <boost\bind.hpp>
 #include "NetMessage.h"
 
@@ -17,6 +16,8 @@ private:
 	boostTCP::socket m_socket;
 	bool m_isConnected = false;
 	std::shared_ptr<NetMessage> m_currentNetMessage;
+	std::deque<std::shared_ptr<NetMessage>> m_sendQueue;
+	boost::asio::io_service::strand m_writeStrand;
 
 protected:
 	std::array<byte, SOCKET_READ_BUFFER_SIZE> m_readContentBuffer;
@@ -26,7 +27,7 @@ protected:
 public:
 	typedef boost::shared_ptr<TCPConnection> pointer;
 
-	TCPConnection(boost::asio::io_service& io_service) : m_socket(io_service)
+	TCPConnection(boost::asio::io_service& io_service) : m_socket(io_service), m_writeStrand(io_service)
 	{
 	}
 
@@ -53,7 +54,7 @@ public:
 	void Connect(const std::string& adress, const UInt16 port);
 	bool IsConnected() const;
 	void Close();
-	void Send(const boost::asio::const_buffer& inputBuffer);
+	void Send(const std::string& msg);
 
 private:
 	void HandleConnectAsync(const boost::system::error_code& error);
@@ -65,6 +66,8 @@ private:
 	void ReadHeader(const boost::system::error_code& error, size_t bytesTransferred);
 	void ReadReceivedContent(const boost::system::error_code& error, size_t bytesTransferred);
 
+	void QueueSendNetMessage(const std::shared_ptr<NetMessage> netMessage);
+	void InternalSend();
 	void HandleWriteAsync(const boost::system::error_code& error, size_t bytesTransferred);
 
 protected:
@@ -72,5 +75,5 @@ protected:
 	virtual bool OnReceivedPacket(std::shared_ptr<NetMessage> netMessage) = 0;
 	//virtual bool OnReceivedContent(/*const NetMessage& netMessage*/) = 0;	// Called each time a part of NetMessage is received which can be partial data
 	virtual bool OnReadError(const boost::system::error_code& error) = 0;
-	virtual bool OnSentPacket(const boost::system::error_code& error, size_t bytesTransferred) = 0;
+	virtual bool OnSentPacket(const std::shared_ptr<NetMessage> netMessage, size_t bytesTransferred) = 0;
 };

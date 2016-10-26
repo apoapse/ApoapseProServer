@@ -3,30 +3,30 @@
 #include "ByteUtils.h"
 #include <array>
 
-using data_ptr = std::shared_ptr<std::vector<byte>>;
-
 class NetMessage
 {
-	data_ptr m_data = std::make_shared<std::vector<byte>>();
-	UInt32 m_expectedSize = 0;
+	std::vector<byte> m_data;
+	const UInt32 m_expectedSize = 0;
 	static UInt64 maxAllowedSize;
+	const bool m_containApoapseTCPHeader;
 
 public:
-	NetMessage(UInt32 expectedContentSize);
+	NetMessage(UInt32 expectedContentSize, bool containApoapseTCPHeader);
 	virtual ~NetMessage();
 	static void SetMaxAllowedSize();
 
-	template<typename T, size_t SIZE>
-	void AppendData(const std::array<T, SIZE>& remoteData, size_t dataRealSize)
+	template<size_t SIZE>
+	void AppendData(const std::array<byte, SIZE>& remoteData, size_t dataRealSize)
 	{
 		// #TODO throw a real errors and handle them on TCPConnection side
 		ASSERT(!IsComplete());
-		ASSERT((m_data->size() + dataRealSize) <= m_expectedSize);
+		ASSERT((m_data.size() + dataRealSize) <= m_expectedSize);
 
-		m_data->insert(m_data->end(), remoteData.begin(), remoteData.end() - (remoteData.size() - dataRealSize));
+		m_data.insert(m_data.end(), remoteData.begin(), remoteData.end() - (remoteData.size() - dataRealSize));
 	}
+	void AppendStr(const std::string& str);
 
-	data_ptr GetData() const;
-	std::wstring GetDataStr() const;
+	const std::vector<byte>& GetRawData() const;
+	std::wstring GetDataStr(size_t offset = 0) const;
 	bool IsComplete() const;
 };
