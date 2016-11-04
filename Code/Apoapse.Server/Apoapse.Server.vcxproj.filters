@@ -16,7 +16,6 @@
     <ClCompile Include="JobManager.cpp">
       <Filter>Threading</Filter>
     </ClCompile>
-    <ClCompile Include="ApoapseServer.cpp" />
     <ClCompile Include="TestConnection.cpp">
       <Filter>Network\Protocol</Filter>
     </ClCompile>
@@ -32,12 +31,22 @@
     <ClCompile Include="NetMessage.cpp">
       <Filter>Network\Protocol</Filter>
     </ClCompile>
-    <ClCompile Include="ApoapseAddress.cpp">
-      <Filter>Network</Filter>
-    </ClCompile>
     <ClCompile Include="ConfigVars.cpp" />
     <ClCompile Include="TCPServer.cpp">
       <Filter>Network\Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="Startup.cpp" />
+    <ClCompile Include="ApoapseAddress.cpp">
+      <Filter>Network\Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="ApoapseServer.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandsManager.cpp">
+      <Filter>Network\Protocol\CommandSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Connect.cpp">
+      <Filter>Network\Protocol\CommandSystem\Commands</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -84,7 +93,6 @@
     <ClInclude Include="Types.h">
       <Filter>Globals</Filter>
     </ClInclude>
-    <ClInclude Include="ApoapseServer.h" />
     <ClInclude Include="TestConnection.h">
       <Filter>Network\Protocol</Filter>
     </ClInclude>
@@ -112,15 +120,28 @@
     <ClInclude Include="NetMessage.h">
       <Filter>Network\Protocol</Filter>
     </ClInclude>
-    <ClInclude Include="ApoapseAddress.h">
-      <Filter>Network</Filter>
-    </ClInclude>
     <ClInclude Include="ConfigVars.h" />
     <ClInclude Include="UT_NetMessage.h">
       <Filter>Tests\UnitTests</Filter>
     </ClInclude>
     <ClInclude Include="UTF8.h">
       <Filter>Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="Command.h">
+      <Filter>Network\Protocol\CommandSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandsManager.h">
+      <Filter>Network\Protocol\CommandSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Startup.h" />
+    <ClInclude Include="ApoapseAddress.h">
+      <Filter>Network\Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="ApoapseServer.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Connect.h">
+      <Filter>Network\Protocol\CommandSystem\Commands</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -159,6 +180,12 @@
     </Filter>
     <Filter Include="Tests\UnitTests">
       <UniqueIdentifier>{16306175-e663-4011-a66b-219789664755}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\Protocol\CommandSystem">
+      <UniqueIdentifier>{dfa8e232-f5bb-4b73-9aff-4c7ec8a9dfd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\Protocol\CommandSystem\Commands">
+      <UniqueIdentifier>{30634b79-649f-4f7f-ab1f-64fb55e2b36e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

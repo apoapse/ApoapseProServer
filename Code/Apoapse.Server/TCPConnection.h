@@ -26,10 +26,9 @@ protected:
 
 public:
 	typedef boost::shared_ptr<TCPConnection> pointer;
+	static const UInt16 headerLength = HEADER_LENGTH;
 
-	TCPConnection(boost::asio::io_service& io_service) : m_socket(io_service), m_writeStrand(io_service)
-	{
-	}
+	TCPConnection(boost::asio::io_service& io_service);
 
 	virtual ~TCPConnection()
 	{
@@ -46,11 +45,7 @@ public:
 		return m_socket;
 	}
 
-	boost::asio::ip::tcp::endpoint GetEndpoint() const
-	{
-		return m_socket.remote_endpoint();
-	}
-
+	boost::asio::ip::tcp::endpoint GetEndpoint() const;
 	void Connect(const std::string& adress, const UInt16 port);
 	bool IsConnected() const;
 	void Close();

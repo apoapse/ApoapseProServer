@@ -2,6 +2,7 @@
 #include "Common.h"
 #include "NetMessage.h"
 #include "UTF8.h"
+#include "TCPConnection.h"
 
 UInt64 NetMessage::maxAllowedSize = 0;
 
@@ -24,6 +25,8 @@ NetMessage::~NetMessage()
 
 void NetMessage::SetMaxAllowedSize()
 {
+	ASSERT_MSG(maxAllowedSize == 0, "NetMessage::SetMaxAllowedSize() has already been called");
+
 	// Set the max allowed size of any network message by using the attachments max size and adding a margin of 255 bytes for the eventual size of meta data and syntax
 	maxAllowedSize = (UInt64)round(global->settings->ReadConfigValue_double("messages.attachments.max_attachement_size_mb")) * 1000000 + 255;
 }
@@ -52,5 +55,10 @@ std::wstring NetMessage::GetDataStr(size_t offset) const
 
 bool NetMessage::IsComplete() const
 {
-	return (m_data.size() == m_expectedSize);
+	return (GetContentSize() == m_expectedSize);
+}
+
+size_t NetMessage::GetContentSize() const
+{
+	return (m_containApoapseTCPHeader ? (m_data.size() - TCPConnection::headerLength) : m_data.size());
 }

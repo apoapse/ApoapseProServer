@@ -29,4 +29,5 @@ public:
 	const std::vector<byte>& GetRawData() const;
 	std::wstring GetDataStr(size_t offset = 0) const;
 	bool IsComplete() const;
+	size_t GetContentSize() const;
 };

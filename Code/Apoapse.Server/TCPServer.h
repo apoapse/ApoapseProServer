@@ -27,7 +27,7 @@ public:
 	{
 		TCPConnection::pointer newConnection = TCPConnection::Create<T_CONNECTION>(m_ioservice);
 
-		auto handler = boost::bind(&TCPServer::HandleAcceptAsync<T_CONNECTION>, this, newConnection, boost::asio::placeholders::error);	// #TODO: declare the handler in a member var instead of creating it at each call?
+		auto handler = boost::bind(&TCPServer::HandleAcceptAsync<T_CONNECTION>, this, newConnection, boost::asio::placeholders::error);
 		m_acceptor->async_accept(newConnection->GetSocket(), handler);
 	}
 

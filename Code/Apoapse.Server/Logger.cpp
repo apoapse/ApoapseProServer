@@ -46,9 +46,11 @@ string Logger::GetCurrentLogFileName()
 void Logger::WriteToLogFileRaw(const string& text)
 {
 	boost::lock_guard<boost::mutex> lock(m_mutex);
-	//	TODO: test if file is readable
 	std::ofstream ofs;
 	ofs.open(GetCurrentLogFileName(), std::ofstream::out | std::ofstream::app);
+
+	if (!ofs.is_open())
+		return;
 
 	ofs << text << '\n';
 

@@ -14,7 +14,7 @@ public:
 	void Init();
 
 	void Push(LambdaFunction callback);
-	long int GetTasksInQueueCount();
+	Int64 GetTasksInQueueCount();
 
 private:
 	boost::lockfree::queue<LambdaFunction*> m_lockFreeQueue{ INITIAL_QUEUE_CAPACITY };

@@ -29,11 +29,6 @@ bool TestConnection::OnConnectedToServer(const boost::system::error_code& error)
 		string msg = "FROM SERVER!";
 		std::wstring wideMsg = UTF8::utf8_to_wstring(msg);
 
-
-	
-		//byte* p = reinterpret_cast<byte*>(&wideMsg[0]);
-
-		//Send(wideMsg);
 		return true;
 	}
 	else

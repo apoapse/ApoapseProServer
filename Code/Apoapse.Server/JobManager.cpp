@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Common.h"
 #include "JobManager.h"
+#include <thread>
+#include <mutex>
 
 JobManager::JobManager() : m_tasksInQueueCount(0), m_queueCapacity(0)
 {
@@ -15,6 +17,9 @@ void JobManager::Init()
 	{
 		m_workerThreads.create_thread([this] { this->Consume(); });
 	}
+
+	//auto thread = std::thread();
+	//thread.detach();
 
 	Log("JobManager initialized");
 }
@@ -47,6 +52,7 @@ void JobManager::Consume()
 {
 	while (true)
 	{
+		//std::lock_guard<std::mutex> lock(m_mutex);
 		boost::unique_lock<boost::mutex> lock(m_mutex);
 
 		while (m_tasksInQueueCount == 0)
@@ -73,10 +79,10 @@ void JobManager::ResizeQueue(size_t requestedQueueCapacity)
 
 	m_lockFreeQueue.reserve(requestedQueueCapacity);
 
-	m_queueCapacity = m_queueCapacity + (long int)requestedQueueCapacity;
+	m_queueCapacity = m_queueCapacity + (Int64)requestedQueueCapacity;
 }
 
-long int JobManager::GetTasksInQueueCount()
+Int64 JobManager::GetTasksInQueueCount()
 {
 	return m_tasksInQueueCount;
 }

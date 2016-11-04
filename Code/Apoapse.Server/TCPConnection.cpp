@@ -3,6 +3,10 @@
 #include "TCPConnection.h"
 #include "UTF8.h"
 
+TCPConnection::TCPConnection(boost::asio::io_service& io_service) : m_socket(io_service), m_writeStrand(io_service)
+{
+}
+
 void TCPConnection::Connect(const std::string& adress, const UInt16 port)
 {
 	ASSERT(!IsConnected());
@@ -20,6 +24,19 @@ void TCPConnection::Close()
 {
 	m_isConnected = false;
 	m_socket.close();
+}
+
+boost::asio::ip::tcp::endpoint TCPConnection::GetEndpoint() const
+{
+	try
+	{
+		return m_socket.remote_endpoint();
+	}
+	catch (...)
+	{
+		ASSERT_MSG(false, "TCPConnection::GetEndpoint() is called too early");
+		return boost::asio::ip::tcp::endpoint();
+	}
 }
 
 void TCPConnection::HandleConnectAsync(const boost::system::error_code& error)
@@ -121,7 +138,7 @@ void TCPConnection::Send(const std::string& msg)
 	netMessage->AppendData<HEADER_LENGTH>(header, HEADER_LENGTH);
 	netMessage->AppendStr(msg);
 
-	m_socket.get_io_service().post(m_writeStrand.wrap([netMessage, currentObj=shared_from_this()] {	// #TODO make sure this is completely thread safe
+	m_socket.get_io_service().post(m_writeStrand.wrap([netMessage, currentObj=shared_from_this()] {	// #TODO test in order to make sure this is completely thread safe
 		currentObj->QueueSendNetMessage(netMessage);
 	}));
 }
