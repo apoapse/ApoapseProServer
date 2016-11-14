@@ -25,7 +25,7 @@ void LogMessage::LogToConsole() const
 	if (color != 7)	//	Only if it's not to apply the default color again
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 
-	std::cout << message << std::endl;
+	std::cout << message + "\n";
 
 	if (color != 7)
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);	//	Reset to default color

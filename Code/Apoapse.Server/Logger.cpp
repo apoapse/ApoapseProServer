@@ -63,7 +63,8 @@ void Logger::SpamPreventionUpdate()
 
 	const UInt32 maxAllowedConsecutiveLogs = MAX_ALLOWED_CONSECUTIVE_LOGS;
 
-	const auto now = std::chrono::system_clock::now();
+	//const auto now = std::chrono::system_clock::now();
+	const auto now = std::chrono::steady_clock::now();
 	const std::chrono::milliseconds previousLogDifference = std::chrono::duration_cast<std::chrono::milliseconds>(now - m_previousLogRecord);
 	++m_lockedLogCount;
 

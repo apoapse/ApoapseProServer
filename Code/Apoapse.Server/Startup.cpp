@@ -15,6 +15,8 @@
 #include "CommandsManager.h"
 #include <boost\any.hpp>
 
+#include "ThreadPool.h"
+
 #ifdef UNIT_TESTS
 #include "UnitTestsSystem.h"
 #endif // UNIT_TESTS
@@ -50,14 +52,32 @@ void ApoapseServerStartup::Start(Global* outsideGlobalPtr, std::vector<std::stri
 
 	global->logger = new Logger();
 	global->logger->Init("log.txt");
+
+	auto threadPool = new ThreadPool("Main (test)", 4);
+	auto test = threadPool->PushTask([] { std::this_thread::sleep_for(std::chrono::milliseconds(300)); return string("My name is NULL"); });
+	//auto test2 = threadPool->Push([] { Log("HELLLLLO!!!"); return 101; });
+
+	
 	
 	
 	NetMessage::SetMaxAllowedSize();	//TODO: change location
 	//auto client = TCPConnection::Create<TestConnection>(io_serviceGeneral);
 	//client->Connect("127.0.0.1", 55056);
 
-	std::thread thread([]
+	std::thread thread([&]
 	{
+		threadPool->PushTask([] {
+			std::stringstream ss;
+			ss << std::this_thread::get_id();
+			string mystring = ss.str();
+
+			std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+
+			Log("Completed LONG on thread: " + mystring);
+		});
+		Log("Quik1");
+
+
 		boost::asio::io_service io_serviceGeneral;
 
 		TCPServer server(io_serviceGeneral, 3000/*, TCPServer::IP_v6*/);
@@ -67,6 +87,18 @@ void ApoapseServerStartup::Start(Global* outsideGlobalPtr, std::vector<std::stri
 	});
 	thread.detach();
 
+	threadPool->PushTask([] {
+		std::stringstream ss;
+		ss << std::this_thread::get_id();
+		string mystring = ss.str();
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+		Log("Completed short on thread: " + mystring);
+	});
+
+	Log("Quik2");
+	Log("NAME?: " + test.get());
 	//io_serviceGeneral.run();
 }
 

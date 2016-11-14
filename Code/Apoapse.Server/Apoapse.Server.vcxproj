@@ -172,6 +172,7 @@
     <ClCompile Include="JobManager.cpp" />
     <ClCompile Include="SettingsManager.cpp" />
     <ClCompile Include="StringExtensions.cpp" />
+    <ClCompile Include="ThreadPool.cpp" />
     <ClCompile Include="UnitTestsSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -182,6 +183,7 @@
     <ClInclude Include="ConfigVars.h" />
     <ClInclude Include="Connect.h" />
     <ClInclude Include="NetMessage.h" />
+    <ClInclude Include="ThreadPool.h" />
     <ClInclude Include="UTF8.h" />
     <ClInclude Include="UT_ByteConverter.h" />
     <ClInclude Include="TCPConnection.h" />

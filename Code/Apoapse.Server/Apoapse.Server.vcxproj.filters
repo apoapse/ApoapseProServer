@@ -2,13 +2,13 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="SettingsManager.cpp">
-      <Filter>ServerSystems\Settings</Filter>
+      <Filter>InternalSystems\Settings</Filter>
     </ClCompile>
     <ClCompile Include="LogMessage.cpp">
-      <Filter>ServerSystems\Logger</Filter>
+      <Filter>InternalSystems\Logger</Filter>
     </ClCompile>
     <ClCompile Include="Logger.cpp">
-      <Filter>ServerSystems\Logger</Filter>
+      <Filter>InternalSystems\Logger</Filter>
     </ClCompile>
     <ClCompile Include="Common.cpp">
       <Filter>Globals</Filter>
@@ -48,20 +48,23 @@
     <ClCompile Include="Connect.cpp">
       <Filter>Network\Protocol\CommandSystem\Commands</Filter>
     </ClCompile>
+    <ClCompile Include="ThreadPool.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SettingsManager.h">
-      <Filter>ServerSystems\Settings</Filter>
+      <Filter>InternalSystems\Settings</Filter>
     </ClInclude>
     <ClInclude Include="ConfigVariable.h">
-      <Filter>ServerSystems\Settings</Filter>
+      <Filter>InternalSystems\Settings</Filter>
     </ClInclude>
     <ClInclude Include="LogMessage.h">
-      <Filter>ServerSystems\Logger</Filter>
+      <Filter>InternalSystems\Logger</Filter>
     </ClInclude>
     <ClInclude Include="Logger.h">
-      <Filter>ServerSystems\Logger</Filter>
+      <Filter>InternalSystems\Logger</Filter>
     </ClInclude>
     <ClInclude Include="Platforms.h">
       <Filter>Globals</Filter>
@@ -73,13 +76,13 @@
       <Filter>Globals</Filter>
     </ClInclude>
     <ClInclude Include="ILogger.h">
-      <Filter>ServerSystems\Logger</Filter>
+      <Filter>InternalSystems\Logger</Filter>
     </ClInclude>
     <ClInclude Include="InternalLibraryLoader.h">
-      <Filter>ServerSystems\DLLSystem</Filter>
+      <Filter>InternalSystems\DLLSystem</Filter>
     </ClInclude>
     <ClInclude Include="InternalLibraryLoadingAPI.h">
-      <Filter>ServerSystems\DLLSystem</Filter>
+      <Filter>InternalSystems\DLLSystem</Filter>
     </ClInclude>
     <ClInclude Include="JobManager.h">
       <Filter>Threading</Filter>
@@ -88,7 +91,7 @@
       <Filter>Threading</Filter>
     </ClInclude>
     <ClInclude Include="ISettingsManager.h">
-      <Filter>ServerSystems\Settings</Filter>
+      <Filter>InternalSystems\Settings</Filter>
     </ClInclude>
     <ClInclude Include="Types.h">
       <Filter>Globals</Filter>
@@ -143,6 +146,9 @@
     <ClInclude Include="Connect.h">
       <Filter>Network\Protocol\CommandSystem\Commands</Filter>
     </ClInclude>
+    <ClInclude Include="ThreadPool.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Threading">
@@ -160,18 +166,6 @@
     <Filter Include="Algorithms">
       <UniqueIdentifier>{3c2daeed-824c-4470-9a30-dada018c5c2a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ServerSystems">
-      <UniqueIdentifier>{4716473c-6be3-45c2-a84c-910b50ec48cd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ServerSystems\DLLSystem">
-      <UniqueIdentifier>{a6c3456b-7830-4068-ba9e-37af55f1aeff}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ServerSystems\Logger">
-      <UniqueIdentifier>{68b93324-54aa-4c97-b8b9-a3c4f61a1f6d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ServerSystems\Settings">
-      <UniqueIdentifier>{2368b359-b726-4631-aac2-d992fc5a0c20}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Globals">
       <UniqueIdentifier>{105bdf6a-270b-416e-bfd9-2661ab7b7e17}</UniqueIdentifier>
     </Filter>
@@ -186,6 +180,18 @@
     </Filter>
     <Filter Include="Network\Protocol\CommandSystem\Commands">
       <UniqueIdentifier>{30634b79-649f-4f7f-ab1f-64fb55e2b36e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="InternalSystems">
+      <UniqueIdentifier>{4716473c-6be3-45c2-a84c-910b50ec48cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="InternalSystems\DLLSystem">
+      <UniqueIdentifier>{a6c3456b-7830-4068-ba9e-37af55f1aeff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="InternalSystems\Logger">
+      <UniqueIdentifier>{68b93324-54aa-4c97-b8b9-a3c4f61a1f6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="InternalSystems\Settings">
+      <UniqueIdentifier>{2368b359-b726-4631-aac2-d992fc5a0c20}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
