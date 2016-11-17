@@ -16,7 +16,7 @@ void SettingsManager::Init(const string& configFilePath)
 
 	LoadConfigFile();
 
-	Log("SettingsManager initialized");
+	//Log("SettingsManager initialized");
 }
 
 void SettingsManager::LoadConfigFile()
@@ -35,7 +35,7 @@ template <typename U> void SettingsManager::InternalRegisterConfigVar(const stri
 
 	if (!m_registeredConfigs.insert(std::make_pair(configVarName, defaultValue)).second)
 	{
-		Log(Format("%1% config variable %2% is already registered", __FUNCTION__, configVarName), LogSeverity::warning);
+		//Log(Format("%1% config variable %2% is already registered", __FUNCTION__, configVarName), LogSeverity::warning);
 	}
 }
 
@@ -83,7 +83,7 @@ template <typename U> U SettingsManager::InternalReadConfigValue(const string& c
 	}
 	catch (const boost::property_tree::ptree_error e)	// #TODO find a better way that do not use exceptions
 	{
-		Log("Can't find the value in the config file. Use the default value from the registered variable instead.", LogSeverity::debug);
+		//Log("Can't find the value in the config file. Use the default value from the registered variable instead.", LogSeverity::debug);
 
 		ConfigVariable<U> registedVariable = GetRegisteredConfigVariableByName<U>(configVarName);
 		return registedVariable.defaultValue;

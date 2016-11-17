@@ -1,29 +1,20 @@
 #pragma once
-
-#ifdef WINDOWS
-#include <windows.h>
-#endif // WINDOWS
+#include "ELogSeverity.h"
 
 struct LogMessage
 {
-	LogMessage(const std::string& msg, LogSeverity severity);
-	virtual ~LogMessage() {}
+	string msg;
+	LogSeverity logSeverity;
+	string severityPrefix;
+	string dateTime;
 
-	const std::string message;
-	const LogSeverity logSeverity;
-
-	void LogToConsole() const;
-	void LogToFile() const;
+	LogMessage(string& message, LogSeverity severity) : msg(message), logSeverity(severity)
+	{
+		GenerateDateTime();	// The time is recorded as soon as possible in order to not loose accuracy once the message is registered in the log file via an async call
+		GenerateSeverityPrefix();
+	}
 
 private:
-	std::string m_logFormatedDateTime;
-	std::string GenerateLocalDateTime() const;
-	std::string GetSeverityPrefix() const;
-	void Trace() const;
-
-#ifdef WINDOWS
-	WORD GetConsoleColorBySeverity(LogSeverity) const;
-#else
-	std::string GetColorBySeverity(LogSeverity) const;
-#endif
+	void GenerateSeverityPrefix();
+	void GenerateDateTime();
 };

@@ -21,7 +21,7 @@ TCPServer::TCPServer(boost::asio::io_service& io_service, const UInt16 port, con
 
 	if (!error)
 	{
-		Log(Format("%1% server started at %2%, port %3%, protocol %4%", __FUNCTION__, endpoint.address(), endpoint.port(), endpoint.protocol().protocol()));
+		//Log(Format("%1% server started at %2%, port %3%, protocol %4%", __FUNCTION__, endpoint.address(), endpoint.port(), endpoint.protocol().protocol()));
 
 		m_acceptor->listen();
 	}

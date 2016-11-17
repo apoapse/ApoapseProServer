@@ -3,20 +3,20 @@
 #include "Platforms.h"
 #include "Diagnostics.h"
 
-#include <boost/format.hpp>
-
 #include "ISettingsManager.h"
 #include "IJobManager.h"
-#include "ILogger.h"
+#include "Log.h"
 
 struct Global
 {
 	ISettingsManager* settings = nullptr;
 	IJobManager* jobManager = nullptr;
-	ILogger* logger = nullptr;
+	//Logger* logger = nullptr;
+	std::unique_ptr<Logger> logger;
 
 	Global()
 	{
+		
 	}
 
 	DLL_API static Global* CreateGlobal()
@@ -26,16 +26,8 @@ struct Global
 };
 extern Global* global;
 
+extern Logger* g_logger;
 
-DLL_API void Log(const string& msg, const LogSeverity severity = LogSeverity::normal);
+//DLL_API void Log(const string& msg, const LogSeverity severity = LogSeverity::normal);
 DLL_API void FatalError(const string& msg);
-
-template<typename... Arguments>
-string Format(const string& inputStr, Arguments&&... args)
-{
-	boost::format formated(inputStr);
-	int unroll[]{ 0, (formated % std::forward<Arguments>(args), 0)... };
-	static_cast<void>(unroll);
-
-	return boost::str(formated);
-}
+#define LOG if (global->logger.get() != nullptr) Log(*global->logger)

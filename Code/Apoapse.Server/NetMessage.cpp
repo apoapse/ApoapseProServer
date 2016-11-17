@@ -11,16 +11,16 @@ NetMessage::NetMessage(UInt32 expectedContentSize, bool containApoapseTCPHeader)
 	ASSERT_MSG(maxAllowedSize > 0, "NetMessage::SetMaxAllowedSize should have been called");
 
 	if (expectedContentSize > maxAllowedSize)
-		Log("NetMessage::NetMessage the expected size is higher than the allowed max size", LogSeverity::error);	// #TODO throw a real error and handle it on TCPConnection side
+		//Log("NetMessage::NetMessage the expected size is higher than the allowed max size", LogSeverity::error);	// #TODO throw a real error and handle it on TCPConnection side
 
 	m_data.reserve(expectedContentSize);
 
-	LOG_DEBUG_ONLY(Format("%1% created a new network message with an expected size of %2%", __FUNCTION__, m_expectedSize));
+	//LOG_DEBUG_ONLY(Format("%1% created a new network message with an expected size of %2%", __FUNCTION__, m_expectedSize));
 }
 
 NetMessage::~NetMessage()
 {
-	LOG_DEBUG_ONLY("NetMessage destroyed");
+	//LOG_DEBUG_ONLY("NetMessage destroyed");
 }
 
 void NetMessage::SetMaxAllowedSize()

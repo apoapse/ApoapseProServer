@@ -160,6 +160,8 @@
     <ClCompile Include="ApoapseServer.cpp" />
     <ClCompile Include="CommandsManager.cpp" />
     <ClCompile Include="ConfigVars.cpp" />
+    <ClCompile Include="Logger.cpp" />
+    <ClCompile Include="LogMessage.cpp" />
     <ClCompile Include="NetMessage.cpp" />
     <ClCompile Include="Connect.cpp" />
     <ClCompile Include="TCPConnection.cpp" />
@@ -167,8 +169,6 @@
     <ClCompile Include="TestConnection.cpp" />
     <ClCompile Include="Startup.cpp" />
     <ClCompile Include="Common.cpp" />
-    <ClCompile Include="Logger.cpp" />
-    <ClCompile Include="LogMessage.cpp" />
     <ClCompile Include="JobManager.cpp" />
     <ClCompile Include="SettingsManager.cpp" />
     <ClCompile Include="StringExtensions.cpp" />
@@ -182,6 +182,10 @@
     <ClInclude Include="CommandsManager.h" />
     <ClInclude Include="ConfigVars.h" />
     <ClInclude Include="Connect.h" />
+    <ClInclude Include="eLogSeverity.h" />
+    <ClInclude Include="Logger.h" />
+    <ClInclude Include="Log.h" />
+    <ClInclude Include="LogMessage.h" />
     <ClInclude Include="NetMessage.h" />
     <ClInclude Include="ThreadPool.h" />
     <ClInclude Include="UTF8.h" />
@@ -195,11 +199,8 @@
     <ClInclude Include="Common.h" />
     <ClInclude Include="InternalLibraryLoader.h" />
     <ClInclude Include="InternalLibraryLoadingAPI.h" />
-    <ClInclude Include="ILogger.h" />
     <ClInclude Include="IJobManager.h" />
     <ClInclude Include="ISettingsManager.h" />
-    <ClInclude Include="Logger.h" />
-    <ClInclude Include="LogMessage.h" />
     <ClInclude Include="Platforms.h" />
     <ClInclude Include="JobManager.h" />
     <ClInclude Include="SettingsManager.h" />

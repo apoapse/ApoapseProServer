@@ -5,9 +5,9 @@
 #define ASSERT_MSG(_exp, _msg)	BOOST_ASSERT_MSG(_exp, _msg)
 
 #ifdef DEBUG
-#define LOG_DEBUG_ONLY(_text)	Log(_text, LogSeverity::debug);
+#define LOG_DEBUG_ONLY(_params)	LOG << LogSeverity::debug << __FUNCTION__ << " " << _params
 #else
-#define LOG_DEBUG_ONLY(_text)
+#define LOG_DEBUG_ONLY(_params)
 #endif
 
 /*#define ASSERT_MSG(_exp, _msg) {\

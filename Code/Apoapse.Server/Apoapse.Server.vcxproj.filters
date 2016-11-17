@@ -4,12 +4,6 @@
     <ClCompile Include="SettingsManager.cpp">
       <Filter>InternalSystems\Settings</Filter>
     </ClCompile>
-    <ClCompile Include="LogMessage.cpp">
-      <Filter>InternalSystems\Logger</Filter>
-    </ClCompile>
-    <ClCompile Include="Logger.cpp">
-      <Filter>InternalSystems\Logger</Filter>
-    </ClCompile>
     <ClCompile Include="Common.cpp">
       <Filter>Globals</Filter>
     </ClCompile>
@@ -51,6 +45,12 @@
     <ClCompile Include="ThreadPool.cpp">
       <Filter>Threading</Filter>
     </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>InternalSystems\Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="LogMessage.cpp">
+      <Filter>InternalSystems\Logger</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -60,12 +60,6 @@
     <ClInclude Include="ConfigVariable.h">
       <Filter>InternalSystems\Settings</Filter>
     </ClInclude>
-    <ClInclude Include="LogMessage.h">
-      <Filter>InternalSystems\Logger</Filter>
-    </ClInclude>
-    <ClInclude Include="Logger.h">
-      <Filter>InternalSystems\Logger</Filter>
-    </ClInclude>
     <ClInclude Include="Platforms.h">
       <Filter>Globals</Filter>
     </ClInclude>
@@ -74,9 +68,6 @@
     </ClInclude>
     <ClInclude Include="Common.h">
       <Filter>Globals</Filter>
-    </ClInclude>
-    <ClInclude Include="ILogger.h">
-      <Filter>InternalSystems\Logger</Filter>
     </ClInclude>
     <ClInclude Include="InternalLibraryLoader.h">
       <Filter>InternalSystems\DLLSystem</Filter>
@@ -148,6 +139,18 @@
     </ClInclude>
     <ClInclude Include="ThreadPool.h">
       <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>InternalSystems\Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="LogMessage.h">
+      <Filter>InternalSystems\Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="Log.h">
+      <Filter>InternalSystems\Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="eLogSeverity.h">
+      <Filter>InternalSystems\Logger</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,26 +1,24 @@
 #include "stdafx.h"
-#include "Common.h"
 #include "Logger.h"
-#include <boost\thread.hpp>
+#include "Common.h"
+#include <iostream>
 #include <fstream>
 
-Logger::Logger() : m_logLock(false), m_lockedLogCount(0)
-{
-}
+#ifdef WINDOWS
+#include <WinBase.h>
+#endif
 
-void Logger::Init(const string& logFileLocation)
+Logger::Logger(const string& logFile, bool asyncLogToFile /*= true*/) : m_logFile(logFile), m_asyncLogToFile(asyncLogToFile)
 {
-	m_logFileLocation = logFileLocation;
-	m_previousLogRecord = std::chrono::system_clock::now();
-
-	Log("Logger initialized");
+	if (m_asyncLogToFile)
+		m_localThreadPool = std::make_unique<ThreadPool>("Logger (" + m_logFile + ")", 1);
 }
 
 Logger::~Logger()
 {
 }
 
-void Logger::Log(const string& msg, LogSeverity severity, bool asyncLogToFile)
+void Logger::Log(const LogMessage& logMessage)
 {
 #ifdef ENABLE_SPAM_PREVENTION
 	SpamPreventionUpdate();
@@ -28,39 +26,64 @@ void Logger::Log(const string& msg, LogSeverity severity, bool asyncLogToFile)
 		return;
 #endif // ENABLE_SPAM_PREVENTION
 
-	std::shared_ptr<LogMessage> log = std::make_shared<LogMessage>(msg, severity);
-	log->LogToConsole();
+	LogToConsole(logMessage);
 
-	//	Log to file
-	if (asyncLogToFile)
-		global->jobManager->Push([log] { log->LogToFile(); });
+	if (m_asyncLogToFile)
+		m_localThreadPool->PushTask([this, logMessage] { LogToFile(logMessage); });
 	else
-		log->LogToFile();
+		LogToFile(logMessage);
 }
 
-string Logger::GetCurrentLogFileName()
+void Logger::LogToConsole(const LogMessage& logMessage)
 {
-	return m_logFileLocation;
+#ifdef DEBUG
+	Trace(logMessage.severityPrefix + logMessage.msg);
+#endif
+
+#ifdef WINDOWS
+	// Warning: There are no thread synchronization here so sometimes when there are a lot of calls from multiple threads the colors can be out of place
+	// but it's a minor annoyance compared to slow down the whole program
+	auto color = GetConsoleColorBySeverity(logMessage.logSeverity);
+
+	if (color != 7)	//	Only if it's not to apply the default color again
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+
+	std::cout << logMessage.msg << '\n';
+
+	if (color != 7)
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);	// Reset to default color
+
+#else
+	PLATFORM_NOT_IMPLEMENTED("unix console colors");
+	std::cout << steam.rdbuf() << '\n';
+#endif
 }
 
-void Logger::WriteToLogFileRaw(const string& text)
+void Logger::LogToFile(const LogMessage& logMessage)
 {
-	boost::lock_guard<boost::mutex> lock(m_mutex);
-	std::ofstream ofs;
-	ofs.open(GetCurrentLogFileName(), std::ofstream::out | std::ofstream::app);
+	std::lock_guard<std::mutex> lock(m_writeFileMutex);
 
-	if (!ofs.is_open())
-		return;
-
-	ofs << text << '\n';
-
-	ofs.close();
+	try
+	{
+		std::ofstream ofs;
+		ofs.open(m_logFile, std::ofstream::out | std::ofstream::app);
+	
+		if (!ofs.is_open())
+			return;
+	
+		ofs << logMessage.dateTime << " - " << logMessage.severityPrefix << logMessage.msg << '\n';
+	
+		ofs.close();
+	}
+	catch (const std::exception&)
+	{
+		//#TODO Handle error
+	}
 }
 
+#ifdef ENABLE_SPAM_PREVENTION
 void Logger::SpamPreventionUpdate()
 {
-#ifdef ENABLE_SPAM_PREVENTION
-
 	const UInt32 maxAllowedConsecutiveLogs = MAX_ALLOWED_CONSECUTIVE_LOGS;
 
 	//const auto now = std::chrono::system_clock::now();
@@ -72,9 +95,9 @@ void Logger::SpamPreventionUpdate()
 	{
 		if (!m_logLock)
 		{
-			LogMessage warningMsg("Log spam prevention engaged: too many log calls in a short period of time", LogSeverity::warning);
-			warningMsg.LogToConsole();
-			warningMsg.LogToFile();
+			//LogMessage warningMsg("Log spam prevention engaged: too many log calls in a short period of time", LogSeverity::warning);
+			//warningMsg.LogToConsole();
+			//warningMsg.LogToFile();
 
 			m_logLock = true;
 		}
@@ -83,9 +106,9 @@ void Logger::SpamPreventionUpdate()
 	{
 		if (m_logLock)
 		{
-			LogMessage warningMsg(Format("Log spam prevention released (approximately %1% log calls blocked)", (m_lockedLogCount - maxAllowedConsecutiveLogs)), LogSeverity::normal);
-			warningMsg.LogToConsole();
-			warningMsg.LogToFile();
+			//LogMessage warningMsg(Format("Log spam prevention released (approximately %1% log calls blocked)", (m_lockedLogCount - maxAllowedConsecutiveLogs)), LogSeverity::normal);
+			//warningMsg.LogToConsole();
+			//warningMsg.LogToFile();
 
 			m_logLock = false;
 			m_lockedLogCount = 0;
@@ -93,11 +116,46 @@ void Logger::SpamPreventionUpdate()
 	}
 
 	m_previousLogRecord = now;
-
-#endif // ENABLE_SPAM_PREVENTION
 }
+#endif // ENABLE_SPAM_PREVENTION
+
 
 bool Logger::IsSpamPreventionEngaged() const
 {
+#ifdef ENABLE_SPAM_PREVENTION
 	return m_logLock;
+#else
+	return false;
+#endif // ENABLE_SPAM_PREVENTION
+}
+
+
+#ifdef WINDOWS
+UInt16 Logger::GetConsoleColorBySeverity(LogSeverity severity)
+{
+	switch (severity)
+	{
+	case LogSeverity::debug:
+		return FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_INTENSITY;	//	Cyan
+
+	case LogSeverity::warning:
+		return 14;															//	Yellow
+
+	case LogSeverity::error:
+	case LogSeverity::fatalError:
+		return FOREGROUND_RED | FOREGROUND_INTENSITY;						// Red
+
+	default:
+		return 7;															//	Default color (light gray)
+	}
+}
+#endif
+
+void Logger::Trace(const string& msg)
+{
+#ifdef WINDOWS
+	std::wostringstream os_;
+	os_ << msg.c_str() << '\n';
+	OutputDebugStringW(os_.str().c_str());
+#endif
 }

@@ -41,7 +41,7 @@ boost::asio::ip::tcp::endpoint TCPConnection::GetEndpoint() const
 
 void TCPConnection::HandleConnectAsync(const boost::system::error_code& error)
 {
-	LOG_DEBUG_ONLY(Format("%1% connected to %2%, port %3%", __FUNCTION__, GetEndpoint().address(), GetEndpoint().port()));
+	//LOG_DEBUG_ONLY(Format("%1% connected to %2%, port %3%", __FUNCTION__, GetEndpoint().address(), GetEndpoint().port()));
 
 	if (!error)
 		m_isConnected = true;
@@ -56,7 +56,7 @@ void TCPConnection::HandleConnectAsync(const boost::system::error_code& error)
 
 void TCPConnection::HandleAcceptedAsync(const boost::system::error_code& error)
 {
-	LOG_DEBUG_ONLY(Format("%1% accepeted by server %2%, port %3%", __FUNCTION__, GetEndpoint().address(), GetEndpoint().port()));
+	//LOG_DEBUG_ONLY(Format("%1% accepeted by server %2%, port %3%", __FUNCTION__, GetEndpoint().address(), GetEndpoint().port()));
 	HandleConnectAsync(error);
 }
 
@@ -83,7 +83,7 @@ void TCPConnection::ReadHeader(const boost::system::error_code& error, size_t by
 	}
 	ASSERT(bytesTransferred == HEADER_LENGTH);	// #TODO
 
-	LOG_DEBUG_ONLY(Format("%1% received %4% bytes from %2%, port %3%", __FUNCTION__, GetEndpoint().address(), GetEndpoint().port(), bytesTransferred));
+	//LOG_DEBUG_ONLY(Format("%1% received %4% bytes from %2%, port %3%", __FUNCTION__, GetEndpoint().address(), GetEndpoint().port(), bytesTransferred));
 
 	if (error)
 	{
@@ -106,7 +106,7 @@ void TCPConnection::ReadReceivedContent(const boost::system::error_code& error, 
 	if (bytesTransferred == 0)
 		return;
 
-	LOG_DEBUG_ONLY(Format("%1% received %4% bytes from %2%, port %3% (%5% bytes left)", __FUNCTION__, GetEndpoint().address(), GetEndpoint().port(), bytesTransferred, -1));//TODO
+	//LOG_DEBUG_ONLY(Format("%1% received %4% bytes from %2%, port %3% (%5% bytes left)", __FUNCTION__, GetEndpoint().address(), GetEndpoint().port(), bytesTransferred, -1));//TODO
 
 	m_currentNetMessage->AppendData<SOCKET_READ_BUFFER_SIZE>(m_readContentBuffer, bytesTransferred);
 
@@ -164,7 +164,7 @@ void TCPConnection::HandleWriteAsync(const boost::system::error_code& error, siz
 
 	if (!error)
 	{
-		LOG_DEBUG_ONLY(Format("%1% send successfully %4% bytes to %2%, port %3%", __FUNCTION__, GetEndpoint().address(), GetEndpoint().port(), bytesTransferred));
+		//LOG_DEBUG_ONLY(Format("%1% send successfully %4% bytes to %2%, port %3%", __FUNCTION__, GetEndpoint().address(), GetEndpoint().port(), bytesTransferred));
 
 		if (this->OnSentPacket(m_sendQueue.front(), bytesTransferred))
 			m_sendQueue.pop_front();

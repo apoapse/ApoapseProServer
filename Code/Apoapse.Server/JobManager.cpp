@@ -39,7 +39,7 @@ void JobManager::Push(LambdaFunction callback)
 	{
 		Int64 newSize = m_queueCapacity * 2;
 
-		Log("JobManager: queue close to be full, preventively resizing to " + std::to_string(newSize));
+		//Log("JobManager: queue close to be full, preventively resizing to " + std::to_string(newSize));
 		ResizeQueue(newSize);
 	}
 }

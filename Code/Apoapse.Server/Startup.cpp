@@ -16,6 +16,7 @@
 #include <boost\any.hpp>
 
 #include "ThreadPool.h"
+#include "Log.h"
 
 #ifdef UNIT_TESTS
 #include "UnitTestsSystem.h"
@@ -32,10 +33,10 @@ void ApoapseServerStartup::Start(Global* outsideGlobalPtr, std::vector<std::stri
 #endif // UNIT_TESTS
 
 	ASSERT(global == nullptr);
-
 	global = outsideGlobalPtr;
 	ASSERT(global);
 
+	global->logger = std::make_unique<Logger>("log.txt");
 	global->settings = new SettingsManager();
 	try
 	{
@@ -50,12 +51,9 @@ void ApoapseServerStartup::Start(Global* outsideGlobalPtr, std::vector<std::stri
 	global->jobManager = new JobManager();
 	global->jobManager->Init();
 
-	global->logger = new Logger();
-	global->logger->Init("log.txt");
-
 	auto threadPool = new ThreadPool("Main (test)", 4);
 	auto test = threadPool->PushTask([] { std::this_thread::sleep_for(std::chrono::milliseconds(300)); return string("My name is NULL"); });
-	//auto test2 = threadPool->Push([] { Log("HELLLLLO!!!"); return 101; });
+	//auto test2 = threadPool->Push([] { //Log("HELLLLLO!!!"); return 101; });
 
 	
 	
@@ -73,9 +71,9 @@ void ApoapseServerStartup::Start(Global* outsideGlobalPtr, std::vector<std::stri
 
 			std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
-			Log("Completed LONG on thread: " + mystring);
+			//Log("Completed LONG on thread: " + mystring);
 		});
-		Log("Quik1");
+		//Log("Quik1");
 
 
 		boost::asio::io_service io_serviceGeneral;
@@ -94,12 +92,21 @@ void ApoapseServerStartup::Start(Global* outsideGlobalPtr, std::vector<std::stri
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-		Log("Completed short on thread: " + mystring);
+		//Log("Completed short on thread: " + mystring);
 	});
 
-	Log("Quik2");
-	Log("NAME?: " + test.get());
+	Log(*global->logger) << LogSeverity::debug << "HI" << " " << 15;
+
+	LOG << "Works?!";
+	LOG << LogSeverity::warning << "Oh yeah.";
+	LOG_DEBUG_ONLY("yup" << " " << "that's correct");
+
+	//Log("Quik2");
+	//Log("NAME?: " + test.get());
 	//io_serviceGeneral.run();
+
+	string s;
+	std::getline(std::cin, s);
 }
 
 ApoapseServerStartup::~ApoapseServerStartup()
