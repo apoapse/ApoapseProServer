@@ -16,13 +16,17 @@ ThreadPool::ThreadPool(const string& threadPoolName, UInt32 nbThreads)
 	}
 
 	//Log -> created x threads
-	Log("Created worker threads");
+	//Log("Created worker threads for " + threadPoolName + " : " + std::to_string(nbThreads));
 }
 
 ThreadPool::~ThreadPool()
 {
-	m_tasksInQueueCounter = 0;
 	m_conditionVariable.notify_all();
+
+	for (std::thread& thread : m_workerThreads)
+	{
+		thread.join();
+	}
 }
 
 void ThreadPool::OnAddedTask()
@@ -37,7 +41,7 @@ void ThreadPool::OnAddedTask()
 	{
 		Int64 newSize = m_queueCapacity * 2;
 
-		Log("JobManager: queue close to be full, preventively resizing to " + std::to_string(newSize));
+		//Log("JobManager: queue close to be full, preventively resizing to " + std::to_string(newSize));
 		ResizeQueue(newSize);
 	}
 }
@@ -46,22 +50,23 @@ void ThreadPool::Consume()
 {
 	while (true)
 	{
-		if (m_tasksInQueueCounter == 0)
-		{
-			std::unique_lock<std::mutex> lock(m_mutex);
-			m_conditionVariable.wait(lock);
-		}
-		else
+		std::unique_lock<std::mutex> lock(m_mutex);
+
+		if (m_tasksInQueueCounter > 0)
 		{
 			ITask* task;
 			if (m_workQueue.pop(task))
 			{
+				ASSERT(m_tasksInQueueCounter > 0);
 				--m_tasksInQueueCounter;
 
 				task->Execute();
 				delete task;
 			}
 		}
+
+		if (m_tasksInQueueCounter == 0)
+			m_conditionVariable.wait(lock);
 	}
 }
 
