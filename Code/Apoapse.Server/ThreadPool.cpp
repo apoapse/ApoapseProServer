@@ -15,8 +15,7 @@ ThreadPool::ThreadPool(const string& threadPoolName, UInt32 nbThreads)
 		m_workerThreads.push_back(std::move(thread));
 	}
 
-	//Log -> created x threads
-	//Log("Created worker threads for " + threadPoolName + " : " + std::to_string(nbThreads));
+	LOG << "Created the thread pool " << threadPoolName << " with " << nbThreads << " worker threads";
 }
 
 ThreadPool::~ThreadPool()
@@ -41,7 +40,7 @@ void ThreadPool::OnAddedTask()
 	{
 		Int64 newSize = m_queueCapacity * 2;
 
-		//Log("JobManager: queue close to be full, preventively resizing to " + std::to_string(newSize));
+		LOG << "Thread pool " << threadPoolName << ": queue close to be full, preventively resizing to " << newSize;
 		ResizeQueue(newSize);
 	}
 }

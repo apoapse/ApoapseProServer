@@ -4,11 +4,9 @@
 
 #include <iostream>
 
-Global* global = Global::CreateGlobal();
-
-int main(int argcout, char* argv[])
+int main(int argcount, char* argv[])
 {
-	InternalLibraryLoader::LoadInternalLibrary(global, "Apoapse.Server", std::vector<string>(argv, argv + argcout));
+	InternalLibraryLoader::LoadInternalLibrary("Apoapse.Server", std::vector<string>(argv, argv + argcount));
 
 	string inputstr;
 	getline(std::cin, inputstr);

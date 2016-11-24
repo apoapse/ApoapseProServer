@@ -61,8 +61,6 @@ void Logger::LogToConsole(const LogMessage& logMessage)
 
 void Logger::LogToFile(const LogMessage& logMessage)
 {
-	std::lock_guard<std::mutex> lock(m_writeFileMutex);
-
 	try
 	{
 		std::ofstream ofs;

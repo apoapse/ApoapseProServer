@@ -1,8 +1,8 @@
 #pragma once
-#pragma once
+
 enum LogSeverity
 {
-	normal,
+	normal,		// Default value
 	verbose,
 	debug,
 	warning,

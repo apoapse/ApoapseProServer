@@ -7,9 +7,6 @@
     <ClCompile Include="Common.cpp">
       <Filter>Globals</Filter>
     </ClCompile>
-    <ClCompile Include="JobManager.cpp">
-      <Filter>Threading</Filter>
-    </ClCompile>
     <ClCompile Include="TestConnection.cpp">
       <Filter>Network\Protocol</Filter>
     </ClCompile>
@@ -18,9 +15,6 @@
     </ClCompile>
     <ClCompile Include="TCPConnection.cpp">
       <Filter>Network\Socket</Filter>
-    </ClCompile>
-    <ClCompile Include="UnitTestsSystem.cpp">
-      <Filter>Tests</Filter>
     </ClCompile>
     <ClCompile Include="NetMessage.cpp">
       <Filter>Network\Protocol</Filter>
@@ -51,6 +45,12 @@
     <ClCompile Include="LogMessage.cpp">
       <Filter>InternalSystems\Logger</Filter>
     </ClCompile>
+    <ClCompile Include="UT_ByteConverter.cpp">
+      <Filter>Tests\UnitTests</Filter>
+    </ClCompile>
+    <ClCompile Include="UT_SettingsManager.cpp">
+      <Filter>Tests\UnitTests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -75,12 +75,6 @@
     <ClInclude Include="InternalLibraryLoadingAPI.h">
       <Filter>InternalSystems\DLLSystem</Filter>
     </ClInclude>
-    <ClInclude Include="JobManager.h">
-      <Filter>Threading</Filter>
-    </ClInclude>
-    <ClInclude Include="IJobManager.h">
-      <Filter>Threading</Filter>
-    </ClInclude>
     <ClInclude Include="ISettingsManager.h">
       <Filter>InternalSystems\Settings</Filter>
     </ClInclude>
@@ -96,28 +90,13 @@
     <ClInclude Include="TCPConnection.h">
       <Filter>Network\Socket</Filter>
     </ClInclude>
-    <ClInclude Include="ByteUtils.h">
-      <Filter>Algorithms</Filter>
-    </ClInclude>
     <ClInclude Include="StringExtensions.h">
       <Filter>Algorithms</Filter>
-    </ClInclude>
-    <ClInclude Include="UnitTestsSystem.h">
-      <Filter>Tests</Filter>
-    </ClInclude>
-    <ClInclude Include="UT_SettingsManager.h">
-      <Filter>Tests\UnitTests</Filter>
-    </ClInclude>
-    <ClInclude Include="UT_ByteConverter.h">
-      <Filter>Tests\UnitTests</Filter>
     </ClInclude>
     <ClInclude Include="NetMessage.h">
       <Filter>Network\Protocol</Filter>
     </ClInclude>
     <ClInclude Include="ConfigVars.h" />
-    <ClInclude Include="UT_NetMessage.h">
-      <Filter>Tests\UnitTests</Filter>
-    </ClInclude>
     <ClInclude Include="UTF8.h">
       <Filter>Algorithms</Filter>
     </ClInclude>
@@ -134,9 +113,6 @@
     <ClInclude Include="ApoapseServer.h">
       <Filter>Network</Filter>
     </ClInclude>
-    <ClInclude Include="Connect.h">
-      <Filter>Network\Protocol\CommandSystem\Commands</Filter>
-    </ClInclude>
     <ClInclude Include="ThreadPool.h">
       <Filter>Threading</Filter>
     </ClInclude>
@@ -151,6 +127,12 @@
     </ClInclude>
     <ClInclude Include="eLogSeverity.h">
       <Filter>InternalSystems\Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="ILogger.h">
+      <Filter>InternalSystems\Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="ByteUtils.h">
+      <Filter>Algorithms</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

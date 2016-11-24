@@ -6,17 +6,11 @@
 #include <boost\algorithm\string.hpp>
 #include <boost\thread.hpp>
 
-SettingsManager::SettingsManager()
-{
-}
-
-void SettingsManager::Init(const string& configFilePath)
+SettingsManager::SettingsManager(const string& configFilePath)
 {
 	m_configFilePath = configFilePath;
 
 	LoadConfigFile();
-
-	//Log("SettingsManager initialized");
 }
 
 void SettingsManager::LoadConfigFile()
@@ -35,7 +29,7 @@ template <typename U> void SettingsManager::InternalRegisterConfigVar(const stri
 
 	if (!m_registeredConfigs.insert(std::make_pair(configVarName, defaultValue)).second)
 	{
-		//Log(Format("%1% config variable %2% is already registered", __FUNCTION__, configVarName), LogSeverity::warning);
+		LOG << "SettingsManager: config variable " << configVarName << " is already registered" << LogSeverity::warning;
 	}
 }
 
@@ -72,18 +66,13 @@ template <typename U> U SettingsManager::InternalReadConfigValue(const string& c
 {
 	boost::lock_guard<boost::mutex> lock(m_mutex);
 
-#ifdef DEBUG
-	//	In debug mode, we check if the variable is registered even if it is already implemented in the config file
-	GetRegisteredConfigVariableByName<U>(configVarName);
-#endif
-
 	try
 	{
 		return m_propertyTree.get<U>(configVarName);	// #TODO What happen if the value in the config file is not of the right type?
 	}
 	catch (const boost::property_tree::ptree_error e)	// #TODO find a better way that do not use exceptions
 	{
-		//Log("Can't find the value in the config file. Use the default value from the registered variable instead.", LogSeverity::debug);
+		LOG << "SettingsManager: Can't find the value of " << configVarName << ". Using the default value from the registered variable instead." << LogSeverity::debug;
 
 		ConfigVariable<U> registedVariable = GetRegisteredConfigVariableByName<U>(configVarName);
 		return registedVariable.defaultValue;

@@ -3,8 +3,9 @@
 #include "Common.h"
 
 #include "NetMessage.h"
+#include "TCPServer.h"
 
-ApoapseServer::ApoapseServer()
+ApoapseServer::ApoapseServer(UInt16 port)
 {
 	NetMessage::SetMaxAllowedSize();
 }

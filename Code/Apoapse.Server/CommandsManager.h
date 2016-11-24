@@ -55,6 +55,6 @@ public:
 		m_commandFactories[commandName] = std::make_unique<CommmandFactory<T_COMMAND>>();
 	}
 
-	std::shared_ptr<Command> CreateCommand(string commandName);
-	bool CommandExist(string commandName) const;
+	std::shared_ptr<Command> CreateCommand(const string& commandName);
+	bool CommandExist(const string& commandName) const;
 };

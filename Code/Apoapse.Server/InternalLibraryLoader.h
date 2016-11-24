@@ -1,10 +1,11 @@
 #pragma once
 #include <boost/dll/import.hpp>
 #include "InternalLibraryLoadingAPI.h"
+#include <iostream>
 
 struct InternalLibraryLoader
 {
-	static void LoadInternalLibrary(Global* globalPtr, const char* libraryName, std::vector<std::string>& params)
+	static void LoadInternalLibrary(const char* libraryName, std::vector<std::string>& params)
 	{
 		boost::shared_ptr<InternalLibraryLoadingAPI> coreDLL;
 		try
@@ -13,11 +14,10 @@ struct InternalLibraryLoader
 		}
 		catch (const std::exception&)
 		{
-			FatalError("Unable to load the dynamic library " + string(libraryName));
+			std::cout << "Unable to load the dynamic library " << string(libraryName);
+			std::abort();
 		}
 
-		coreDLL->Start(global, params);
-
-		global = globalPtr;
+		coreDLL->Start(params);
 	}
 };

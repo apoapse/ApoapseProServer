@@ -1,5 +1,5 @@
 #pragma once
-#include "UnitTest.h"
+#include "Apoapse.UnitTest/UnitTest.h"
 #include <vector>
 
 #ifdef COMPILE_DLL
@@ -10,10 +10,10 @@
 
 class TestsManager
 {
-	typedef std::function<void()> lamdba;
 	using string = std::string;
 private:
-	std::vector<const UnitTest*> m_registeredUnitTests;
+	std::vector<UnitTest> m_registeredUnitTests;
+
 	enum ConsoleColors
 	{
 		default,
@@ -23,11 +23,36 @@ private:
 
 public:
 	UNIT_TESTS_DLL_API TestsManager();
-	virtual UNIT_TESTS_DLL_API ~TestsManager();
+	UNIT_TESTS_DLL_API virtual ~TestsManager();
 
-	UNIT_TESTS_DLL_API void RunTests(const char* testsPath = "");
-	UNIT_TESTS_DLL_API void RegisterTest(const UnitTest* test);
+
+	UNIT_TESTS_DLL_API void RunTests(const char* /*testsPath*/ = "");
+	UNIT_TESTS_DLL_API void RegisterTest(const UnitTest& test);
+
+	TestsManager(TestsManager const&) = delete;
+	void operator=(TestsManager const&) = delete;
+
+	static TestsManager& GetInstance()
+	{
+		static TestsManager testsManager;
+		return testsManager;
+	}
 
 private:
-	void Log(const string& msg, ConsoleColors color = ConsoleColors::default) const;
+	UNIT_TESTS_DLL_API void Log(const string& msg, ConsoleColors color = ConsoleColors::default) const;
 };
+
+class UnitTestAutoRegister
+{
+public:
+	UnitTestAutoRegister(const UnitTest& test)
+	{
+		TestsManager::GetInstance().RegisterTest(test);
+	}
+};
+
+#define CONCAT_IMPL( x, y ) x##y
+#define MACRO_CONCAT( x, y ) CONCAT_IMPL( x, y )
+
+#define UNIT_TEST(_name)	static UnitTestAutoRegister MACRO_CONCAT(testRegister_, __COUNTER__)(UnitTest(_name, []() -> void
+#define UNIT_TEST_END		));

@@ -3,7 +3,7 @@
 class ApoapseServer
 {
 public:
-	ApoapseServer();
+	ApoapseServer(UInt16 port);
 	~ApoapseServer();
 
 private:

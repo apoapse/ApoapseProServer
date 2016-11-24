@@ -1,6 +1,6 @@
 {
   "system": {
-    "JobManager_nb_threads": 8
+    "glboal_threadpool_nb_threads": 8
   },
   "server": {
     "port":  3000

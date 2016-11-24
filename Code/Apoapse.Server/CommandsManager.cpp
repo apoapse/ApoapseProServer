@@ -12,14 +12,14 @@ CommandsManager::~CommandsManager()
 
 }
 
-std::shared_ptr<Command> CommandsManager::CreateCommand(string commandName)
+std::shared_ptr<Command> CommandsManager::CreateCommand(const string& commandName)
 {
 	ASSERT_MSG(CommandExist(commandName), "The command requested does not exist");
 
 	return m_commandFactories[commandName]->Create();
 }
 
-bool CommandsManager::CommandExist(string commandName) const
+bool CommandsManager::CommandExist(const string& commandName) const
 {
 	return (m_commandFactories.count(commandName) > 0);
 }

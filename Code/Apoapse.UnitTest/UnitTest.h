@@ -3,10 +3,8 @@
 #include <functional>
 #include <exception>
 
-#define UNIT_TEST(_name)	testsManager->RegisterTest(new UnitTest(_name, []() -> void
-#define UNIT_TEST_END	));
-
 class SuccessException : public std::exception {};
+
 class FailException : public std::exception {
 	std::string m_errorMsgStr;
 public:
@@ -24,19 +22,17 @@ public:
 class UnitTest
 {
 	class TestsManager;
-	typedef std::function<void()> lamdba;
 
-	lamdba m_testCode;
+	std::function<void()> m_testCode;
 	const char* m_fullName;
 
 public:
-	UnitTest(const char* fullName, lamdba code) : m_fullName(fullName), m_testCode(code)
+	UnitTest(const char* fullName, const std::function<void()> code) : m_fullName(fullName), m_testCode(code)
 	{
 	}
 
 	virtual ~UnitTest()
 	{
-		delete m_fullName;
 	}
 
 	bool Execute(std::string& returnErrorMsg) const
@@ -57,6 +53,8 @@ public:
 		}
 		catch (...)
 		{
+			returnErrorMsg = "An unexpected exception has been received";
+			return false;
 		}
 
 		return false;
@@ -67,16 +65,31 @@ public:
 		return m_fullName;
 	}
 
+	//************************************
+	// Method:    UnitTest::Fail - Calling this function from a unit test will directly report it as a failure and end the execution of the test
+	// Access:    public static 
+	// Parameter: const char * msg - Use it to explain why the unit test has failed. Optional but highly recommended
+	//************************************
 	static void Fail(const char* msg = "")
 	{
 		throw FailException(msg);
 	}
 
+	//************************************
+	// Method:    UnitTest::Success - Calling this function from a unit test will directly report it as a success and end the execution of the test
+	// Access:    public static 
+	//************************************
 	static void Success()
 	{
 		throw SuccessException();
 	}
 
+	//************************************
+	// Method:    UnitTest::Assert - The expression define if the unit test will be marked as a success or a failure and end the execution of the test
+	// Access:    public static 
+	// Parameter: bool expression - Works like a normal assert
+	// Parameter: const char * msg - Use it to explain why the unit test has failed. Optional but highly recommended
+	//************************************
 	static void Assert(bool expression, const char* msg = "")
 	{
 		if (expression)

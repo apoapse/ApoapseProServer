@@ -10,7 +10,7 @@ public:
 	}
 	~ApoapseServerStartup();
 
-	void Start(Global* outsideGlobalPtr, std::vector<std::string>& params);
+	void Start(std::vector<std::string>& params);
 };
 
 extern "C" BOOST_SYMBOL_EXPORT ApoapseServerStartup apoapse_internal_dll;

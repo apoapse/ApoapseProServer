@@ -1,15 +1,15 @@
 #pragma once
 #include <sstream>
-#include "Logger.h"
+#include "ILogger.h"
 
 class Log
 {
 	std::stringstream m_stream;
-	Logger& m_logger;
+	ILogger& m_logger;
 	LogSeverity m_logSeverity { LogSeverity::normal };
 
 public:
-	Log(Logger& logger) : m_logger(logger)
+	Log(ILogger& logger) : m_logger(logger)
 	{
 	}
 
