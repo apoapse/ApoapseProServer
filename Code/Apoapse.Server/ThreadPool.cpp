@@ -3,7 +3,7 @@
 #include "Common.h"
 
 ThreadPool::ThreadPool(const string& threadPoolName, UInt32 nbThreads)
-	: threadPoolName(threadPoolName),
+	: m_threadPoolName(threadPoolName),
 	m_queueCapacity(INITIAL_QUEUE_CAPACITY),
 	m_tasksInQueueCounter(0)
 {
@@ -40,7 +40,7 @@ void ThreadPool::OnAddedTask()
 	{
 		Int64 newSize = m_queueCapacity * 2;
 
-		LOG << "Thread pool " << threadPoolName << ": queue close to be full, preventively resizing to " << newSize;
+		LOG << "Thread pool " << m_threadPoolName << ": queue close to be full, preventively resizing to " << newSize;
 		ResizeQueue(newSize);
 	}
 }
@@ -78,7 +78,12 @@ void ThreadPool::ResizeQueue(size_t requestedQueueCapacity)
 	m_queueCapacity = m_queueCapacity + (Int64)requestedQueueCapacity;
 }
 
-Int64 ThreadPool::GetTasksInQueueCount()
+Int64 ThreadPool::GetTasksInQueueCount() const
 {
 	return m_tasksInQueueCounter;
+}
+
+string ThreadPool::GetThreadPoolName() const
+{
+	return m_threadPoolName;
 }

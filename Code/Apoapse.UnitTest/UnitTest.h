@@ -35,6 +35,11 @@ public:
 	{
 	}
 
+	bool operator== (const UnitTest& other)
+	{
+		return m_fullName == other.GetFullName();
+	}
+
 	bool Execute(std::string& returnErrorMsg) const
 	{
 		try

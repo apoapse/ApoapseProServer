@@ -27,7 +27,7 @@ public:
 	void AppendStr(const std::string& str);
 
 	const std::vector<byte>& GetRawData() const;
-	std::wstring GetDataStr(size_t offset = 0) const;
+	string GetDataU8Str(size_t offset = 0) const;
 	bool IsComplete() const;
 	size_t GetContentSize() const;
 };

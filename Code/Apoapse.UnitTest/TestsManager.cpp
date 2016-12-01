@@ -1,6 +1,8 @@
 #include "TestsManager.h"
 #include <iostream>
 #include <string>
+#include <algorithm>
+#include <cassert>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -45,6 +47,8 @@ UNIT_TESTS_DLL_API void TestsManager::RunTests(const char* /*testsPath = ""*/)	/
 
 void TestsManager::RegisterTest(const UnitTest& test)
 {
+	assert(!(std::find(m_registeredUnitTests.begin(), m_registeredUnitTests.end(), test) != m_registeredUnitTests.end()) && "Test already registered");
+
 	m_registeredUnitTests.push_back(test);
 }
 

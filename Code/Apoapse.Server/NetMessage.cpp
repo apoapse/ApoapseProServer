@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Common.h"
 #include "NetMessage.h"
-#include "UTF8.h"
+#include "UnicodeUtils.h"
 #include "TCPConnection.h"
 
 UInt64 NetMessage::maxAllowedSize = 0;
@@ -45,12 +45,12 @@ const std::vector<byte>& NetMessage::GetRawData() const
 	return m_data;
 }
 
-std::wstring NetMessage::GetDataStr(size_t offset) const
+string NetMessage::GetDataU8Str(size_t offset /*= 0*/) const
 {
 	if (m_containApoapseTCPHeader)
 		offset += 4;
 
-	return UTF8::utf8_to_wstring(string(m_data.begin() + offset, m_data.end()));
+	return string(m_data.begin() + offset, m_data.end());
 }
 
 bool NetMessage::IsComplete() const

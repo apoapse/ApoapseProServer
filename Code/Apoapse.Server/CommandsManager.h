@@ -5,16 +5,16 @@
 // OBJECT FACTORY
 struct ICommandFactory
 {
-	virtual std::shared_ptr<Command> Create() = 0;
+	virtual std::shared_ptr<Command> Create(ApoapseServer& apoapseServer) = 0;
 };
 
 template<class T_COMMAND>
 class CommmandFactory : public ICommandFactory
 {
 public:
-	std::shared_ptr<Command> Create()
+	std::shared_ptr<Command> Create(ApoapseServer& apoapseServer)
 	{
-		return std::make_shared<T_COMMAND>();
+		return std::make_shared<T_COMMAND>(apoapseServer);
 	}
 };
 
@@ -55,6 +55,6 @@ public:
 		m_commandFactories[commandName] = std::make_unique<CommmandFactory<T_COMMAND>>();
 	}
 
-	std::shared_ptr<Command> CreateCommand(const string& commandName);
+	std::shared_ptr<Command> CreateCommand(const string& commandName, ApoapseServer& apoapseServer);
 	bool CommandExist(const string& commandName) const;
 };

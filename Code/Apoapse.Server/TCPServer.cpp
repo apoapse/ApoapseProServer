@@ -2,16 +2,16 @@
 #include "Common.h"
 #include "TCPServer.h"
 
-TCPServer::TCPServer(boost::asio::io_service& io_service, const UInt16 port, const Protocol IPProtocol)
+TCPServer::TCPServer(boost::asio::io_service& io_service, const UInt16 port, const Protocol ipProtocol /*= Protocol::IP_v4*/)
 	: m_acceptor(std::make_unique<boostTCP::acceptor>(io_service)), m_ioservice(io_service)
 {
 	boost::system::error_code error;
 	boostTCP::endpoint endpoint;
 
-	if (IPProtocol == Protocol::IP_v4)
+	if (ipProtocol == Protocol::IP_v4)
 		endpoint = boostTCP::endpoint(boostTCP::v4(), port);
 
-	else if (IPProtocol == Protocol::IP_v6)
+	else if (ipProtocol == Protocol::IP_v6)
 		endpoint = boostTCP::endpoint(boostTCP::v6(), port);
 
 	m_acceptor->open(endpoint.protocol(), error);

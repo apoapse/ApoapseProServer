@@ -158,6 +158,7 @@
   <ItemGroup>
     <ClCompile Include="ApoapseAddress.cpp" />
     <ClCompile Include="ApoapseServer.cpp" />
+    <ClCompile Include="Command.cpp" />
     <ClCompile Include="CommandsManager.cpp" />
     <ClCompile Include="ConfigVars.cpp" />
     <ClCompile Include="Logger.cpp" />
@@ -166,14 +167,15 @@
     <ClCompile Include="Connect.cpp" />
     <ClCompile Include="TCPConnection.cpp" />
     <ClCompile Include="TCPServer.cpp" />
+    <ClCompile Include="UnicodeUtils.cpp" />
     <ClCompile Include="UT_ByteConverter.cpp" />
     <ClCompile Include="TestConnection.cpp" />
     <ClCompile Include="Startup.cpp" />
     <ClCompile Include="Common.cpp" />
     <ClCompile Include="SettingsManager.cpp" />
-    <ClCompile Include="StringExtensions.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
     <ClCompile Include="UT_SettingsManager.cpp" />
+    <ClCompile Include="UT_StringExtensions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ApoapseAddress.h" />
@@ -188,7 +190,7 @@
     <ClInclude Include="LogMessage.h" />
     <ClInclude Include="NetMessage.h" />
     <ClInclude Include="ThreadPool.h" />
-    <ClInclude Include="UTF8.h" />
+    <ClInclude Include="UnicodeUtils.h" />
     <ClInclude Include="TCPConnection.h" />
     <ClInclude Include="TCPServer.h" />
     <ClInclude Include="TestConnection.h" />

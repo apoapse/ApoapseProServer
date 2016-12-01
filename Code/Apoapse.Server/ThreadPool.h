@@ -30,34 +30,39 @@ class ThreadPool
 		}
 	};
 
+	const string m_threadPoolName;
 	std::vector<std::thread> m_workerThreads;
 	std::atomic<Int64> m_tasksInQueueCounter;
 	std::atomic<UInt64> m_queueCapacity;
-	boost::lockfree::queue<ITask*> m_workQueue{ INITIAL_QUEUE_CAPACITY };	// We are using raw pointer here because the Boost lockfree queue require a trivial assignment operator
+	boost::lockfree::queue<ITask*> m_workQueue { INITIAL_QUEUE_CAPACITY };	// We are using raw pointer here because the Boost lockfree queue require a trivial assignment operator
 	std::condition_variable m_conditionVariable;
 	std::mutex m_mutex;
 
 public:
-	const string threadPoolName;
-
+	//************************************
+	// Method:    ThreadPool::ThreadPool - Task based thread pool with a producer-consumer queue model
+	// Parameter: const string & threadPoolName - Name of the object, useful for debugging
+	// Parameter: UInt32 nbThreads - Number of worker threads
+	//************************************
 	ThreadPool(const string& threadPoolName, UInt32 nbThreads);
 	virtual ~ThreadPool();
 
 	template<typename T>
 	std::future<typename std::result_of<T()>::type> PushTask(const T func)
 	{
-		typedef typename std::result_of<T()>::type TypeResult;
+		using TypeResult = std::result_of<T()>::type;
 
-		Task<TypeResult>* task = new Task<TypeResult>(std::move(func));
+		auto* task = new Task<TypeResult>(std::move(func));
 		std::future<TypeResult> response = task->task.get_future();
 
-		while(!m_workQueue.push(std::move(task)));
+		while (!m_workQueue.push(std::move(task)));
 		OnAddedTask();
 
 		return response;
 	}
 
-	Int64 GetTasksInQueueCount();
+	Int64 GetTasksInQueueCount() const;
+	string GetThreadPoolName() const;
 
 protected:
 	void Consume();

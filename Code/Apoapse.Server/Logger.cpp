@@ -29,7 +29,10 @@ void Logger::Log(const LogMessage& logMessage)
 	LogToConsole(logMessage);
 
 	if (m_asyncLogToFile)
+	{
+		ASSERT(m_localThreadPool.get() != nullptr);
 		m_localThreadPool->PushTask([this, logMessage] { LogToFile(logMessage); });
+	}
 	else
 		LogToFile(logMessage);
 }

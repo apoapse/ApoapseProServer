@@ -5,6 +5,9 @@
 #include "Logger.h"
 #include "ApoapseServer.h"
 
+#include "TCPServer.h"
+#include "TestConnection.h"
+
 #ifdef UNIT_TESTS
 #include "Apoapse.UnitTest\TestsManager.h"
 #endif // UNIT_TESTS
@@ -13,6 +16,14 @@ void ApoapseServerStartup::Start(std::vector<std::string>& params)
 {
 	ASSERT(global == nullptr);
 	global = Global::CreateGlobal();
+
+#ifdef UNIT_TESTS
+	if (std::find(params.begin(), params.end(), "-run_unit_tests") != params.end())
+	{
+		TestsManager::GetInstance().RunTests();
+		return;
+	}
+#endif // UNIT_TESTS
 
 	try
 	{
@@ -27,25 +38,27 @@ void ApoapseServerStartup::Start(std::vector<std::string>& params)
 	global->logger = std::make_unique<Logger>("log.txt");
 	global->threadPool = std::make_unique<ThreadPool>("Global thread pool", global->settings->ReadConfigValue_uint("system.glboal_threadpool_nb_threads"));
 
-#ifdef UNIT_TESTS
-	if (std::find(params.begin(), params.end(), "-run_unit_tests") != params.end())
-	{
-		TestsManager::GetInstance().RunTests();
-		return;
-	}
-#endif // UNIT_TESTS
-	/*new*/ ApoapseServer((UInt16)global->settings->ReadConfigValue_uint("server.port"));
+
+	/*new*/ ApoapseServer apoapseServer((UInt16)global->settings->ReadConfigValue_uint("server.port"));
 	
-	//std::thread thread([&]
-	//{
-	//	boost::asio::io_service io_serviceGeneral;
 
-	//	TCPServer server(io_serviceGeneral, 3000/*, TCPServer::IP_v6*/);
-	//	server.StartAccept<TestConnection>();
 
-	//	io_serviceGeneral.run(); 
-	//});
-	//thread.detach();
+#pragma region regionName
+
+	std::thread thread([&]
+	{
+		boost::asio::io_service io_serviceGeneral;
+
+		TCPServer server(io_serviceGeneral, 3000/*, TCPServer::IP_v6*/);
+		server.StartAccept<TestConnection>();
+
+		io_serviceGeneral.run(); 
+	});
+	thread.detach();
+#pragma endregion regionName
+
+
+
 
 	string s;
 	std::getline(std::cin, s);

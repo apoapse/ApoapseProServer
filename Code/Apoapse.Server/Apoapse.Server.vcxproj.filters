@@ -10,9 +10,6 @@
     <ClCompile Include="TestConnection.cpp">
       <Filter>Network\Protocol</Filter>
     </ClCompile>
-    <ClCompile Include="StringExtensions.cpp">
-      <Filter>Algorithms</Filter>
-    </ClCompile>
     <ClCompile Include="TCPConnection.cpp">
       <Filter>Network\Socket</Filter>
     </ClCompile>
@@ -49,6 +46,13 @@
       <Filter>Tests\UnitTests</Filter>
     </ClCompile>
     <ClCompile Include="UT_SettingsManager.cpp">
+      <Filter>Tests\UnitTests</Filter>
+    </ClCompile>
+    <ClCompile Include="Command.cpp">
+      <Filter>Network\Protocol\CommandSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="UnicodeUtils.cpp" />
+    <ClCompile Include="UT_StringExtensions.cpp">
       <Filter>Tests\UnitTests</Filter>
     </ClCompile>
   </ItemGroup>
@@ -91,15 +95,12 @@
       <Filter>Network\Socket</Filter>
     </ClInclude>
     <ClInclude Include="StringExtensions.h">
-      <Filter>Algorithms</Filter>
+      <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="NetMessage.h">
       <Filter>Network\Protocol</Filter>
     </ClInclude>
     <ClInclude Include="ConfigVars.h" />
-    <ClInclude Include="UTF8.h">
-      <Filter>Algorithms</Filter>
-    </ClInclude>
     <ClInclude Include="Command.h">
       <Filter>Network\Protocol\CommandSystem</Filter>
     </ClInclude>
@@ -132,7 +133,10 @@
       <Filter>InternalSystems\Logger</Filter>
     </ClInclude>
     <ClInclude Include="ByteUtils.h">
-      <Filter>Algorithms</Filter>
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="UnicodeUtils.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -147,9 +151,6 @@
     </Filter>
     <Filter Include="Network\Socket">
       <UniqueIdentifier>{b306046f-3d26-4f7d-8c72-b59ce52f80e6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Algorithms">
-      <UniqueIdentifier>{3c2daeed-824c-4470-9a30-dada018c5c2a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Globals">
       <UniqueIdentifier>{105bdf6a-270b-416e-bfd9-2661ab7b7e17}</UniqueIdentifier>
@@ -177,6 +178,9 @@
     </Filter>
     <Filter Include="InternalSystems\Settings">
       <UniqueIdentifier>{2368b359-b726-4631-aac2-d992fc5a0c20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{3c2daeed-824c-4470-9a30-dada018c5c2a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

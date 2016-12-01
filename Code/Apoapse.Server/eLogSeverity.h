@@ -1,6 +1,6 @@
 #pragma once
 
-enum LogSeverity
+enum class LogSeverity
 {
 	normal,		// Default value
 	verbose,

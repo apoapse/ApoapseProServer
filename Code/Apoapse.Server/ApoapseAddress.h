@@ -5,7 +5,7 @@ struct ApoapseAddress
 {
 	static const size_t FULL_ADDRESS_MAX_LENGTH = 255;
 
-	ApoapseAddress(const std::string& rawAddress);
+	ApoapseAddress(const std::string& rawAddress);	//#TODO remplacre with std::u16string
 
 	bool IsValid() const;
 	std::string GetFullAddress() const;

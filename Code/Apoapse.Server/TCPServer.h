@@ -11,13 +11,13 @@ class TCPServer
 	std::unique_ptr<boostTCP::acceptor> m_acceptor;
 
 public:
-	enum Protocol
+	enum class Protocol
 	{
 		IP_v4,
 		IP_v6
 	};
 
-	TCPServer(boost::asio::io_service& io_service, const UInt16 port, const Protocol IPProtocol = IP_v4);
+	TCPServer(boost::asio::io_service& io_service, const UInt16 port, const Protocol ipProtocol = Protocol::IP_v4);
 	virtual ~TCPServer();
 
 	void Close();

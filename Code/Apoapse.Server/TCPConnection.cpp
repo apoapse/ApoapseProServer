@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Common.h"
 #include "TCPConnection.h"
-#include "UTF8.h"
+#include "UnicodeUtils.h"
 
 TCPConnection::TCPConnection(boost::asio::io_service& io_service) : m_socket(io_service), m_writeStrand(io_service)
 {
