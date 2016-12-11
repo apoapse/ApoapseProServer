@@ -11,15 +11,12 @@ Command::Command(ApoapseServer& apoapseServer) : m_server(apoapseServer)
 
 Command::~Command()
 {
-
+	LOG_DEBUG_FUNCTION_NAME();
 }
 
 void Command::FromRawCmd(string& u8cmdText)
 {
 	ASSERT_MSG(u8cmdText.substr(0, GetConfig().name.length()) == GetConfig().name, "The command name is the command raw text does not mach the command name defined in the class");
-
-	if (u8cmdText.length() < GetConfig().name.length())
-		ASSERT(false);	//TODO
 
 	u8cmdText = u8cmdText.erase(0, GetConfig().name.length());
 
@@ -32,11 +29,12 @@ void Command::FromRawCmd(string& u8cmdText)
 	{
 		// is JSON
 		std::stringstream ss;
-		ss << u8cmdText;	// #OPTIMIZATION avoid full copy of the string in the stream
+		ss << std::move(u8cmdText);
 
 		try
 		{
 			boost::property_tree::read_json(ss, m_fields);
+			m_inputRealFormat = Format::JSON;
 		}
 		catch (const std::exception& e)
 		{
@@ -53,6 +51,8 @@ void Command::FromRawCmd(string& u8cmdText)
 			m_isValid = false;
 			return;
 		}
+
+		m_inputRealFormat = Format::INLINE;
 
 		{
 			string u16CmdText = u8cmdText;	// #TODO #IMPORTANT Convert to UTF-16
@@ -80,6 +80,13 @@ void Command::ValidateInternal()
 
 	const CommandConfig localConfig = GetConfig();	// Create a local copy of the config info to avoid iterator issues while reading in the loop
 
+	if (localConfig.isPayloadExpected && !m_fields.get_optional<string>("payload_size").is_initialized())	//TODO: content length
+	{
+		LOG << "Command pre-validation (" << localConfig.name << "), a payload is expected but the field payload_size is missing" << LogSeverity::warning;
+		m_isValid = false;
+		return;
+	}
+
 	for (const auto& preRegisteredField : localConfig.fields)
 	{
 		const auto fieldActualValue = m_fields.get_optional<string>(preRegisteredField.name);
@@ -92,7 +99,7 @@ void Command::ValidateInternal()
 
 			// In debug mode we continue the pre-validation process in order to see all the errors
 			#ifndef DEBUG
-			break;
+			return;
 			#endif
 		}
 
@@ -106,13 +113,13 @@ void Command::ValidateInternal()
 				m_isValid = false;
 
 				#ifndef DEBUG
-				break;
+				return;
 				#endif
 			}
 		}
 	}
 
-	if (!PostValidate())
+	if (m_isValid && !PostValidate())
 		m_isValid = false;
 }
 
@@ -121,7 +128,22 @@ bool Command::IsValid() const
 	return m_isValid;
 }
 
-boost::optional<string> Command::GetFieldValue(const string& fieldName)
+Format Command::GetInputRealFormat() const
+{
+	return m_inputRealFormat;
+}
+
+string Command::ReadCommandNameFromRaw(const string& rawcmdText)
+{
+	const auto result = rawcmdText.find("\n");
+
+	if (result == std::string::npos)
+		throw std::exception();
+
+	return rawcmdText.substr(0, result);
+}
+
+boost::optional<string> Command::ReadFieldValue(const string& fieldName)
 {
 	return m_fields.get_optional<string>(fieldName);
 }

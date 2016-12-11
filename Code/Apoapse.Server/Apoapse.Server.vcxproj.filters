@@ -7,9 +7,6 @@
     <ClCompile Include="Common.cpp">
       <Filter>Globals</Filter>
     </ClCompile>
-    <ClCompile Include="TestConnection.cpp">
-      <Filter>Network\Protocol</Filter>
-    </ClCompile>
     <ClCompile Include="TCPConnection.cpp">
       <Filter>Network\Socket</Filter>
     </ClCompile>
@@ -51,8 +48,13 @@
     <ClCompile Include="Command.cpp">
       <Filter>Network\Protocol\CommandSystem</Filter>
     </ClCompile>
-    <ClCompile Include="UnicodeUtils.cpp" />
     <ClCompile Include="UT_StringExtensions.cpp">
+      <Filter>Tests\UnitTests</Filter>
+    </ClCompile>
+    <ClCompile Include="UnicodeUtils.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="UT_Command.cpp">
       <Filter>Tests\UnitTests</Filter>
     </ClCompile>
   </ItemGroup>
@@ -84,9 +86,6 @@
     </ClInclude>
     <ClInclude Include="Types.h">
       <Filter>Globals</Filter>
-    </ClInclude>
-    <ClInclude Include="TestConnection.h">
-      <Filter>Network\Protocol</Filter>
     </ClInclude>
     <ClInclude Include="TCPServer.h">
       <Filter>Network\Socket</Filter>
@@ -138,6 +137,15 @@
     <ClInclude Include="UnicodeUtils.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="RemoteServer.h">
+      <Filter>Actors</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalUser.h">
+      <Filter>Actors</Filter>
+    </ClInclude>
+    <ClInclude Include="Connection.h">
+      <Filter>Network\Protocol</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Threading">
@@ -181,6 +189,9 @@
     </Filter>
     <Filter Include="Utils">
       <UniqueIdentifier>{3c2daeed-824c-4470-9a30-dada018c5c2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actors">
+      <UniqueIdentifier>{db70fa0a-5f43-4d2f-ad9a-a5d7f53caf7f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

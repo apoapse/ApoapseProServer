@@ -23,7 +23,7 @@ template<class T_COMMAND>
 class CommandAutoRegister
 {
 public:
-	CommandAutoRegister(string name)
+	CommandAutoRegister(const string& name)
 	{
 		CommandsManager::GetInstance().RegisterCommand<T_COMMAND>(name);
 	}

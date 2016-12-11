@@ -1,11 +1,11 @@
 #pragma once
 #include "TCPConnection.h"
 
-class TestConnection : public TCPConnection
+class Connection : public TCPConnection
 {
 public:
-	TestConnection(boost::asio::io_service& io_service);
-	~TestConnection();
+	Connection(boost::asio::io_service& io_service);
+	~Connection();
 
 private:
 	bool OnAcceptedByServer();
