@@ -3,8 +3,10 @@
 #include "Common.h"
 
 #include "CommandsManager.h"
+#include "Command.h"
 #include "NetMessage.h"
 #include "TCPServer.h"
+
 
 ApoapseServer::ApoapseServer(UInt16 port)
 {
@@ -13,15 +15,10 @@ ApoapseServer::ApoapseServer(UInt16 port)
 	Test(std::move(test_sttuc));
 
 	auto test = CommandsManager::GetInstance().CreateCommand("CONNECT", *this);
-	std::string test2 = u8"CONNECT\n{\"username\": \"Guillaume\",	\"password\" : \"MyPassword\"}\n\nPAYLOAD";
+	//std::string test2 = u8"CONNECT\n{\"username\": \"Guillaume\",	\"password\" : \"MyPassword\"}";
+	std::string test2 = u8"CONNECT\n{\"username\": 7,	\"password\" : \"MyPassword\"}";
 	
 	test->FromRawCmd(test2);
-
-	//std::string test4 = u8"CONNECT\nGuillaume MyPassword\n";
-	//auto test3 = CommandsManager::GetInstance().CreateCommand("CONNECT", *this);
-	//test3->FromRawCmd(test4);
-
-	
 
 	NetMessage::SetMaxAllowedSize();
 }

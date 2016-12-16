@@ -60,61 +60,60 @@ void Command::FromRawCmd(string& u8cmdText)
 
 			StringExtensions::split(u16CmdText, tempValues, string(" "));
 
-			const CommandConfig localConfig = GetConfig();
-			for (size_t i = 0; i < localConfig.fields.size(); i++)
+			for (size_t i = 0; i < GetConfig().fields.size(); i++)
 			{
-				m_fields.add(localConfig.fields.at(i).name, std::move(tempValues.at(i)));
+				m_fields.add(GetConfig().fields.at(i).name, std::move(tempValues.at(i)));
 			}
 		}
 	}
 
 	//#OPTIMIZATION make sure u8cmdText is free from the memory
 
-	ValidateInternal();
+	ValidateInternal();	// #TODO #SHORT_TERM Call it via the thread pool? In this case, make sure Command::IsValid is thread safe
 }
 
 void Command::ValidateInternal()
 {
+
 	if (!IsValid())
 		return;
 
-	const CommandConfig localConfig = GetConfig();	// Create a local copy of the config info to avoid iterator issues while reading in the loop
-
-	if (localConfig.isPayloadExpected && !m_fields.get_optional<string>("payload_size").is_initialized())	//TODO: content length
+	if (GetConfig().isPayloadExpected && !m_fields.get_optional<string>("payload_size").is_initialized())	//TODO: content length
 	{
-		LOG << "Command pre-validation (" << localConfig.name << "), a payload is expected but the field payload_size is missing" << LogSeverity::warning;
+		LOG << "Command pre-validation (" << GetConfig().name << "), a payload is expected but the field payload_size is missing" << LogSeverity::warning;
 		m_isValid = false;
 		return;
 	}
 
-	for (const auto& preRegisteredField : localConfig.fields)
+	for (size_t i = 0; i < GetConfig().fields.size(); i++)
 	{
-		const auto fieldActualValue = m_fields.get_optional<string>(preRegisteredField.name);
-		const bool isValueInitialized = fieldActualValue.is_initialized();
+		const auto& currentField = GetConfig().fields.at(i);
+		const auto currentVal = m_fields.get_optional<string>(currentField.name);
+		const bool isValueExist = currentVal.is_initialized();
 
-		if (preRegisteredField.isRequired && !isValueInitialized)
+		if (currentField.isRequired && !isValueExist)
 		{
-			LOG << "Command pre-validation (" << localConfig.name << "), required field " << preRegisteredField.name << " is missing" << LogSeverity::warning;
+			LOG << "Command pre-validation (" << GetConfig().name << "), required field " << currentField.name << " is missing" << LogSeverity::warning;
 			m_isValid = false;
 
 			// In debug mode we continue the pre-validation process in order to see all the errors
-			#ifndef DEBUG
+#ifndef DEBUG
 			return;
-			#endif
+#endif
 		}
 
-		if (isValueInitialized && preRegisteredField.fieldValueValidator.is_initialized())
+		if (isValueExist && currentField.IsValidatorInitialized())
 		{
-			auto validator = preRegisteredField.fieldValueValidator.get();
+			auto validator = currentField.fieldValueValidator;
 
-			if (!validator(fieldActualValue.get()))
+			if (!validator.get()->ExecValidator(currentVal.get()))
 			{
-				LOG << "Command pre-validation (" << localConfig.name << "), field " << preRegisteredField.name << " is not valid" << LogSeverity::warning;
+				LOG << "Command pre-validation (" << GetConfig().name << "), field " << currentField.name << " is not valid" << LogSeverity::warning;
 				m_isValid = false;
 
-				#ifndef DEBUG
+#ifndef DEBUG
 				return;
-				#endif
+#endif
 			}
 		}
 	}
@@ -141,9 +140,4 @@ string Command::ReadCommandNameFromRaw(const string& rawcmdText)
 		throw std::exception();
 
 	return rawcmdText.substr(0, result);
-}
-
-boost::optional<string> Command::ReadFieldValue(const string& fieldName)
-{
-	return m_fields.get_optional<string>(fieldName);
 }

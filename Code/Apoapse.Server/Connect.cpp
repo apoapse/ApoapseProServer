@@ -2,7 +2,7 @@
 #include "Common.h"
 #include "CommandsManager.h"
 
-class Connect : public Command
+class Connect final : public Command
 {
 public:
 	Connect(ApoapseServer& apoapseServer) : Command(apoapseServer)
@@ -10,22 +10,21 @@ public:
 		LOG << "!Connect created ";
 	}
 
-	const CommandConfig& GetConfig() const
+	const CommandConfig& GetConfig() const override
 	{
 		static auto config = CommandConfig();	//TODO have a way to define if a command can be executed from a simple connection, from a user or both (std::bind?)
 		config.name = "CONNECT";
 		config.format = Format::INLINE;
-		config.fields =
+		config.fields = 
 		{
-			CommmandField<string> { "username", true },
-			//CommmandField<string> { "password", true, [](string test) { LOG << "LAMBDA: " << test; return false; } }
-			CommmandField<string> { "password", true, Connect::Test }
+			CommmandField { "username", true, new FieldValueValidator<int>([](int test) { LOG << LogSeverity::warning << "LAMBDA: " << test; return true; }) },
+			CommmandField { "password", true, new FieldValueValidator<string>(Connect::Test) }
 		};
 
 		return config;
 	}
 
-	bool Connect::PostValidate() const
+	bool Connect::PostValidate() const override
 	{
 
 
@@ -34,8 +33,8 @@ public:
 
 	static bool Test(string str)
 	{
-		LOG << "WORKS";
-		return false;
+		LOG << "WORKS " << str << LogSeverity::debug;
+		return true;
 	}
 
 };
