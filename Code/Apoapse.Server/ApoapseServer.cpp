@@ -4,23 +4,26 @@
 
 #include "CommandsManager.h"
 #include "Command.h"
-#include "NetMessage.h"
-#include "TCPServer.h"
+#include "GenericConnection.h"
 
-
-ApoapseServer::ApoapseServer(UInt16 port)
+ApoapseServer::ApoapseServer(UInt16 port) : m_tcpServer()
 {
-	std::unique_ptr<MyStruct> test_sttuc = std::make_unique<MyStruct>();
+	m_tcpServer = std::make_unique<TCPServer>(m_IOServiceGeneral, port/*, TCPServer::IP_v6*/);
 
-	Test(std::move(test_sttuc));
+	
 
-	auto test = CommandsManager::GetInstance().CreateCommand("CONNECT", *this);
+
+
+
+
+
+
+
+	auto test = CommandsManager::GetInstance().CreateCommand("CONNECT");
 	//std::string test2 = u8"CONNECT\n{\"username\": \"Guillaume\",	\"password\" : \"MyPassword\"}";
 	std::string test2 = u8"CONNECT\n{\"username\": 7,	\"password\" : \"MyPassword\"}";
 	
 	test->FromRawCmd(test2);
-
-	NetMessage::SetMaxAllowedSize();
 }
 
 ApoapseServer::~ApoapseServer()
@@ -29,5 +32,10 @@ ApoapseServer::~ApoapseServer()
 
 void ApoapseServer::Start()
 {
-
+	std::thread thread([this]
+	{
+		m_tcpServer->StartAccept<GenericConnection>();
+		m_IOServiceGeneral.run();
+	});
+	thread.detach();
 }

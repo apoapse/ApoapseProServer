@@ -25,7 +25,7 @@ public:
 	template <typename T_CONNECTION>
 	void StartAccept()
 	{
-		TCPConnection::pointer newConnection = TCPConnection::Create<T_CONNECTION>(m_ioservice);
+		TCPConnection::TCPConnection_ptr newConnection = TCPConnection::Create<T_CONNECTION>(m_ioservice);
 
 		auto handler = boost::bind(&TCPServer::HandleAcceptAsync<T_CONNECTION>, this, newConnection, boost::asio::placeholders::error);
 		m_acceptor->async_accept(newConnection->GetSocket(), handler);
@@ -33,7 +33,7 @@ public:
 
 private:
 	template <typename T_CONNECTION>
-	void HandleAcceptAsync(const TCPConnection::pointer tcpConnection, const boost::system::error_code& error)
+	void HandleAcceptAsync(const TCPConnection::TCPConnection_ptr tcpConnection, const boost::system::error_code& error)
 	{
 		tcpConnection->HandleAcceptedAsync(error);
 

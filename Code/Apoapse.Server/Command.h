@@ -1,5 +1,4 @@
 #pragma once
-#include "ApoapseServer.h"
 #include <boost/property_tree/ptree.hpp>
 #include <boost/optional.hpp>	// #TODO replace with C++17 std
 #include <boost/lexical_cast.hpp>
@@ -52,6 +51,7 @@ private:
 		return boost::lexical_cast<T>(str);
 	}
 };
+#define FIELD_VALUE_VALIDATOR(_type, _func)	new FieldValueValidator<_type>(_func)
 
 struct CommmandField
 {
@@ -72,7 +72,7 @@ struct CommandConfig
 	std::vector<CommmandField> fields;
 	//boost::optional<std::function<void(LocalUser)>> fieldValueValidator;	// Integrate as functions (maybe overloaded functions?) in this very class and in these, check if the vars are defined and if they are, call them
 	//boost::optional<std::function<void(RemoteServer)>> fieldValueValidator;
-	//boost::optional<std::function<void(TCPConnection)>> fieldValueValidator;
+	//boost::optional<std::function<void(GenericConnection)>> fieldValueValidator;
 	bool isPayloadExpected = { false };
 };
 
@@ -84,9 +84,9 @@ class Command
 	boost::optional<std::vector<byte>> m_payload;	//TODO
 
 public:
-	//static const Int16 commandNameAllowedMaxSize = 255;	// #TODO
+	//static const Int16 COMMAND_NAME_MAX_SIZE = 255;	// #TODO
 
-	Command(ApoapseServer& apoapseServer);
+	Command();
 	virtual ~Command();
 	void FromRawCmd(string& u8cmdText);
 	bool IsValid() const;
@@ -99,7 +99,7 @@ private:
 	void ValidateInternal();
 
 protected:
-	ApoapseServer& m_server;
+	//ApoapseServer& m_server;
 
 	//************************************
 	// Method:    Connect::PostValidate - Used to do to additional validations on the fields - called only if the previous automatic validation steps succeeded

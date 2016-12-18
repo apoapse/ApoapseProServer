@@ -60,5 +60,5 @@ bool NetMessage::IsComplete() const
 
 size_t NetMessage::GetContentSize() const
 {
-	return (m_containApoapseTCPHeader ? (m_data.size() - TCPConnection::headerLength) : m_data.size());
+	return (m_containApoapseTCPHeader ? (m_data.size() - 255) : m_data.size());
 }

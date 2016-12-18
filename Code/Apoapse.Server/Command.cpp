@@ -4,7 +4,7 @@
 #include "StringExtensions.h"
 #include <boost/property_tree/json_parser.hpp>
 
-Command::Command(ApoapseServer& apoapseServer) : m_server(apoapseServer)
+Command::Command()
 {
 	LOG << "Command created";
 }
@@ -69,7 +69,7 @@ void Command::FromRawCmd(string& u8cmdText)
 
 	//#OPTIMIZATION make sure u8cmdText is free from the memory
 
-	ValidateInternal();	// #TODO #SHORT_TERM Call it via the thread pool? In this case, make sure Command::IsValid is thread safe
+	ValidateInternal();	// #TODO #SHORT_TERM Call it via the thread pool? In this case, make sure Command::IsValid is thread safe -> do it from the call of FromRawCmd in TCP Connection?
 }
 
 void Command::ValidateInternal()
@@ -134,10 +134,12 @@ Format Command::GetInputRealFormat() const
 
 string Command::ReadCommandNameFromRaw(const string& rawcmdText)
 {
-	const auto result = rawcmdText.find("\n");
-
-	if (result == std::string::npos)
-		throw std::exception();
-
-	return rawcmdText.substr(0, result);
+// 	
+// 	const auto result = rawcmdText.find("\n");
+// 
+// 	if (result == std::string::npos)
+// 		throw std::exception();
+// 
+// 	return rawcmdText.substr(0, result);
+	return "TO REMOVE";
 }

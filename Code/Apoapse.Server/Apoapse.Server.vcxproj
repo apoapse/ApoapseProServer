@@ -161,6 +161,7 @@
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="CommandsManager.cpp" />
     <ClCompile Include="ConfigVars.cpp" />
+    <ClCompile Include="GenericConnection.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="LogMessage.cpp" />
     <ClCompile Include="NetMessage.cpp" />
@@ -183,8 +184,8 @@
     <ClInclude Include="Command.h" />
     <ClInclude Include="CommandsManager.h" />
     <ClInclude Include="ConfigVars.h" />
-    <ClInclude Include="Connection.h" />
     <ClInclude Include="eLogSeverity.h" />
+    <ClInclude Include="GenericConnection.h" />
     <ClInclude Include="ILogger.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="Log.h" />

@@ -12,11 +12,11 @@ CommandsManager::~CommandsManager()
 
 }
 
-std::unique_ptr<Command> CommandsManager::CreateCommand(const string& commandName, ApoapseServer& apoapseServer)
+std::unique_ptr<Command> CommandsManager::CreateCommand(const string& commandName)
 {
-	ASSERT_MSG(CommandExist(commandName), "The command requested does not exist");	//TODO exception
+	ASSERT_MSG(CommandExist(commandName), "The command requested does not exist");
 
-	return m_commandFactories[commandName]->Create(apoapseServer);
+	return m_commandFactories[commandName]->Create();
 }
 
 bool CommandsManager::CommandExist(const string& commandName) const

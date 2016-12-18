@@ -5,7 +5,7 @@
 #define ASSERT_MSG(_exp, _msg)	BOOST_ASSERT_MSG(_exp, _msg)
 
 #ifdef DEBUG
-#define LOG_DEBUG_ONLY(_params)	LOG << LogSeverity::debug << __FUNCTION__ << " (" << __FILE__ << ") " << _params
+#define LOG_DEBUG_ONLY(_params)	LOG << LogSeverity::debug << __FUNCTION__ << " (" << __FILE__ << ":" << __LINE__ << ") " << _params
 #else
 #define LOG_DEBUG_ONLY(_params)
 #endif

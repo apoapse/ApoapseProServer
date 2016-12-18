@@ -1,13 +1,13 @@
 #pragma once
 #include "ByteUtils.h"
 #include <boost\asio.hpp>
-#include <boost\bind.hpp>
-#include "NetMessage.h"
+#include <boost\bind.hpp>	//TODO: remove
+#include <functional>
 
 #define SOCKET_READ_BUFFER_SIZE 1024
-#define HEADER_LENGTH 4
+//#define HEADER_LENGTH 4
 
-class TCPConnection : public boost::enable_shared_from_this<TCPConnection>
+class TCPConnection : public std::enable_shared_from_this<TCPConnection>
 {
 	using boostTCP = boost::asio::ip::tcp;
 	friend class TCPServer;
@@ -15,18 +15,15 @@ class TCPConnection : public boost::enable_shared_from_this<TCPConnection>
 private:
 	boostTCP::socket m_socket;
 	bool m_isConnected = false;
-	std::shared_ptr<NetMessage> m_currentNetMessage;
-	std::deque<std::shared_ptr<NetMessage>> m_sendQueue;
+	//std::deque<std::shared_ptr<NetMessage>> m_sendQueue;
 	boost::asio::io_service::strand m_writeStrand;
 
 protected:
-	std::array<byte, SOCKET_READ_BUFFER_SIZE> m_readContentBuffer;
-	byte m_readHeaderBuffer[HEADER_LENGTH];
-	boost::asio::streambuf data_;
+ 	//std::array<byte, SOCKET_READ_BUFFER_SIZE> m_readBuffer;
+	//boost::asio::streambuf m_readStreamBuffer;
 
 public:
-	typedef boost::shared_ptr<TCPConnection> pointer;
-	static const UInt16 headerLength = HEADER_LENGTH;
+	typedef std::shared_ptr<TCPConnection> TCPConnection_ptr;
 
 	TCPConnection(boost::asio::io_service& io_service);
 
@@ -35,9 +32,9 @@ public:
 	}
 
 	template<typename T_CONNECTION>
-	static pointer Create(boost::asio::io_service& io_service)
+	static TCPConnection_ptr Create(boost::asio::io_service& io_service)
 	{
-		return pointer(new T_CONNECTION(io_service));
+		return std::make_shared<T_CONNECTION>(io_service);
 	}
 
 	boostTCP::socket& GetSocket()
@@ -49,26 +46,38 @@ public:
 	void Connect(const std::string& adress, const UInt16 port);
 	bool IsConnected() const;
 	void Close();
-	void Send(const std::string& msg);
 
 private:
 	void HandleConnectAsync(const boost::system::error_code& error);
 	void HandleAcceptedAsync(const boost::system::error_code& error);
+	void OnReceivedErrorInternal(const boost::system::error_code& error);
 
-	void ListenIncomingNewMessages();
-	void ListenIncomingMessageContent();
+	void HandleReadInternal(const std::function<void(size_t)>& handler, const boost::system::error_code& error, size_t bytesTransferred);
 
-	void ReadHeader(const boost::system::error_code& error, size_t bytesTransferred);
-	void ReadReceivedContent(const boost::system::error_code& error, size_t bytesTransferred);
+	void ListenForCommandName();
+	void ListenForInlineCommandContent();
 
-	void QueueSendNetMessage(const std::shared_ptr<NetMessage> netMessage);
+	/*void ReadHeader(const boost::system::error_code& error, size_t bytesTransferred);*/
+	
+
+	void QueueSend(const std::vector<byte> data);
 	void InternalSend();
 	void HandleWriteAsync(const boost::system::error_code& error, size_t bytesTransferred);
 
 protected:
-	virtual bool OnConnectedToServer(const boost::system::error_code& error) = 0;
-	virtual bool OnReceivedPacket(std::shared_ptr<NetMessage> netMessage) = 0;
+	template <typename T>
+	void ReadUntil(boost::asio::streambuf& streambuf, T delimiter, std::function<void(size_t)> externalHandler)
+	{
+		auto handler = boost::bind(&TCPConnection::HandleReadInternal, shared_from_this(), externalHandler, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred);
+
+		boost::asio::async_read_until(GetSocket(), streambuf, delimiter, handler);
+	}
+
+
+	virtual bool OnConnectedToServer() = 0;
+	//virtual void OnReceivedCommandName(const boost::system::error_code& error, size_t bytesTransferred) = 0;
+	//virtual bool OnReceivedPacket(std::shared_ptr<NetMessage> netMessage) = 0;
 	//virtual bool OnReceivedContent(/*const NetMessage& netMessage*/) = 0;	// Called each time a part of NetMessage is received which can be partial data
-	virtual bool OnReadError(const boost::system::error_code& error) = 0;
-	virtual bool OnSentPacket(const std::shared_ptr<NetMessage> netMessage, size_t bytesTransferred) = 0;
+	virtual bool OnReceivedError(const boost::system::error_code& error) = 0;
+	//virtual bool OnSentPacket(const std::shared_ptr<NetMessage> netMessage, size_t bytesTransferred) = 0;
 };

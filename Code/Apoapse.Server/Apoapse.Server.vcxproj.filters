@@ -57,6 +57,9 @@
     <ClCompile Include="UT_Command.cpp">
       <Filter>Tests\UnitTests</Filter>
     </ClCompile>
+    <ClCompile Include="GenericConnection.cpp">
+      <Filter>Network\Protocol\Connection</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -143,8 +146,8 @@
     <ClInclude Include="LocalUser.h">
       <Filter>Actors</Filter>
     </ClInclude>
-    <ClInclude Include="Connection.h">
-      <Filter>Network\Protocol</Filter>
+    <ClInclude Include="GenericConnection.h">
+      <Filter>Network\Protocol\Connection</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -192,6 +195,9 @@
     </Filter>
     <Filter Include="Actors">
       <UniqueIdentifier>{db70fa0a-5f43-4d2f-ad9a-a5d7f53caf7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\Protocol\Connection">
+      <UniqueIdentifier>{86af4c3d-4e80-4a89-9016-c381e7f4ffed}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

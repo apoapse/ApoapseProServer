@@ -3,7 +3,8 @@
 #include "TCPServer.h"
 
 TCPServer::TCPServer(boost::asio::io_service& io_service, const UInt16 port, const Protocol ipProtocol /*= Protocol::IP_v4*/)
-	: m_acceptor(std::make_unique<boostTCP::acceptor>(io_service)), m_ioservice(io_service)
+	: m_acceptor(std::make_unique<boostTCP::acceptor>(io_service)),
+	m_ioservice(io_service)
 {
 	boost::system::error_code error;
 	boostTCP::endpoint endpoint;

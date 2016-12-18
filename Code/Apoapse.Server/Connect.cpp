@@ -5,7 +5,7 @@
 class Connect final : public Command
 {
 public:
-	Connect(ApoapseServer& apoapseServer) : Command(apoapseServer)
+	Connect() : Command()
 	{
 		LOG << "!Connect created ";
 	}
@@ -17,8 +17,8 @@ public:
 		config.format = Format::INLINE;
 		config.fields = 
 		{
-			CommmandField { "username", true, new FieldValueValidator<int>([](int test) { LOG << LogSeverity::warning << "LAMBDA: " << test; return true; }) },
-			CommmandField { "password", true, new FieldValueValidator<string>(Connect::Test) }
+			CommmandField { "username", true, FIELD_VALUE_VALIDATOR(int, [](int test) { LOG << LogSeverity::warning << "LAMBDA: " << test; return true; }) },
+			CommmandField{ "password", true, FIELD_VALUE_VALIDATOR(string, Connect::Test) }
 		};
 
 		return config;
