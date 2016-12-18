@@ -176,11 +176,6 @@ namespace TestClient
             SetReadTextBoxContent();
         }
 
-        private void useApoapseTransportProtocol_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
         public bool IsApoapseTransportProtocolUsed()
         {
             return useApoapseTransportProtocol.Checked;

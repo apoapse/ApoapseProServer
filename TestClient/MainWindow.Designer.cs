@@ -86,15 +86,12 @@
             // 
             this.useApoapseTransportProtocol.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.useApoapseTransportProtocol.AutoSize = true;
-            this.useApoapseTransportProtocol.Checked = true;
-            this.useApoapseTransportProtocol.CheckState = System.Windows.Forms.CheckState.Checked;
             this.useApoapseTransportProtocol.Location = new System.Drawing.Point(881, 18);
             this.useApoapseTransportProtocol.Name = "useApoapseTransportProtocol";
             this.useApoapseTransportProtocol.Size = new System.Drawing.Size(175, 17);
             this.useApoapseTransportProtocol.TabIndex = 11;
             this.useApoapseTransportProtocol.Text = "Use Apoapse transport protocol";
             this.useApoapseTransportProtocol.UseVisualStyleBackColor = true;
-            this.useApoapseTransportProtocol.CheckedChanged += new System.EventHandler(this.useApoapseTransportProtocol_CheckedChanged);
             // 
             // connectButton
             // 

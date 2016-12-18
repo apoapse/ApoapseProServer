@@ -43,6 +43,8 @@ public struct NetMessage
 
     public static byte[] EncodeString(NetMessageEncoding encoding, string data)
     {
+        data = data.Replace("\r\n", "\n");    // The Apoapse protocol is only using \n as new line character
+
         byte[] output;
 
         if (encoding == NetMessageEncoding.UTF8)
