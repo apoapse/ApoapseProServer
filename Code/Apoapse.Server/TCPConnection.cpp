@@ -5,8 +5,7 @@
 
 TCPConnection::TCPConnection(boost::asio::io_service& io_service)
 	: m_socket(io_service),
-	m_writeStrand(io_service)/*,
-	m_readStreamBuffer(SOCKET_READ_BUFFER_SIZE)*/
+	m_writeStrand(io_service)
 {
 }
 
@@ -69,31 +68,13 @@ void TCPConnection::OnReceivedErrorInternal(const boost::system::error_code& err
 
 void TCPConnection::HandleReadInternal(const std::function<void(size_t)>& handler, const boost::system::error_code& error, size_t bytesTransferred)
 {
-	if (error)
+	if (error && error != boost::asio::error::not_found)
 	{
 		OnReceivedError(error);
 		return;
 	}
 
 	handler(bytesTransferred);
-}
-
-void TCPConnection::ListenForCommandName()
-{
-	ASSERT(IsConnected());
-
-
-/*
-
-	auto handler = boost::bind(&TCPConnection::ReadHeader, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred);
-	boost::asio::async_read(m_socket, boost::asio::buffer(m_readHeaderBuffer, HEADER_LENGTH), boost::asio::transfer_at_least(HEADER_LENGTH), handler);*/
-}
-
-void TCPConnection::ListenForInlineCommandContent()
-{
-/*
-	auto handler = boost::bind(&TCPConnection::ReadReceivedContent, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred);
-	m_socket.async_read_some(boost::asio::buffer(m_readContentBuffer), handler);*/
 }
 
 void TCPConnection::QueueSend(const std::vector<byte> data)
@@ -128,4 +109,11 @@ void TCPConnection::HandleWriteAsync(const boost::system::error_code& error, siz
 	}
 	else
 		OnReceivedErrorInternal(error);*/
+}
+
+void TCPConnection::ReadSome(boost::asio::streambuf& streambuf, size_t length, std::function<void(size_t)> externalHandler)
+{
+	auto handler = boost::bind(&TCPConnection::HandleReadInternal, shared_from_this(), externalHandler, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred);
+
+	boost::asio::async_read(GetSocket(), streambuf, boost::asio::transfer_exactly(length), handler);
 }

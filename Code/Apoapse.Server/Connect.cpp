@@ -15,7 +15,7 @@ public:
 		static auto config = CommandConfig();	//TODO have a way to define if a command can be executed from a simple connection, from a user or both (std::bind?)
 		config.name = "CONNECT";
 		config.format = Format::INLINE;
-		config.fields = 
+		config.fields =
 		{
 			CommmandField { "username", true, FIELD_VALUE_VALIDATOR(int, [](int test) { LOG << LogSeverity::warning << "LAMBDA: " << test; return true; }) },
 			CommmandField{ "password", true, FIELD_VALUE_VALIDATOR(string, Connect::Test) }
@@ -38,4 +38,5 @@ public:
 	}
 
 };
+
 APOAPSE_COMMAND_REGISTER(Connect, "CONNECT");

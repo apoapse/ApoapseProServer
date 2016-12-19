@@ -15,12 +15,8 @@ class TCPConnection : public std::enable_shared_from_this<TCPConnection>
 private:
 	boostTCP::socket m_socket;
 	bool m_isConnected = false;
-	//std::deque<std::shared_ptr<NetMessage>> m_sendQueue;
 	boost::asio::io_service::strand m_writeStrand;
 
-protected:
- 	//std::array<byte, SOCKET_READ_BUFFER_SIZE> m_readBuffer;
-	//boost::asio::streambuf m_readStreamBuffer;
 
 public:
 	typedef std::shared_ptr<TCPConnection> TCPConnection_ptr;
@@ -54,12 +50,6 @@ private:
 
 	void HandleReadInternal(const std::function<void(size_t)>& handler, const boost::system::error_code& error, size_t bytesTransferred);
 
-	void ListenForCommandName();
-	void ListenForInlineCommandContent();
-
-	/*void ReadHeader(const boost::system::error_code& error, size_t bytesTransferred);*/
-	
-
 	void QueueSend(const std::vector<byte> data);
 	void InternalSend();
 	void HandleWriteAsync(const boost::system::error_code& error, size_t bytesTransferred);
@@ -73,11 +63,8 @@ protected:
 		boost::asio::async_read_until(GetSocket(), streambuf, delimiter, handler);
 	}
 
+	void ReadSome(boost::asio::streambuf& streambuf, size_t length, std::function<void(size_t)> externalHandler);
 
 	virtual bool OnConnectedToServer() = 0;
-	//virtual void OnReceivedCommandName(const boost::system::error_code& error, size_t bytesTransferred) = 0;
-	//virtual bool OnReceivedPacket(std::shared_ptr<NetMessage> netMessage) = 0;
-	//virtual bool OnReceivedContent(/*const NetMessage& netMessage*/) = 0;	// Called each time a part of NetMessage is received which can be partial data
 	virtual bool OnReceivedError(const boost::system::error_code& error) = 0;
-	//virtual bool OnSentPacket(const std::shared_ptr<NetMessage> netMessage, size_t bytesTransferred) = 0;
 };

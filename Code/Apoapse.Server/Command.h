@@ -34,7 +34,7 @@ public:
 		try
 		{
 			T convertedValue = ConvertFromStr(value);
-		
+
 			return m_validatorFunction(convertedValue);
 		}
 		catch (const std::exception& e)
@@ -82,16 +82,21 @@ class Command
 	bool m_isValid = { true };
 	Format m_inputRealFormat = { Format::UNDEFINED };
 	boost::optional<std::vector<byte>> m_payload;	//TODO
+	boost::optional<string> m_commandInfoRawBody;
+	bool m_isCommandParsed = { false };
 
 public:
 	//static const Int16 COMMAND_NAME_MAX_SIZE = 255;	// #TODO
 
 	Command();
 	virtual ~Command();
+
+	void ParseRawCmdBody();
 	void FromRawCmd(string& u8cmdText);
+	void AppendCommandBodyData(const string& data);
 	bool IsValid() const;
 	Format GetInputRealFormat() const;
-	static string ReadCommandNameFromRaw(const string& rawcmdText);
+	void SetInputRealFormat(Format format);
 
 	virtual const CommandConfig& GetConfig() const = 0;
 

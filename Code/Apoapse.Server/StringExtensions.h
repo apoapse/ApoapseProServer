@@ -57,4 +57,10 @@ namespace StringExtensions
 	{
 		boost::split(output, str, boost::is_any_of(separator));
 	}
+
+	template <typename T>
+	std::basic_string<T> get_last_chars(const std::basic_string<T>& str, size_t nb_of_chars)
+	{
+		return str.substr(str.length() - nb_of_chars);
+	}
 }

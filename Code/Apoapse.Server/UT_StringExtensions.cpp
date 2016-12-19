@@ -55,4 +55,11 @@ UNIT_TEST("StringExtensions/split")
 	UnitTest::Assert(resultValues.size() == 2 && resultValues.at(0) == "StringExtensions" && resultValues.at(1) == "split");
 } UNIT_TEST_END
 
+UNIT_TEST("StringExtensions/get_last_chars")
+{
+	string str = "StringExtensions";
+
+	UnitTest::Assert(StringExtensions::get_last_chars(str, 3) == "ons");
+} UNIT_TEST_END
+
 #endif	// UNIT_TESTS

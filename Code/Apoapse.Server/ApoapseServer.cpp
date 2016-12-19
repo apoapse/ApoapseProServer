@@ -19,11 +19,11 @@ ApoapseServer::ApoapseServer(UInt16 port) : m_tcpServer()
 
 
 
-	auto test = CommandsManager::GetInstance().CreateCommand("CONNECT");
-	//std::string test2 = u8"CONNECT\n{\"username\": \"Guillaume\",	\"password\" : \"MyPassword\"}";
-	std::string test2 = u8"CONNECT\n{\"username\": 7,	\"password\" : \"MyPassword\"}";
-	
-	test->FromRawCmd(test2);
+// 	auto test = CommandsManager::GetInstance().CreateCommand("CONNECT");
+// 	//std::string test2 = u8"CONNECT\n{\"username\": \"Guillaume\",	\"password\" : \"MyPassword\"}";
+// 	std::string test2 = u8"CONNECT\n{\"username\": 7,	\"password\" : \"MyPassword\"}";
+// 	
+// 	test->FromRawCmd(test2);
 }
 
 ApoapseServer::~ApoapseServer()
