@@ -16,6 +16,18 @@ GenericConnection::~GenericConnection()
 	LOG_DEBUG_FUNCTION_NAME();
 }
 
+void GenericConnection::SetAssociatedActor(std::shared_ptr<Actor> actor)
+{
+	ASSERT(!HasAssociatedActor());
+
+	m_associatedActor = actor;
+}
+
+bool GenericConnection::HasAssociatedActor() const
+{
+	return m_associatedActor.is_initialized();
+}
+
 bool GenericConnection::OnConnectedToServer()
 {
 	ListenForCommand();
@@ -37,6 +49,40 @@ void GenericConnection::ListenForCommand()
 	ReadUntil(m_readStreamBuffer, '\n', [this](size_t bytesTransferred) { OnReceivedCommandName(bytesTransferred); });
 }
 
+void GenericConnection::OnCommandBodyComplete(std::unique_ptr<Command>& command)
+{
+	global->threadPool->PushTask([this, &command]
+	{
+		command->ParseRawCmdBody();
+
+		if (command->IsValid())
+		{
+			global->threadPool->PushTask([this, &command]	// #TODO use a specific thread pool -> do it inside Command::ProcessFromNetwork?
+			{
+				if (HasAssociatedActor())
+					GetAssociatedActor()->ProcessCommandFromNetwork(*command.get());
+				else
+					command->ProcessFromNetwork(this);
+
+				m_commands.pop_front();	// use GenericConnection::PopLastCommand (used to have a mutex) instead?
+			});
+			// #TODO support from network and user (do from generic connection in another method that automatically decide if this has to be done on which actor?) Maybe have an actor Interface/base class?
+			// This class having an actor base class in a optional shared ptr? This base class just acting as a proxy, the inherited virtual functions should do most (if not all of the operations)
+
+			//TODO: if no errors from ProcessFromNetwork, remove the command from the queue
+		}
+		else
+		{
+			// #TODO_NETWORK_ERR_HANDLING
+			LOG << "Command invalid, closing connection" << LogSeverity::error;
+			Close();
+		}
+	});
+
+	// #TODO Implement payload receiving system here
+	ListenForCommand();
+}
+
 void GenericConnection::OnReceivedCommandName(size_t bytesTransferred)
 {
 	constexpr UInt8 newLineCharacterSize = 1;	// Used to remove the \n at the end of the command name
@@ -49,22 +95,34 @@ void GenericConnection::OnReceivedCommandName(size_t bytesTransferred)
 	{
 		m_commands.push_front(CommandsManager::GetInstance().CreateCommand(commandName));
 
-		ReadCommandFirstChar(m_commands.front());
-		ListenForCommandBody();
+		auto& currentCommand = m_commands.front();
+
+		if (CheckActorAndCommandCompatibility(*currentCommand.get()))
+		{
+			ReadCommandFirstChar(*currentCommand.get());
+			ListenForCommandBody();
+		}
+		else
+		{
+			// #TODO_NETWORK_ERR_HANDLING
+			LOG << "The command " << currentCommand->GetConfig().name << " does not support the input from this connection, user, or remote server" << LogSeverity::error;
+
+			m_commands.pop_front();
+		}
 	}
 	else
 	{
 		LOG << "The command requested from " << GetEndpoint().address() << " does not exist" << LogSeverity::error;
-
-		if (m_readStreamBuffer.size() > 0)
-			m_readStreamBuffer.consume(m_readStreamBuffer.size());
-
-		// #TODO handle error network side
-		ListenForCommand();
+		// #TODO_NETWORK_ERR_HANDLING
 	}
+
+	if (m_readStreamBuffer.size() > 0)
+		m_readStreamBuffer.consume(m_readStreamBuffer.size());
+
+	ListenForCommand();
 }
 
-void GenericConnection::ReadCommandFirstChar(const std::unique_ptr<Command>& command)
+void GenericConnection::ReadCommandFirstChar(Command& command)
 {
 	auto data = m_readStreamBuffer.data();
 	m_readStreamBuffer.consume(1);
@@ -72,16 +130,16 @@ void GenericConnection::ReadCommandFirstChar(const std::unique_ptr<Command>& com
 	const string firstChar = string(boost::asio::buffers_begin(data), boost::asio::buffers_begin(data) + 1);
 
 	if (firstChar == "{")
-		command->SetInputRealFormat(Format::JSON);
+		command.SetInputRealFormat(Format::JSON);
 	else
-		command->SetInputRealFormat(Format::INLINE);
+		command.SetInputRealFormat(Format::INLINE);
 
-	command->AppendCommandBodyData(firstChar);
+	command.AppendCommandBodyData(firstChar);
 }
 
 void GenericConnection::ListenForCommandBody()
 {
-	const auto& command = m_commands.front();
+	auto& command = m_commands.front();
 	const size_t bufferDataSize = m_readStreamBuffer.size();
 	const Format commandRealFormat = command->GetInputRealFormat();
 
@@ -129,7 +187,7 @@ void GenericConnection::OnReceivedCommandInfoBody(size_t bytesTransferred)
 	}
 
 	ASSERT(bytesTransferred == m_readStreamBuffer.size());
-	const auto& command = m_commands.front();
+	auto& command = m_commands.front();
 
 	auto data = m_readStreamBuffer.data();
 	m_readStreamBuffer.consume(bytesTransferred);
@@ -139,9 +197,15 @@ void GenericConnection::OnReceivedCommandInfoBody(size_t bytesTransferred)
 	OnCommandBodyComplete(command);
 }
 
-void GenericConnection::OnCommandBodyComplete(const std::unique_ptr<Command>& command)
+bool GenericConnection::CheckActorAndCommandCompatibility(Command& command)
 {
-	command->ParseRawCmdBody();//FROM THREAD POOL?
-	ListenForCommand();
+	if (HasAssociatedActor())
+		return GetAssociatedActor()->IsCommandCompatibleWithCurrentActor(command);
+	else
+		return command.CanProcessThisActor(this);
 }
 
+// void GenericConnection::PopLastCommand()
+// {
+// 
+// }

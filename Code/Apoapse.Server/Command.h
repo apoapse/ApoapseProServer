@@ -6,6 +6,7 @@
 
 class LocalUser;
 class RemoteServer;
+class GenericConnection;
 
 enum class Format
 {
@@ -52,6 +53,7 @@ private:
 	}
 };
 #define FIELD_VALUE_VALIDATOR(_type, _func)	new FieldValueValidator<_type>(_func)
+#define PROCESS_METHOD(_inputType, _method)	[this](_inputType* input) { _method(input); };
 
 struct CommmandField
 {
@@ -68,11 +70,11 @@ struct CommmandField
 struct CommandConfig
 {
 	string name;
-	Format format;
+	Format expectedFormat;
 	std::vector<CommmandField> fields;
-	//boost::optional<std::function<void(LocalUser)>> fieldValueValidator;	// Integrate as functions (maybe overloaded functions?) in this very class and in these, check if the vars are defined and if they are, call them
-	//boost::optional<std::function<void(RemoteServer)>> fieldValueValidator;
-	//boost::optional<std::function<void(GenericConnection)>> fieldValueValidator;
+	std::function<void(GenericConnection*)> processFromGenericConnection = { NULL };
+	std::function<void(LocalUser*)> processFromUser = { NULL };
+	std::function<void(RemoteServer*)> processFromRemoteServer = { NULL };
 	bool isPayloadExpected = { false };
 };
 
@@ -92,16 +94,30 @@ public:
 	virtual ~Command();
 
 	void ParseRawCmdBody();
-	void FromRawCmd(string& u8cmdText);
 	void AppendCommandBodyData(const string& data);
 	bool IsValid() const;
 	Format GetInputRealFormat() const;
 	void SetInputRealFormat(Format format);
 
-	virtual const CommandConfig& GetConfig() const = 0;
+	void ProcessFromNetwork(GenericConnection* connection);
+	void ProcessFromNetwork(LocalUser* user);
+	void ProcessFromNetwork(RemoteServer* remoteServer);
+
+	bool CanProcessThisActor(GenericConnection*);
+	bool CanProcessThisActor(LocalUser*);
+	bool CanProcessThisActor(RemoteServer*);
+
+	virtual const CommandConfig& GetConfig() = 0;
 
 private:
-	void ValidateInternal();
+	void AutoValidateInternal();
+
+	template <typename T>
+	inline void InternalCmdProcess(T* input, const std::function<void(T*)>& func)
+	{
+		if (func)
+			func(input);
+	}
 
 protected:
 	//ApoapseServer& m_server;

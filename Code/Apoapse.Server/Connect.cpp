@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Common.h"
 #include "CommandsManager.h"
+#include "GenericConnection.h"
+#include "LocalUser.h"
 
 class Connect final : public Command
 {
@@ -10,25 +12,37 @@ public:
 		LOG << "!Connect created ";
 	}
 
-	const CommandConfig& GetConfig() const override
+	const CommandConfig& GetConfig() override
 	{
-		static auto config = CommandConfig();	//TODO have a way to define if a command can be executed from a simple connection, from a user or both (std::bind?)
+		static auto config = CommandConfig();
 		config.name = "CONNECT";
-		config.format = Format::INLINE;
+		config.expectedFormat = Format::INLINE;
+		config.processFromGenericConnection = PROCESS_METHOD(GenericConnection, Connect::Process);
 		config.fields =
 		{
-			CommmandField { "username", true, FIELD_VALUE_VALIDATOR(int, [](int test) { LOG << LogSeverity::warning << "LAMBDA: " << test; return true; }) },
+			CommmandField { "username", true },
 			CommmandField{ "password", true, FIELD_VALUE_VALIDATOR(string, Connect::Test) }
 		};
 
 		return config;
 	}
 
-	bool Connect::PostValidate() const override
+	bool PostValidate() const override
 	{
-
-
 		return true;
+	}
+
+	void Process(GenericConnection* connection)
+	{
+		if (ReadFieldValue<string>("username").get() == "Guillaume" && ReadFieldValue<string>("password").get() == "MyPassword")
+		{
+			connection->SetAssociatedActor(std::make_shared<LocalUser>());
+			LOG << "User " << ReadFieldValue<string>("username").get() << " connected with success";
+		}
+		else
+		{
+			LOG << "Wrong username or password" << LogSeverity::warning;
+		}
 	}
 
 	static bool Test(string str)

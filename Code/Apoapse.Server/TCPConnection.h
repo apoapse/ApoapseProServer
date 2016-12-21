@@ -1,11 +1,8 @@
 #pragma once
 #include "ByteUtils.h"
 #include <boost\asio.hpp>
-#include <boost\bind.hpp>	//TODO: remove
+#include <boost\bind.hpp>
 #include <functional>
-
-#define SOCKET_READ_BUFFER_SIZE 1024
-//#define HEADER_LENGTH 4
 
 class TCPConnection : public std::enable_shared_from_this<TCPConnection>
 {

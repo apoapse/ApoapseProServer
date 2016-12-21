@@ -60,6 +60,12 @@
     <ClCompile Include="GenericConnection.cpp">
       <Filter>Network\Protocol\Connection</Filter>
     </ClCompile>
+    <ClCompile Include="Actor.cpp">
+      <Filter>Actors</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalUser.cpp">
+      <Filter>Actors</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -148,6 +154,9 @@
     </ClInclude>
     <ClInclude Include="GenericConnection.h">
       <Filter>Network\Protocol\Connection</Filter>
+    </ClInclude>
+    <ClInclude Include="Actor.h">
+      <Filter>Actors</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

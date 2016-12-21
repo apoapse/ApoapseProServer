@@ -16,61 +16,53 @@ Command::~Command()
 
 void Command::ParseRawCmdBody()
 {
-	LOG << m_commandInfoRawBody;
+	auto& commandInfoRawBody = m_commandInfoRawBody.get();
 
-	m_isCommandParsed = true;
-}
+	StringExtensions::trim_left(commandInfoRawBody);
+	StringExtensions::trim_right(commandInfoRawBody);
 
-void Command::FromRawCmd(string& u8cmdText)
-{
-	StringExtensions::trim_left(u8cmdText);
-	StringExtensions::trim_right(u8cmdText);
-
-	if (u8cmdText.substr(0, 1) == "{" && u8cmdText.substr(u8cmdText.length() - 1, u8cmdText.length()) == "}")
+	if (GetInputRealFormat() == Format::JSON)
 	{
 		// is JSON
 		std::stringstream ss;
-		ss << std::move(u8cmdText);
+		ss << std::move(commandInfoRawBody);
 
 		try
 		{
 			boost::property_tree::read_json(ss, m_fields);
-			m_inputRealFormat = Format::JSON;//REMOVE
 		}
 		catch (const std::exception& e)
 		{
 			LOG << "Command " << GetConfig().name << ": error reading json (" << e.what() << ")" << LogSeverity::warning;
 			m_isValid = false;
+			return;
 		}
 	}
 	else
 	{
 		// is INLINE
-		if (GetConfig().format == Format::JSON)
+		if (GetConfig().expectedFormat == Format::JSON)
 		{
 			LOG << "Command " << GetConfig().name << ": expected a json command but an inline was provided" << LogSeverity::warning;
 			m_isValid = false;
 			return;
 		}
 
-		m_inputRealFormat = Format::INLINE;//REMOVE
-
 		{
-			string u16CmdText = u8cmdText;	// #TODO #IMPORTANT Convert to UTF-16
+			string u16CmdText = commandInfoRawBody;	// #TODO #IMPORTANT Convert to UTF-16
 			std::vector<string> tempValues;
 
 			StringExtensions::split(u16CmdText, tempValues, string(" "));
 
 			for (size_t i = 0; i < GetConfig().fields.size(); i++)
-			{
 				m_fields.add(GetConfig().fields.at(i).name, std::move(tempValues.at(i)));
-			}
 		}
 	}
 
-	//#OPTIMIZATION make sure u8cmdText is free from the memory
+	m_isCommandParsed = true;
+	m_commandInfoRawBody.reset();
 
-	ValidateInternal();	// #TODO #SHORT_TERM Call it via the thread pool? In this case, make sure Command::IsValid is thread safe -> do it from the call of FromRawCmd in TCP Connection?
+	AutoValidateInternal();
 }
 
 void Command::AppendCommandBodyData(const string& data)
@@ -78,17 +70,16 @@ void Command::AppendCommandBodyData(const string& data)
 	if (m_isCommandParsed)
 		ASSERT_MSG(false, "The command as already been parsed");	// #TODO Throw and exception and handle it on GenericConnection
 
+	// #TODO Monitor command body size to make sure it can't be too large
+
 	if (!m_commandInfoRawBody)
 		m_commandInfoRawBody = data;
 	else
 		m_commandInfoRawBody->append(data);
-
-	string test = m_commandInfoRawBody.get();
 }
 
-void Command::ValidateInternal()
+void Command::AutoValidateInternal()
 {
-
 	if (!IsValid())
 		return;
 
@@ -148,5 +139,49 @@ Format Command::GetInputRealFormat() const
 
 void Command::SetInputRealFormat(Format format)
 {
+	ASSERT_MSG(m_inputRealFormat == Format::UNDEFINED, "Input real format already defined");
+
 	m_inputRealFormat = format;
+}
+
+void Command::ProcessFromNetwork(GenericConnection* connection)
+{
+	if (connection == nullptr)
+		return;
+
+	ASSERT(CanProcessThisActor(connection));
+	InternalCmdProcess(connection, GetConfig().processFromGenericConnection);
+}
+
+void Command::ProcessFromNetwork(LocalUser* user)
+{
+	if (user == nullptr)
+		return;
+
+	ASSERT(CanProcessThisActor(user));
+	InternalCmdProcess(user, GetConfig().processFromUser);
+}
+
+void Command::ProcessFromNetwork(RemoteServer* remoteServer)
+{
+	if (remoteServer == nullptr)
+		return;
+
+	ASSERT(CanProcessThisActor(remoteServer));
+	InternalCmdProcess(remoteServer, GetConfig().processFromRemoteServer);
+}
+
+bool Command::CanProcessThisActor(GenericConnection*)
+{
+	return GetConfig().processFromGenericConnection != NULL;
+}
+
+bool Command::CanProcessThisActor(LocalUser*)
+{
+	return GetConfig().processFromUser != NULL;
+}
+
+bool Command::CanProcessThisActor(RemoteServer*)
+{
+	return GetConfig().processFromRemoteServer != NULL;
 }
