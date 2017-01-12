@@ -24,12 +24,6 @@ public:
 	{
 	}
 
-	template<typename T_CONNECTION>
-	static TCPConnection_ptr Create(boost::asio::io_service& io_service)
-	{
-		return std::make_shared<T_CONNECTION>(io_service);
-	}
-
 	boostTCP::socket& GetSocket()
 	{
 		return m_socket;
