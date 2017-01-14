@@ -25,11 +25,20 @@ public:
 		return m_data;
 	}
 
+	T* operator->() const
+	{
+		return &m_data;
+	}
+
+	T* operator->()
+	{
+		return &m_data;
+	}
+
 	void Set(const T& input)
 	{
 		m_data = input;
 	}
-
 
 	boost::shared_mutex& GetMutex() const
 	{

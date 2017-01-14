@@ -9,7 +9,7 @@ LocalUser::LocalUser(/*const Address& address*/)
 
 LocalUser::~LocalUser()
 {
-	LOG_DEBUG_FUNCTION_NAME();
+	//connectedUsersManager->RemoveUser(this);
 }
 
 void LocalUser::AssociateConnection(ClientConnection* connection)

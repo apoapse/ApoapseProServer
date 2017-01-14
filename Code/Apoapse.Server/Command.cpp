@@ -55,7 +55,12 @@ void Command::ParseRawCmdBody()
 			StringExtensions::split(u16CmdText, tempValues, string(" "));
 
 			for (size_t i = 0; i < GetConfig().fields.size(); i++)
+			{
+				if (i >= tempValues.size())	// Prevent vector overflow in case there are less command arguments than expected
+					return;
+
 				m_fields.add(GetConfig().fields.at(i).name, std::move(tempValues.at(i)));
+			}
 		}
 	}
 
@@ -150,7 +155,7 @@ void Command::ProcessFromNetwork(ClientConnection* connection)
 		return;
 
 	ASSERT(CanProcessFrom(connection));
-	InternalCmdProcess(connection, GetConfig().processFromClient);
+	InternalCmdProcess(*connection, GetConfig().processFromClient);
 }
 
 void Command::ProcessFromNetwork(LocalUser* user)
@@ -159,7 +164,7 @@ void Command::ProcessFromNetwork(LocalUser* user)
 		return;
 
 	ASSERT(CanProcessFrom(user));
-	InternalCmdProcess(user, GetConfig().processFromUser);
+	InternalCmdProcess(*user, GetConfig().processFromUser);
 }
 
 void Command::ProcessFromNetwork(RemoteServer* remoteServer)
@@ -168,7 +173,7 @@ void Command::ProcessFromNetwork(RemoteServer* remoteServer)
 		return;
 
 	ASSERT(CanProcessFrom(remoteServer));
-	InternalCmdProcess(remoteServer, GetConfig().processFromRemoteServer);
+	InternalCmdProcess(*remoteServer, GetConfig().processFromRemoteServer);
 }
 
 bool Command::CanProcessFrom(ClientConnection*)

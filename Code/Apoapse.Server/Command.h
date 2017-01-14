@@ -53,7 +53,7 @@ private:
 	}
 };
 #define FIELD_VALUE_VALIDATOR(_type, _func)	new FieldValueValidator<_type>(_func)
-#define PROCESS_METHOD(_inputType, _method)	[this](_inputType* input) { _method(input); };
+#define PROCESS_METHOD(_inputType, _method)	[this](_inputType& input) { _method(input); };
 
 struct CommmandField
 {
@@ -72,9 +72,9 @@ struct CommandConfig
 	string name;
 	Format expectedFormat;
 	std::vector<CommmandField> fields;
-	std::function<void(ClientConnection*)> processFromClient = { NULL };
-	std::function<void(LocalUser*)> processFromUser = { NULL };
-	std::function<void(RemoteServer*)> processFromRemoteServer = { NULL };
+	std::function<void(ClientConnection&)> processFromClient = { NULL };
+	std::function<void(LocalUser&)> processFromUser = { NULL };
+	std::function<void(RemoteServer&)> processFromRemoteServer = { NULL };
 	bool isPayloadExpected = { false };
 };
 
@@ -113,7 +113,7 @@ private:
 	void AutoValidateInternal();
 
 	template <typename T>
-	inline void InternalCmdProcess(T* input, const std::function<void(T*)>& func)
+	inline void InternalCmdProcess(T& input, const std::function<void(T&)>& func)
 	{
 		ASSERT(func);
 		func(input);

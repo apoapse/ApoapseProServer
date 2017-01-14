@@ -16,10 +16,10 @@ std::unique_ptr<Command> CommandsManager::CreateCommand(const string& commandNam
 {
 	ASSERT_MSG(CommandExist(commandName), "The command requested does not exist");
 
-	return m_commandFactories[commandName]->Create();
+	return commandsFactory.CreateObject(commandName);
 }
 
 bool CommandsManager::CommandExist(const string& commandName) const
 {
-	return (m_commandFactories.count(commandName) > 0);
+	return commandsFactory.IsObjectExist(commandName);
 }

@@ -66,6 +66,9 @@
     <ClCompile Include="ClientConnection.cpp">
       <Filter>Network\Protocol\Connection</Filter>
     </ClCompile>
+    <ClCompile Include="ConnectedUsersManager.cpp">
+      <Filter>UserSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -156,6 +159,12 @@
       <Filter>Network\Protocol\Connection</Filter>
     </ClInclude>
     <ClInclude Include="ReadWriteMutexWrapper.h">
+      <Filter>Library</Filter>
+    </ClInclude>
+    <ClInclude Include="ConnectedUsersManager.h">
+      <Filter>UserSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectsFactory.h">
       <Filter>Library</Filter>
     </ClInclude>
   </ItemGroup>
