@@ -43,7 +43,7 @@ boost::asio::ip::tcp::endpoint TCPConnection::GetEndpoint() const
 
 void TCPConnection::HandleConnectAsync(const boost::system::error_code& error)
 {
-	LOG << "Connected to " << GetEndpoint().address() << ", port " << GetEndpoint().port();
+	LOG << "Connected to " << GetEndpoint();
 
 	if (error)
 		OnReceivedErrorInternal(error);
@@ -56,7 +56,7 @@ void TCPConnection::HandleConnectAsync(const boost::system::error_code& error)
 
 void TCPConnection::HandleAcceptedAsync(const boost::system::error_code& error)
 {
-	LOG_DEBUG_ONLY("TCPConnection Accepeted " << " bytes to " << GetEndpoint().address() << ", port " << GetEndpoint().port());
+	LOG_DEBUG_ONLY("TCPConnection accepeted from " << GetEndpoint());
 	HandleConnectAsync(error);
 }
 
@@ -68,9 +68,12 @@ void TCPConnection::OnReceivedErrorInternal(const boost::system::error_code& err
 
 void TCPConnection::HandleReadInternal(const std::function<void(size_t)>& handler, const boost::system::error_code& error, size_t bytesTransferred)
 {
+	if (!IsConnected())
+		return;
+
 	if (error && error != boost::asio::error::not_found)
 	{
-		OnReceivedError(error);
+		OnReceivedErrorInternal(error);
 		return;
 	}
 
@@ -95,6 +98,9 @@ void TCPConnection::InternalSend()
 
 void TCPConnection::HandleWriteAsync(const boost::system::error_code& error, size_t bytesTransferred)
 {
+	if (!IsConnected())
+		return;
+
 /*
 	ASSERT(m_sendQueue.front()->GetRawData().size() == bytesTransferred);
 
@@ -111,9 +117,9 @@ void TCPConnection::HandleWriteAsync(const boost::system::error_code& error, siz
 		OnReceivedErrorInternal(error);*/
 }
 
-void TCPConnection::ReadSome(boost::asio::streambuf& streambuf, size_t length, std::function<void(size_t)> externalHandler)
-{
-	auto handler = boost::bind(&TCPConnection::HandleReadInternal, shared_from_this(), externalHandler, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred);
-
-	boost::asio::async_read(GetSocket(), streambuf, boost::asio::transfer_exactly(length), handler);
-}
+// void TCPConnection::ReadSome(boost::asio::streambuf& streambuf, size_t length, std::function<void(size_t)> externalHandler)
+// {
+// 	auto handler = boost::bind(&TCPConnection::HandleReadInternal, shared_from_this(), externalHandler, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred);
+// 
+// 	boost::asio::async_read(GetSocket(), streambuf, boost::asio::transfer_exactly(length), handler);
+// }

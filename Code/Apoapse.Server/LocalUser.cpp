@@ -9,15 +9,15 @@ LocalUser::LocalUser(/*const Address& address*/)
 
 LocalUser::~LocalUser()
 {
-
+	LOG_DEBUG_FUNCTION_NAME();
 }
 
-void LocalUser::ProcessCommandFromNetwork(Command& command)
+void LocalUser::AssociateConnection(ClientConnection* connection)
 {
-	command.ProcessFromNetwork(this);
+	m_connections.insert(connection);
 }
 
-bool LocalUser::IsCommandCompatibleWithCurrentActor(Command& command)
+void LocalUser::RemoveAssociatedConnection(ClientConnection* connection)
 {
-	return command.CanProcessThisActor(this);
+	m_connections.erase(connection);
 }

@@ -6,7 +6,7 @@
 
 class LocalUser;
 class RemoteServer;
-class GenericConnection;
+class ClientConnection;
 
 enum class Format
 {
@@ -72,7 +72,7 @@ struct CommandConfig
 	string name;
 	Format expectedFormat;
 	std::vector<CommmandField> fields;
-	std::function<void(GenericConnection*)> processFromGenericConnection = { NULL };
+	std::function<void(ClientConnection*)> processFromClient = { NULL };
 	std::function<void(LocalUser*)> processFromUser = { NULL };
 	std::function<void(RemoteServer*)> processFromRemoteServer = { NULL };
 	bool isPayloadExpected = { false };
@@ -99,13 +99,13 @@ public:
 	Format GetInputRealFormat() const;
 	void SetInputRealFormat(Format format);
 
-	void ProcessFromNetwork(GenericConnection* connection);
+	void ProcessFromNetwork(ClientConnection* connection);
 	void ProcessFromNetwork(LocalUser* user);
 	void ProcessFromNetwork(RemoteServer* remoteServer);
 
-	bool CanProcessThisActor(GenericConnection*);
-	bool CanProcessThisActor(LocalUser*);
-	bool CanProcessThisActor(RemoteServer*);
+	bool CanProcessFrom(ClientConnection*);
+	bool CanProcessFrom(LocalUser*);
+	bool CanProcessFrom(RemoteServer*);
 
 	virtual const CommandConfig& GetConfig() = 0;
 
@@ -115,8 +115,8 @@ private:
 	template <typename T>
 	inline void InternalCmdProcess(T* input, const std::function<void(T*)>& func)
 	{
-		if (func)
-			func(input);
+		ASSERT(func);
+		func(input);
 	}
 
 protected:

@@ -52,7 +52,7 @@
       <Filter>Tests\UnitTests</Filter>
     </ClCompile>
     <ClCompile Include="UnicodeUtils.cpp">
-      <Filter>Utils</Filter>
+      <Filter>Library</Filter>
     </ClCompile>
     <ClCompile Include="UT_Command.cpp">
       <Filter>Tests\UnitTests</Filter>
@@ -60,11 +60,11 @@
     <ClCompile Include="GenericConnection.cpp">
       <Filter>Network\Protocol\Connection</Filter>
     </ClCompile>
-    <ClCompile Include="Actor.cpp">
-      <Filter>Actors</Filter>
-    </ClCompile>
     <ClCompile Include="LocalUser.cpp">
-      <Filter>Actors</Filter>
+      <Filter>UserSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientConnection.cpp">
+      <Filter>Network\Protocol\Connection</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -103,7 +103,7 @@
       <Filter>Network\Socket</Filter>
     </ClInclude>
     <ClInclude Include="StringExtensions.h">
-      <Filter>Utils</Filter>
+      <Filter>Library</Filter>
     </ClInclude>
     <ClInclude Include="NetMessage.h">
       <Filter>Network\Protocol</Filter>
@@ -141,22 +141,22 @@
       <Filter>InternalSystems\Logger</Filter>
     </ClInclude>
     <ClInclude Include="ByteUtils.h">
-      <Filter>Utils</Filter>
+      <Filter>Library</Filter>
     </ClInclude>
     <ClInclude Include="UnicodeUtils.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="RemoteServer.h">
-      <Filter>Actors</Filter>
+      <Filter>Library</Filter>
     </ClInclude>
     <ClInclude Include="LocalUser.h">
-      <Filter>Actors</Filter>
+      <Filter>UserSystem</Filter>
     </ClInclude>
     <ClInclude Include="GenericConnection.h">
       <Filter>Network\Protocol\Connection</Filter>
     </ClInclude>
-    <ClInclude Include="Actor.h">
-      <Filter>Actors</Filter>
+    <ClInclude Include="ClientConnection.h">
+      <Filter>Network\Protocol\Connection</Filter>
+    </ClInclude>
+    <ClInclude Include="ReadWriteMutexWrapper.h">
+      <Filter>Library</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -199,14 +199,14 @@
     <Filter Include="InternalSystems\Settings">
       <UniqueIdentifier>{2368b359-b726-4631-aac2-d992fc5a0c20}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Utils">
-      <UniqueIdentifier>{3c2daeed-824c-4470-9a30-dada018c5c2a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Actors">
-      <UniqueIdentifier>{db70fa0a-5f43-4d2f-ad9a-a5d7f53caf7f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Network\Protocol\Connection">
       <UniqueIdentifier>{86af4c3d-4e80-4a89-9016-c381e7f4ffed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library">
+      <UniqueIdentifier>{3c2daeed-824c-4470-9a30-dada018c5c2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UserSystem">
+      <UniqueIdentifier>{db70fa0a-5f43-4d2f-ad9a-a5d7f53caf7f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

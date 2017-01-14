@@ -156,9 +156,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Actor.cpp" />
     <ClCompile Include="ApoapseAddress.cpp" />
     <ClCompile Include="ApoapseServer.cpp" />
+    <ClCompile Include="ClientConnection.cpp" />
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="CommandsManager.cpp" />
     <ClCompile Include="ConfigVars.cpp" />
@@ -181,9 +181,9 @@
     <ClCompile Include="UT_StringExtensions.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Actor.h" />
     <ClInclude Include="ApoapseAddress.h" />
     <ClInclude Include="ApoapseServer.h" />
+    <ClInclude Include="ClientConnection.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="CommandsManager.h" />
     <ClInclude Include="ConfigVars.h" />
@@ -194,7 +194,7 @@
     <ClInclude Include="Log.h" />
     <ClInclude Include="LogMessage.h" />
     <ClInclude Include="NetMessage.h" />
-    <ClInclude Include="RemoteServer.h" />
+    <ClInclude Include="ReadWriteMutexWrapper.h" />
     <ClInclude Include="ThreadPool.h" />
     <ClInclude Include="UnicodeUtils.h" />
     <ClInclude Include="TCPConnection.h" />

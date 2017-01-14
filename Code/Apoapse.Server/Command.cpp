@@ -144,13 +144,13 @@ void Command::SetInputRealFormat(Format format)
 	m_inputRealFormat = format;
 }
 
-void Command::ProcessFromNetwork(GenericConnection* connection)
+void Command::ProcessFromNetwork(ClientConnection* connection)
 {
 	if (connection == nullptr)
 		return;
 
-	ASSERT(CanProcessThisActor(connection));
-	InternalCmdProcess(connection, GetConfig().processFromGenericConnection);
+	ASSERT(CanProcessFrom(connection));
+	InternalCmdProcess(connection, GetConfig().processFromClient);
 }
 
 void Command::ProcessFromNetwork(LocalUser* user)
@@ -158,7 +158,7 @@ void Command::ProcessFromNetwork(LocalUser* user)
 	if (user == nullptr)
 		return;
 
-	ASSERT(CanProcessThisActor(user));
+	ASSERT(CanProcessFrom(user));
 	InternalCmdProcess(user, GetConfig().processFromUser);
 }
 
@@ -167,21 +167,21 @@ void Command::ProcessFromNetwork(RemoteServer* remoteServer)
 	if (remoteServer == nullptr)
 		return;
 
-	ASSERT(CanProcessThisActor(remoteServer));
+	ASSERT(CanProcessFrom(remoteServer));
 	InternalCmdProcess(remoteServer, GetConfig().processFromRemoteServer);
 }
 
-bool Command::CanProcessThisActor(GenericConnection*)
+bool Command::CanProcessFrom(ClientConnection*)
 {
-	return GetConfig().processFromGenericConnection != NULL;
+	return GetConfig().processFromClient != NULL;
 }
 
-bool Command::CanProcessThisActor(LocalUser*)
+bool Command::CanProcessFrom(LocalUser*)
 {
 	return GetConfig().processFromUser != NULL;
 }
 
-bool Command::CanProcessThisActor(RemoteServer*)
+bool Command::CanProcessFrom(RemoteServer*)
 {
 	return GetConfig().processFromRemoteServer != NULL;
 }

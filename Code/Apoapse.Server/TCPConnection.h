@@ -3,6 +3,7 @@
 #include <boost\asio.hpp>
 #include <boost\bind.hpp>
 #include <functional>
+#include <atomic>
 
 class TCPConnection : public std::enable_shared_from_this<TCPConnection>
 {
@@ -11,7 +12,7 @@ class TCPConnection : public std::enable_shared_from_this<TCPConnection>
 
 private:
 	boostTCP::socket m_socket;
-	bool m_isConnected = false;
+	std::atomic<bool> m_isConnected = { false };
 	boost::asio::io_service::strand m_writeStrand;
 
 
@@ -54,7 +55,7 @@ protected:
 		boost::asio::async_read_until(GetSocket(), streambuf, delimiter, handler);
 	}
 
-	void ReadSome(boost::asio::streambuf& streambuf, size_t length, std::function<void(size_t)> externalHandler);
+	//void ReadSome(boost::asio::streambuf& streambuf, size_t length, std::function<void(size_t)> externalHandler);
 
 	virtual bool OnConnectedToServer() = 0;
 	virtual bool OnReceivedError(const boost::system::error_code& error) = 0;

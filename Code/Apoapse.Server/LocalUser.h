@@ -1,17 +1,19 @@
 #pragma once
-#include "GenericConnection.h"
-#include "Actor.h"
+#include <set>
+#include "ClientConnection.h"
+class GenericConnection;
+class Command;
 
-class LocalUser : public Actor
+class LocalUser
 {
-	std::vector<std::shared_ptr<GenericConnection>> m_connections;
+	std::set<ClientConnection*> m_connections;
 
 public:
 	LocalUser(/*const Address& address*/);
 	virtual ~LocalUser();
 
-	virtual void ProcessCommandFromNetwork(Command& command) override;
-	virtual bool IsCommandCompatibleWithCurrentActor(Command& command) override;
+	void AssociateConnection(ClientConnection* connection);
+	void RemoveAssociatedConnection(ClientConnection* connection);
 	
 private:
 };

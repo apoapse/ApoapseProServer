@@ -8,24 +8,11 @@ GenericConnection::GenericConnection(boost::asio::io_service& io_service)
 	: TCPConnection(io_service),
 	m_readStreamBuffer(COMMAND_BODY_RECEIVE_BUFFER_SIZE)
 {
-
 }
 
 GenericConnection::~GenericConnection()
 {
 	LOG_DEBUG_FUNCTION_NAME();
-}
-
-void GenericConnection::SetAssociatedActor(std::shared_ptr<Actor> actor)
-{
-	ASSERT(!HasAssociatedActor());
-
-	m_associatedActor = actor;
-}
-
-bool GenericConnection::HasAssociatedActor() const
-{
-	return m_associatedActor.is_initialized();
 }
 
 bool GenericConnection::OnConnectedToServer()
@@ -37,10 +24,11 @@ bool GenericConnection::OnConnectedToServer()
 
 bool GenericConnection::OnReceivedError(const boost::system::error_code& error)
 {
-	LOG << LogSeverity::error << __FUNCTION__ << ": " << error.message();
+	LOG << LogSeverity::error << __FUNCTION__ << ": " << error.message() << " (from: " << GetEndpoint() << ")";
 
 	// #TODO Handle errors
-	return true;
+	// http://www.boost.org/doc/libs/1_44_0/doc/html/boost_asio/reference/error__basic_errors.html
+	return false;
 }
 
 void GenericConnection::ListenForCommand()
@@ -51,33 +39,42 @@ void GenericConnection::ListenForCommand()
 
 void GenericConnection::OnCommandBodyComplete(std::unique_ptr<Command>& command)
 {
-	global->threadPool->PushTask([this, &command]
+	command->ParseRawCmdBody();
+
+	if (command->IsValid())
 	{
-		command->ParseRawCmdBody();
+		ProcessCommandFromNetwork(*command.get());
 
-		if (command->IsValid())
-		{
-			global->threadPool->PushTask([this, &command]	// #TODO use a specific thread pool -> do it inside Command::ProcessFromNetwork?
-			{
-				if (HasAssociatedActor())
-					GetAssociatedActor()->ProcessCommandFromNetwork(*command.get());
-				else
-					command->ProcessFromNetwork(this);
+		m_commands.pop_front();	// use GenericConnection::PopLastCommand (used to have a mutex) instead? YES
+	}
+	else
+	{
+		// #TODO_NETWORK_ERR_HANDLING
+		LOG << "Command invalid, closing connection" << LogSeverity::error;
+		Close();
+	}
 
-				m_commands.pop_front();	// use GenericConnection::PopLastCommand (used to have a mutex) instead?
-			});
-			// #TODO support from network and user (do from generic connection in another method that automatically decide if this has to be done on which actor?) Maybe have an actor Interface/base class?
-			// This class having an actor base class in a optional shared ptr? This base class just acting as a proxy, the inherited virtual functions should do most (if not all of the operations)
-
-			//TODO: if no errors from ProcessFromNetwork, remove the command from the queue
-		}
-		else
-		{
-			// #TODO_NETWORK_ERR_HANDLING
-			LOG << "Command invalid, closing connection" << LogSeverity::error;
-			Close();
-		}
-	});
+//	#TODO Parallelize this code
+// 	global->threadPool->PushTask([this, &command]
+// 	{
+// 		command->ParseRawCmdBody();
+// 
+// 		if (command->IsValid())
+// 		{
+// 			global->threadPool->PushTask([this, &command]	// #TODO use a specific thread pool -> do it inside Command::ProcessFromNetwork?
+// 			{
+// 				ProcessCommandFromNetwork(*command.get());
+// 
+// 				m_commands.pop_front();	// use GenericConnection::PopLastCommand (used to have a mutex) instead? YES
+// 			});
+// 		}
+// 		else
+// 		{
+// 			// #TODO_NETWORK_ERR_HANDLING
+// 			LOG << "Command invalid, closing connection" << LogSeverity::error;
+// 			Close();
+// 		}
+// 	});
 
 	// #TODO Implement payload receiving system here
 	ListenForCommand();
@@ -97,7 +94,7 @@ void GenericConnection::OnReceivedCommandName(size_t bytesTransferred)
 
 		auto& currentCommand = m_commands.front();
 
-		if (CheckActorAndCommandCompatibility(*currentCommand.get()))
+		if (CheckCommandNetworkInputCompatibility(*currentCommand.get()))
 		{
 			ReadCommandFirstChar(*currentCommand.get());
 			ListenForCommandBody();
@@ -196,16 +193,3 @@ void GenericConnection::OnReceivedCommandInfoBody(size_t bytesTransferred)
 
 	OnCommandBodyComplete(command);
 }
-
-bool GenericConnection::CheckActorAndCommandCompatibility(Command& command)
-{
-	if (HasAssociatedActor())
-		return GetAssociatedActor()->IsCommandCompatibleWithCurrentActor(command);
-	else
-		return command.CanProcessThisActor(this);
-}
-
-// void GenericConnection::PopLastCommand()
-// {
-// 
-// }
