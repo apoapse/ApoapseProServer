@@ -4,6 +4,7 @@
 #include "ClientConnection.h"
 #include "LocalUser.h"
 #include "ApoapseAddress.h"
+#include "ApoapseServer.h"
 
 class Connect final : public Command
 {
@@ -36,10 +37,19 @@ public:
 	void Process(ClientConnection& connection)
 	{
 		// #TODO_DATABASE_IMPL probably on the user class or connectedUsersManager (in this case, this should be renamed to UsersManager)
+		const auto usernamehash = ApoapseAddress::UsernameHash(ReadFieldValue<string>("username").get());
 
-		if (ApoapseAddress::UsernameHash(ReadFieldValue<string>("username").get()) == ApoapseAddress::UsernameHash("9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08") && ReadFieldValue<string>("password").get() == "MyPassword")
+		if (usernamehash == ApoapseAddress::UsernameHash("9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08") && ReadFieldValue<string>("password").get() == "MyPassword")
 		{
-			connection.SetAssociatedUser(std::make_shared<LocalUser>());	// TODO: Use a user manager to make sure an user object can't be created two times if connected from two different connections. (maybe use a general actor manager if necessary for the remote server as well)
+			if (connection.server.GetUsersManager().IsConnected(usernamehash))
+			{
+				connection.SetAssociatedUser(connection.server.GetUsersManager().GetConnectedUser(usernamehash).GetPtr());
+			}
+			else
+			{
+				connection.SetAssociatedUser(std::make_shared<LocalUser>(connection.server.GetUsersManager(), usernamehash));	//TODO->put a create method in the manager
+			}
+
 			LOG << "User " << ReadFieldValue<string>("username").get() << " connected with success";
 		}
 		else

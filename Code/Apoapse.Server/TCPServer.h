@@ -22,14 +22,14 @@ public:
 
 	void Close();
 
-	template <typename T_CONNECTION>
-	void StartAccept()
-	{
-		TCPConnection::TCPConnection_ptr newConnection = std::make_shared<T_CONNECTION>(m_ioservice);	//TODO: HAVE A FLAG TO SPECIFY THAT THIS CONNECTION IS THE SERVER ITSELF?
-
-		auto handler = boost::bind(&TCPServer::HandleAcceptAsync<T_CONNECTION>, this, newConnection, boost::asio::placeholders::error);
-		m_acceptor->async_accept(newConnection->GetSocket(), handler);
-	}
+// 	template <typename T_CONNECTION>
+// 	void StartAccept()
+// 	{
+// 		TCPConnection::TCPConnection_ptr newConnection = std::make_shared<T_CONNECTION>(m_ioservice);	//TODO: HAVE A FLAG TO SPECIFY THAT THIS CONNECTION IS THE SERVER ITSELF?
+// 
+// 		auto handler = boost::bind(&TCPServer::HandleAcceptAsync<T_CONNECTION>, this, newConnection, boost::asio::placeholders::error);
+// 		m_acceptor->async_accept(newConnection->GetSocket(), handler);
+// 	}
 
 	template <typename T_CONNECTION, typename... T_Args>
 	void StartAccept(T_Args&&... args)

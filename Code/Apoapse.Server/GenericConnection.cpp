@@ -4,8 +4,9 @@
 #include "CommandsManager.h"
 #include "StringExtensions.h"
 
-GenericConnection::GenericConnection(boost::asio::io_service& io_service)
+GenericConnection::GenericConnection(boost::asio::io_service& io_service, ApoapseServer& apoapseServer)
 	: TCPConnection(io_service),
+	server(apoapseServer),
 	m_readStreamBuffer(COMMAND_BODY_RECEIVE_BUFFER_SIZE)
 {
 }
@@ -50,8 +51,8 @@ void GenericConnection::OnCommandBodyComplete(std::unique_ptr<Command>& command)
 	else
 	{
 		// #TODO_NETWORK_ERR_HANDLING
-		LOG << "Command invalid, closing connection" << LogSeverity::error;
-		Close();
+		LOG << "Command invalid" << LogSeverity::error;
+		//Close();
 	}
 
 //	#TODO Parallelize this code

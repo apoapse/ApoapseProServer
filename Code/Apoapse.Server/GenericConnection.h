@@ -3,6 +3,7 @@
 #include "Command.h"
 #include <deque>
 #include <boost/optional.hpp>
+class ApoapseServer;
 
 #define COMMAND_BODY_RECEIVE_BUFFER_SIZE 512
 
@@ -12,7 +13,9 @@ class GenericConnection : public TCPConnection
 	std::deque<std::unique_ptr<Command>> m_commands;	// #TODO Make sure there are no issues with thread safety
 
 public:
-	GenericConnection(boost::asio::io_service& io_service);
+	ApoapseServer& server;
+
+	GenericConnection(boost::asio::io_service& io_service, ApoapseServer& apoapseServer);
 	virtual ~GenericConnection();
 
 private:

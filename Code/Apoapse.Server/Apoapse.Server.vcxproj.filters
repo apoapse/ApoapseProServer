@@ -66,11 +66,11 @@
     <ClCompile Include="ClientConnection.cpp">
       <Filter>Network\Protocol\Connection</Filter>
     </ClCompile>
-    <ClCompile Include="ConnectedUsersManager.cpp">
-      <Filter>UserSystem</Filter>
-    </ClCompile>
     <ClCompile Include="UT_ApoapseAddress.cpp">
       <Filter>Tests\UnitTests</Filter>
+    </ClCompile>
+    <ClCompile Include="UsersManager.cpp">
+      <Filter>UserSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -164,11 +164,11 @@
     <ClInclude Include="ReadWriteMutexWrapper.h">
       <Filter>Library</Filter>
     </ClInclude>
-    <ClInclude Include="ConnectedUsersManager.h">
-      <Filter>UserSystem</Filter>
-    </ClInclude>
     <ClInclude Include="ObjectsFactory.h">
       <Filter>Library</Filter>
+    </ClInclude>
+    <ClInclude Include="UsersManager.h">
+      <Filter>UserSystem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

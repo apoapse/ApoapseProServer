@@ -43,3 +43,18 @@ bool ApoapseAddress::IsValid() const
 {
 	return m_isValid;
 }
+
+string ApoapseAddress::GetFullAddress() const
+{
+	return m_fullAddress;
+}
+
+const ApoapseAddress::ServerDomain& ApoapseAddress::GetDomain() const
+{
+	return m_domain;
+}
+
+const ApoapseAddress::UsernameHash& ApoapseAddress::GetUsernameHash() const
+{
+	return m_username;
+}

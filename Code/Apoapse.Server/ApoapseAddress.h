@@ -30,12 +30,22 @@ public:
 			m_data = usernameHash;
 		}
 
+		bool operator<(const UsernameHash& usernameHash) const	// Comparaison operator for std::map
+		{
+			return (usernameHash.GetStr() > m_data);
+		}
+
 // 		std::array<byte, SHA256_SIZE_BYTES> GetInBinary() const
 // 		{
 // 			
 // 		}
 
 		bool operator==(const UsernameHash& secondObj)
+		{
+			return (secondObj.m_data == this->m_data);
+		}
+
+		bool operator==(const UsernameHash& secondObj) const
 		{
 			return (secondObj.m_data == this->m_data);
 		}
@@ -70,6 +80,16 @@ public:
 			return m_data;
 		}
 
+		bool operator==(const ServerDomain& secondObj)
+		{
+			return (secondObj.m_data == this->m_data);
+		}
+
+		bool operator==(const ServerDomain& secondObj) const
+		{
+			return (secondObj.m_data == this->m_data);
+		}
+
 		static bool IsValid(const string& serverTLD)
 		{
 			if (serverTLD.length() > max_server_domain_length || serverTLD.length() < 2)
@@ -95,6 +115,9 @@ public:
 	virtual ~ApoapseAddress();
 
 	bool IsValid() const;
+	string GetFullAddress() const;
+	const ServerDomain& GetDomain() const;
+	const UsernameHash& GetUsernameHash() const;
 
 private:
 	void ParseAddress();

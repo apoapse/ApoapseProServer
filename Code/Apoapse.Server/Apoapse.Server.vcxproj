@@ -162,7 +162,7 @@
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="CommandsManager.cpp" />
     <ClCompile Include="ConfigVars.cpp" />
-    <ClCompile Include="ConnectedUsersManager.cpp" />
+    <ClCompile Include="UsersManager.cpp" />
     <ClCompile Include="GenericConnection.cpp" />
     <ClCompile Include="LocalUser.cpp" />
     <ClCompile Include="Logger.cpp" />
@@ -189,7 +189,7 @@
     <ClInclude Include="Command.h" />
     <ClInclude Include="CommandsManager.h" />
     <ClInclude Include="ConfigVars.h" />
-    <ClInclude Include="ConnectedUsersManager.h" />
+    <ClInclude Include="UsersManager.h" />
     <ClInclude Include="eLogSeverity.h" />
     <ClInclude Include="GenericConnection.h" />
     <ClInclude Include="ILogger.h" />

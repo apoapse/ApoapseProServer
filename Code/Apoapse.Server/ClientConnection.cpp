@@ -2,9 +2,9 @@
 #include "ClientConnection.h"
 #include "Common.h"
 #include "LocalUser.h"
+#include "ApoapseServer.h"
 
-ClientConnection::ClientConnection(boost::asio::io_service& io_service)
-	: GenericConnection(io_service)
+ClientConnection::ClientConnection(boost::asio::io_service& io_service, ApoapseServer& apoapseServer) : GenericConnection(io_service, apoapseServer)
 {
 
 }

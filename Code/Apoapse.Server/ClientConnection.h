@@ -1,6 +1,7 @@
 #pragma once
 #include "GenericConnection.h"
 #include <boost/optional.hpp>
+
 class LocalUser;
 
 class ClientConnection : public GenericConnection
@@ -8,7 +9,7 @@ class ClientConnection : public GenericConnection
 	boost::optional<std::shared_ptr<LocalUser>> m_associatedUser;
 
 public:
-	ClientConnection(boost::asio::io_service& io_service);
+	ClientConnection(boost::asio::io_service& io_service, ApoapseServer& apoapseServer);
 	virtual ~ClientConnection();
 
 	bool HasAssociatedUser() const;
