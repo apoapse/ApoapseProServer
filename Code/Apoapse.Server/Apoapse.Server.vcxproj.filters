@@ -69,6 +69,9 @@
     <ClCompile Include="ConnectedUsersManager.cpp">
       <Filter>UserSystem</Filter>
     </ClCompile>
+    <ClCompile Include="UT_ApoapseAddress.cpp">
+      <Filter>Tests\UnitTests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />

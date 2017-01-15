@@ -53,7 +53,7 @@ namespace StringExtensions
 	}
 
 	template <typename T>
-	void split(const std::basic_string<T>& str, std::vector<std::basic_string<T>>& output, const std::basic_string<T>& separator)
+	void split(const std::basic_string<T>& str, std::vector<std::basic_string<T>>& output, const string& separator)
 	{
 		boost::split(output, str, boost::is_any_of(separator));
 	}
@@ -62,5 +62,16 @@ namespace StringExtensions
 	std::basic_string<T> get_last_chars(const std::basic_string<T>& str, size_t nb_of_chars)
 	{
 		return str.substr(str.length() - nb_of_chars);
+	}
+
+	template <typename T>
+	bool contains(const std::basic_string<T>& str, char character)
+	{
+		const size_t result = str.find(character);
+
+		if (result != std::string::npos)
+			return true;
+		else
+			return false;
 	}
 }

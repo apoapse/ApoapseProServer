@@ -35,7 +35,7 @@ public:
 
 	void Process(ClientConnection& connection)
 	{
-		// #TODO_DATABASE_IMPL
+		// #TODO_DATABASE_IMPL probably on the user class or connectedUsersManager (in this case, this should be renamed to UsersManager)
 
 		if (ApoapseAddress::UsernameHash(ReadFieldValue<string>("username").get()) == ApoapseAddress::UsernameHash("9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08") && ReadFieldValue<string>("password").get() == "MyPassword")
 		{

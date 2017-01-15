@@ -1,58 +1,45 @@
 #include "stdafx.h"
-#include "Common.h"
 #include "ApoapseAddress.h"
-#include <boost\algorithm\string.hpp>
-#include <vector>
+#include "Common.h"
+#include "StringExtensions.h"
 
-ApoapseAddress::ApoapseAddress(const std::string& rawAddress) : m_preValidated(true), m_domain(""), m_username("")
+ApoapseAddress::ApoapseAddress(const string& address) : m_fullAddress(address)
 {
-	ASSERT_MSG(rawAddress.length() <= FULL_ADDRESS_MAX_LENGTH, "The address length is too high. This must be checked before creating the object");
+	ParseAddress();
+}
 
-	// #TODO Store the adress in lowercase to avoid any problem with comparaisons. Maybe not necessary in the consutructor
+ApoapseAddress::~ApoapseAddress()
+{
 
-	/*if (StringExtensions::CountOccurences(rawAddress, ':') == 1)
+}
+
+void ApoapseAddress::ParseAddress()
+{
+	if (m_fullAddress.length() < 5 && m_fullAddress.length() < (UsernameHash::username_hash_str_size + ServerDomain::max_server_domain_length))
+		return;
+
+	if (StringExtensions::contains(m_fullAddress, ':'))
 	{
-		std::vector<string> tmpVector;
+		std::vector<string> temp;
+		StringExtensions::split(m_fullAddress, temp, ":");
 
-		StringExtensions::SplitString(tmpVector, rawAddress, ":");
-
-		if (tmpVector.size() == 2)
+		if (temp.size() == 2)
 		{
-			m_domain = tmpVector.at(0);
-			m_username = tmpVector.at(1);
+			string domain = temp.at(0);
+			string username = temp.at(1);
+
+			if (ServerDomain::IsValid(domain) && UsernameHash::IsValid(username))
+			{
+				m_domain = domain;
+				m_username = username;
+
+				m_isValid = true;
+			}
 		}
-		else
-			m_preValidated = false;
 	}
-	else
-		m_preValidated = false;*/
 }
 
 bool ApoapseAddress::IsValid() const
 {
-	if (m_preValidated == false)
-		return false;
-
-	return true;	// #TODO implement: verify both domain and username
-}
-
-string ApoapseAddress::GetFullAddress() const
-{
-	ASSERT(m_domain.length() != 0 && m_username.length() != 0);
-	return m_domain + ":" + m_username;
-}
-
-string ApoapseAddress::GetDomain() const
-{
-	return m_domain;
-}
-
-string ApoapseAddress::GetUsername() const
-{
-	return m_username;
-}
-
-bool ApoapseAddress::operator== (const ApoapseAddress& otherObj)
-{
-	return (otherObj.m_username == this->m_username) && (otherObj.m_domain == this->m_domain);
+	return m_isValid;
 }

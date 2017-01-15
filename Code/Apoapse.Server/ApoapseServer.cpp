@@ -6,11 +6,9 @@
 #include "Command.h"
 #include "ClientConnection.h"
 
-
 ApoapseServer::ApoapseServer(UInt16 port)
 {
 	m_ServerForClients = std::make_unique<TCPServer>(m_IOServiceForClients, port/*, TCPServer::IP_v6*/);
-
 }
 
 ApoapseServer::~ApoapseServer()

@@ -17,7 +17,7 @@ TestsManager::~TestsManager()
 
 }
 
-UNIT_TESTS_DLL_API void TestsManager::RunTests(const char* /*testsPath = ""*/)	// #TODO support url type address to trigger specific tests or group of tests
+UNIT_TESTS_DLL_API void TestsManager::RunTests(const char* /*testsPath = ""*/)	// #TODO support tests group and individual tests
 {
 	int successCount = 0;
 	int errorsCount = 0;

@@ -7,7 +7,7 @@
 
 #define TOSTRING(x) #x
 #define TEST_REGISTER_AND_READ(_type, _defaultValue, _expectedValue)\
-		UNIT_TEST("SettingsManager/RegisterAndRead/" TOSTRING(_type))\
+		UNIT_TEST("SettingsManager:RegisterAndRead:" TOSTRING(_type))\
 		{\
 			const auto defaultValue = (_defaultValue);\
 			SettingsManager settingsManager("test_config.json");\
@@ -28,7 +28,7 @@
 		} UNIT_TEST_END\
 
 
-UNIT_TEST("SettingsManager/LoadAndReadConfigFile")
+UNIT_TEST("SettingsManager:LoadAndReadConfigFile")
 {
 	
 
@@ -49,7 +49,7 @@ TEST_REGISTER_AND_READ(_int, 121, -10);
 TEST_REGISTER_AND_READ(_uint, 991, 80);
 TEST_REGISTER_AND_READ(_bool, true, false);
 
-UNIT_TEST("SettingsManager/RegisterAndReadMultiple")
+UNIT_TEST("SettingsManager:RegisterAndReadMultiple")
 {
 	SettingsManager settingsManager("test_config.json");
 
@@ -69,7 +69,7 @@ UNIT_TEST("SettingsManager/RegisterAndReadMultiple")
 	}
 } UNIT_TEST_END
 
-UNIT_TEST("SettingsManager/ReadDefaultValue_bool")
+UNIT_TEST("SettingsManager:ReadDefaultValue_bool")
 {
 	const bool defaultValue = true;	
 	SettingsManager settingsManager("test_config.json");
