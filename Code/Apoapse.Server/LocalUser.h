@@ -17,7 +17,9 @@ class LocalUser : public std::enable_shared_from_this<LocalUser>
 	//TCP_IP_ADDRESS (hold a copy)
 
 public:
-	LocalUser(UsersManager& usersManager, const ApoapseAddress::UsernameHash& usernameHash);
+	ApoapseServer& server;
+
+	LocalUser(ApoapseServer& apoapseServer, UsersManager& usersManager, const ApoapseAddress::UsernameHash& usernameHash);
 	virtual ~LocalUser();
 
 	std::shared_ptr<LocalUser> GetPtr();

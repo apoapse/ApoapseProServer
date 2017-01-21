@@ -94,7 +94,7 @@
       <SDLCheck>true</SDLCheck>
       <PrecompiledHeader>Create</PrecompiledHeader>
       <PrecompiledHeaderOutputFile>$(SolutionDir)vs_build\$(Configuration)\$(PlatformTarget)\$(ProjectName).pch</PrecompiledHeaderOutputFile>
-      <PreprocessorDefinitions>LIB;COMPILE_DLL;ENABLE_SEC_ASSERTS;ENABLE_PRECOMPILED_HEADERS;_ENABLE_ATOMIC_ALIGNMENT_FIX;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_WIN32_WINNT=0x0501;DEBUG;UNIT_TESTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>LIB;COMPILE_DLL;ENABLE_SEC_ADVANCED_CHECKS;ENABLE_PRECOMPILED_HEADERS;_ENABLE_ATOMIC_ALIGNMENT_FIX;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_WIN32_WINNT=0x0501;DEBUG;UNIT_TESTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/Zm250 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalIncludeDirectories>$(SolutionDir)Code\</AdditionalIncludeDirectories>
     </ClCompile>
@@ -109,7 +109,7 @@
       <SDLCheck>true</SDLCheck>
       <PrecompiledHeader>Create</PrecompiledHeader>
       <PrecompiledHeaderOutputFile>$(SolutionDir)vs_build\$(Configuration)\$(PlatformTarget)\$(ProjectName).pch</PrecompiledHeaderOutputFile>
-      <PreprocessorDefinitions>LIB;COMPILE_DLL;ENABLE_SEC_ASSERTS;ENABLE_PRECOMPILED_HEADERS;_ENABLE_ATOMIC_ALIGNMENT_FIX;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_WIN32_WINNT=0x0501;DEBUG;UNIT_TESTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>LIB;COMPILE_DLL;ENABLE_SEC_ADVANCED_CHECKS;ENABLE_PRECOMPILED_HEADERS;_ENABLE_ATOMIC_ALIGNMENT_FIX;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_WIN32_WINNT=0x0501;DEBUG;UNIT_TESTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/Zm250 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalIncludeDirectories>$(SolutionDir)Code\</AdditionalIncludeDirectories>
     </ClCompile>
@@ -189,6 +189,11 @@
     <ClInclude Include="Command.h" />
     <ClInclude Include="CommandsManager.h" />
     <ClInclude Include="ConfigVars.h" />
+    <ClInclude Include="Database.h" />
+    <ClInclude Include="SQLQuery.h" />
+    <ClInclude Include="SQLResultContainer.h" />
+    <ClInclude Include="SQLValue.h" />
+    <ClInclude Include="static_string.h" />
     <ClInclude Include="UsersManager.h" />
     <ClInclude Include="eLogSeverity.h" />
     <ClInclude Include="GenericConnection.h" />

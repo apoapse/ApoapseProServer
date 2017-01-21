@@ -9,12 +9,19 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ServerConsole", "Code\Serve
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Apoapse.Server", "Code\Apoapse.Server\Apoapse.Server.vcxproj", "{4715FBC8-8F7A-45A4-9DF6-5EFF6899418C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A1FFE00D-482E-473E-87A5-D849319532E2} = {A1FFE00D-482E-473E-87A5-D849319532E2}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestClient", "TestClient\TestClient.csproj", "{0C3EF785-3C24-4F71-9953-F5DE24E26AEC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{31611892-E35F-4A2F-A909-6D53B20ABBB5}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Apoapse.UnitTest", "Code\Apoapse.UnitTest\Apoapse.UnitTest.vcxproj", "{0EAAF367-EAC1-435B-A90E-2E7C5AB666B9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DatabasesImpl", "DatabasesImpl", "{5F059CEB-03BB-47B7-BA85-46816A58F31E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DatabaseImpl.sqlite", "Code\DatabaseImpl.sqlite\DatabaseImpl.sqlite.vcxproj", "{A1FFE00D-482E-473E-87A5-D849319532E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -68,6 +75,16 @@ Global
 		{0EAAF367-EAC1-435B-A90E-2E7C5AB666B9}.Release|x64.Build.0 = Release|x64
 		{0EAAF367-EAC1-435B-A90E-2E7C5AB666B9}.Release|x86.ActiveCfg = Release|Win32
 		{0EAAF367-EAC1-435B-A90E-2E7C5AB666B9}.Release|x86.Build.0 = Release|Win32
+		{A1FFE00D-482E-473E-87A5-D849319532E2}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{A1FFE00D-482E-473E-87A5-D849319532E2}.Debug|x64.ActiveCfg = Debug|x64
+		{A1FFE00D-482E-473E-87A5-D849319532E2}.Debug|x64.Build.0 = Debug|x64
+		{A1FFE00D-482E-473E-87A5-D849319532E2}.Debug|x86.ActiveCfg = Debug|Win32
+		{A1FFE00D-482E-473E-87A5-D849319532E2}.Debug|x86.Build.0 = Debug|Win32
+		{A1FFE00D-482E-473E-87A5-D849319532E2}.Release|Any CPU.ActiveCfg = Release|Win32
+		{A1FFE00D-482E-473E-87A5-D849319532E2}.Release|x64.ActiveCfg = Release|x64
+		{A1FFE00D-482E-473E-87A5-D849319532E2}.Release|x64.Build.0 = Release|x64
+		{A1FFE00D-482E-473E-87A5-D849319532E2}.Release|x86.ActiveCfg = Release|Win32
+		{A1FFE00D-482E-473E-87A5-D849319532E2}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -75,5 +92,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{0C3EF785-3C24-4F71-9953-F5DE24E26AEC} = {31611892-E35F-4A2F-A909-6D53B20ABBB5}
 		{0EAAF367-EAC1-435B-A90E-2E7C5AB666B9} = {31611892-E35F-4A2F-A909-6D53B20ABBB5}
+		{A1FFE00D-482E-473E-87A5-D849319532E2} = {5F059CEB-03BB-47B7-BA85-46816A58F31E}
 	EndGlobalSection
 EndGlobal

@@ -20,7 +20,7 @@ class ThreadPool
 	{
 		std::packaged_task<T()> task;
 
-		Task(std::function<T()> func) : task(func)
+		Task(std::function<T()>&& func) : task(func)
 		{
 		}
 
@@ -47,6 +47,11 @@ public:
 	ThreadPool(const string& threadPoolName, UInt32 nbThreads);
 	virtual ~ThreadPool();
 
+	//************************************
+	// Method:    ThreadPool::PushTask - Push a task to the queue, generaly a lambda
+	// Parameter: const T func - callable object like std::function
+	// WARNING:   For the return class, std::promise need a default constructor and an copy assignement operator
+	//************************************
 	template<typename T>
 	std::future<typename std::result_of<T()>::type> PushTask(const T func)
 	{

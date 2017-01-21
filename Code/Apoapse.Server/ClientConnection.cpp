@@ -37,10 +37,7 @@ void ClientConnection::SetAssociatedUser(std::shared_ptr<LocalUser> user)
 
 bool ClientConnection::CheckCommandNetworkInputCompatibility(Command& command)
 {
-	if (HasAssociatedUser())
-		return command.CanProcessFrom(GetAssociatedUser().get());
-	else
-		return command.CanProcessFrom(this);
+	return HasAssociatedUser() ? command.CanProcessFrom(GetAssociatedUser().get()) : command.CanProcessFrom(this);
 }
 
 void ClientConnection::ProcessCommandFromNetwork(Command& command)

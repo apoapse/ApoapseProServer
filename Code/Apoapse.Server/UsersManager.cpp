@@ -19,8 +19,6 @@ void UsersManager::AddConnectedUser(LocalUser* user)
 		return;
 
 	m_connectedUsers[user->GetUsernameHash()] = user;
-// 	exclusive_mutex lock(m_connectedUsers.GetMutex());
-// 	m_connectedUsers->insert(user);
 }
 
 void UsersManager::RemoveConnectedUser(LocalUser* user)
@@ -31,8 +29,6 @@ void UsersManager::RemoveConnectedUser(LocalUser* user)
 	ASSERT(IsConnected(user->GetUsernameHash()));
 
 	m_connectedUsers.erase(user->GetUsernameHash());
-// 	exclusive_mutex lock(m_connectedUsers.GetMutex());
-// 	m_connectedUsers->erase(user);
 }
 
 LocalUser& UsersManager::GetConnectedUser(const ApoapseAddress::UsernameHash& usernameHash)

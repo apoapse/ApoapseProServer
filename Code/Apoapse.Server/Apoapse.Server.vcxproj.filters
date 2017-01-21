@@ -170,6 +170,21 @@
     <ClInclude Include="UsersManager.h">
       <Filter>UserSystem</Filter>
     </ClInclude>
+    <ClInclude Include="Database.h">
+      <Filter>DataAbstractionLayers</Filter>
+    </ClInclude>
+    <ClInclude Include="static_string.h">
+      <Filter>Library</Filter>
+    </ClInclude>
+    <ClInclude Include="SQLQuery.h">
+      <Filter>DataAbstractionLayers</Filter>
+    </ClInclude>
+    <ClInclude Include="SQLValue.h">
+      <Filter>DataAbstractionLayers</Filter>
+    </ClInclude>
+    <ClInclude Include="SQLResultContainer.h">
+      <Filter>DataAbstractionLayers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Threading">
@@ -219,6 +234,9 @@
     </Filter>
     <Filter Include="UserSystem">
       <UniqueIdentifier>{db70fa0a-5f43-4d2f-ad9a-a5d7f53caf7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataAbstractionLayers">
+      <UniqueIdentifier>{e8e9e73d-6ac8-44ee-8596-8bb626d6a1d9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

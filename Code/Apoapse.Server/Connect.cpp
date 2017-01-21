@@ -47,7 +47,7 @@ public:
 			}
 			else
 			{
-				connection.SetAssociatedUser(std::make_shared<LocalUser>(connection.server.GetUsersManager(), usernamehash));	//TODO->put a create method in the manager
+				connection.SetAssociatedUser(std::make_shared<LocalUser>(connection.server, connection.server.GetUsersManager(), usernamehash));	//TODO->put a create method in the manager
 			}
 
 			LOG << "User " << ReadFieldValue<string>("username").get() << " connected with success";

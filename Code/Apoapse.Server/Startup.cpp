@@ -5,6 +5,9 @@
 #include "Logger.h"
 #include "ApoapseServer.h"
 
+#include "InternalLibraryLoader.h"
+#include "Database.h"
+
 #ifdef UNIT_TESTS
 #include "Apoapse.UnitTest\TestsManager.h"
 #endif // UNIT_TESTS
@@ -35,8 +38,17 @@ void ApoapseServerStartup::Start(std::vector<std::string>& params)
 	global->logger = std::make_unique<Logger>("log.txt");
 	global->threadPool = std::make_unique<ThreadPool>("Global thread pool", global->settings->ReadConfigValue_uint("system.glboal_threadpool_nb_threads"));
 
+	// Database
+	boost::shared_ptr<Database> database = InternalLibraryLoader::LoadInternalLibrary<Database>("DatabaseImpl.sqlite");
+	const char* dbParams[1];
+	dbParams[0] = "database.db";
+	if (!database->Open(dbParams, 1))
+	{
+		FatalError("Unable to access the database");
+	}
 
-	/*new*/ ApoapseServer apoapseServer((UInt16)global->settings->ReadConfigValue_uint("server.port"));
+	// Apoapse Server
+	/*new*/ ApoapseServer apoapseServer((UInt16)global->settings->ReadConfigValue_uint("server.port"), *database.get());
 	apoapseServer.Start();
 	
 	string s;

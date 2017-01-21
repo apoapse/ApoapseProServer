@@ -1,6 +1,8 @@
 #pragma once
 #include "TCPServer.h"
 #include "UsersManager.h"
+#include "Database.h"
+#include "SQLQuery.h"
 
 class ApoapseServer
 {
@@ -10,12 +12,13 @@ class ApoapseServer
 	std::unique_ptr<UsersManager> m_usersManager;
 
 public:
-	ApoapseServer(UInt16 port);
+	ApoapseServer(UInt16 port, Database& database);
 	~ApoapseServer();
 
 	void Start();
 	UsersManager& GetUsersManager() const;
-	
+	Database& database;
+
 private:
 
 };

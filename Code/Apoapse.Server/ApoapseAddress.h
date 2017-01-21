@@ -52,7 +52,15 @@ public:
 
 		static bool IsValid(const string& usernameHash)
 		{
+			// #TODO Check if there are no specials characters
+
 			return (usernameHash.length() == username_hash_str_size);
+		}
+
+		friend std::ostream& operator<<(std::ostream& stream, const UsernameHash& obj)
+		{
+			stream << obj.GetStr();
+			return stream;
 		}
 	};
 
@@ -96,7 +104,7 @@ public:
 				return false;
 
 			const size_t result = serverTLD.find('.');
-
+			// #TODO Check if there are no specials characters
 			if (result != std::string::npos && result != 0 && result != (serverTLD.length() - 1))
 				return true;
 			else

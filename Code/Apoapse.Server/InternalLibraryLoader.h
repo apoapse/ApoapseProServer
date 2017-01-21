@@ -1,16 +1,17 @@
 #pragma once
 #include <boost/dll/import.hpp>
-#include "InternalLibraryLoadingAPI.h"
 #include <iostream>
+#include <boost/shared_ptr.hpp>
 
 struct InternalLibraryLoader
 {
-	static void LoadInternalLibrary(const char* libraryName, std::vector<std::string>& params)
+	template <typename T>
+	static boost::shared_ptr<T> LoadInternalLibrary(const char* libraryName)
 	{
-		boost::shared_ptr<InternalLibraryLoadingAPI> coreDLL;
+		boost::shared_ptr<T> dll;
 		try
 		{
-			coreDLL = boost::dll::import<InternalLibraryLoadingAPI>(libraryName, "apoapse_internal_dll", boost::dll::load_mode::append_decorations);
+			dll = boost::dll::import<T>(libraryName, "apoapse_internal_dll", boost::dll::load_mode::append_decorations);
 		}
 		catch (const std::exception&)
 		{
@@ -18,6 +19,6 @@ struct InternalLibraryLoader
 			std::abort();
 		}
 
-		coreDLL->Start(params);
+		return dll;
 	}
 };

@@ -5,7 +5,7 @@
 #define ASSERT_MSG(_exp, _msg)	BOOST_ASSERT_MSG(_exp, _msg)
 
 // #TODO 
-#ifdef ENABLE_SEC_ASSERTS
+#ifdef ENABLE_SEC_ADVANCED_CHECKS
 #define SECURITY_ASSERT(_exp)	ASSERT(_exp)
 #define SECURITY_ASSERT_MSG(_exp, _msg)	BOOST_ASSERT_MSG(_exp, _msg)
 #else
