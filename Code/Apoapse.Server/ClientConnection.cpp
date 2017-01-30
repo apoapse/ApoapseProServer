@@ -43,7 +43,7 @@ bool ClientConnection::CheckCommandNetworkInputCompatibility(Command& command)
 void ClientConnection::ProcessCommandFromNetwork(Command& command)
 {
 	if (HasAssociatedUser())
-		command.ProcessFromNetwork(GetAssociatedUser().get());
+		command.ProcessFromNetwork(GetAssociatedUser().get(), *this);
 	else
 		command.ProcessFromNetwork(this);
 }

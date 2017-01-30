@@ -2,7 +2,7 @@
 #include "ThreadPool.h"
 #include "Common.h"
 
-ThreadPool::ThreadPool(const string& threadPoolName, UInt32 nbThreads)
+ThreadPool::ThreadPool(const string& threadPoolName, const UInt32 nbThreads)
 	: m_threadPoolName(threadPoolName),
 	m_queueCapacity(INITIAL_QUEUE_CAPACITY),
 	m_tasksInQueueCounter(0)

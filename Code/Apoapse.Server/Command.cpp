@@ -3,16 +3,7 @@
 #include "Common.h"
 #include "StringExtensions.h"
 #include <boost/property_tree/json_parser.hpp>
-
-Command::Command()
-{
-	LOG << "Command created";
-}
-
-Command::~Command()
-{
-	LOG_DEBUG_FUNCTION_NAME();
-}
+#include <iosfwd>
 
 void Command::ParseRawCmdBody()
 {
@@ -158,13 +149,14 @@ void Command::ProcessFromNetwork(ClientConnection* connection)
 	InternalCmdProcess(*connection, GetConfig().processFromClient);
 }
 
-void Command::ProcessFromNetwork(LocalUser* user)
+void Command::ProcessFromNetwork(LocalUser* user, ClientConnection& callingConnection)
 {
 	if (user == nullptr)
 		return;
 
 	ASSERT(CanProcessFrom(user));
-	InternalCmdProcess(*user, GetConfig().processFromUser);
+
+	GetConfig().processFromUser(*user, callingConnection);
 }
 
 void Command::ProcessFromNetwork(RemoteServer* remoteServer)
@@ -189,4 +181,43 @@ bool Command::CanProcessFrom(LocalUser*)
 bool Command::CanProcessFrom(RemoteServer*)
 {
 	return GetConfig().processFromRemoteServer != NULL;
+}
+
+void Command::Send(INetworkSender& destination)
+{
+	// In debug and security builds, we check if the system's inputs are valid
+#if DEBUG || ENABLE_SEC_ADVANCED_CHECKS
+	AutoValidateInternal();
+	ASSERT(IsValid());
+#endif
+
+	std::stringstream outputStream;
+	outputStream << GetConfig().name << '\n';
+
+	if (GetConfig().expectedFormat == Format::JSON)
+	{
+		// JSON
+		boost::property_tree::write_json(outputStream, m_fields, false);
+		outputStream << '\n' << '\n';
+	}
+	else
+	{
+		// INLINE
+		{
+			int i = 0;
+			const size_t nbFields = m_fields.size();
+			for (auto& field : m_fields)
+			{
+				i++;
+				outputStream << field.second.data();
+
+				if (i < nbFields)
+					outputStream << ' ';
+			}
+		}
+
+		outputStream << '\n';
+	}
+
+	destination.Send(outputStream.str());
 }

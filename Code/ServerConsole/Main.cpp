@@ -1,16 +1,16 @@
 #include "stdafx.h"
-#include "Apoapse.Server\Common.h"
+#include <iostream>
+#include <vector>
+#include <string>
 #include "Apoapse.Server\InternalLibraryLoadingAPI.h"
 #include "Apoapse.Server\InternalLibraryLoader.h"
-
-#include <iostream>
 
 int main(int argcount, char* argv[])
 {
 	auto dll = InternalLibraryLoader::LoadInternalLibrary<InternalLibraryLoadingAPI>("Apoapse.Server");
-	dll->Start(std::vector<string>(argv, argv + argcount));
+	dll->Start(std::vector<std::string>(argv, argv + argcount));
 
-	string inputstr;
+	std::string inputstr;
 	getline(std::cin, inputstr);
 
 	return 0;

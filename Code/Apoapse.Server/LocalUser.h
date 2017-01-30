@@ -3,11 +3,12 @@
 #include "ClientConnection.h"
 #include "ApoapseAddress.h"
 #include "UsersManager.h"
+#include "INetworkSender.h"
 
 class GenericConnection;
 class Command;
 
-class LocalUser : public std::enable_shared_from_this<LocalUser>
+class LocalUser : public std::enable_shared_from_this<LocalUser>, public INetworkSender
 {
 	friend class ClientConnection;
 
@@ -24,6 +25,9 @@ public:
 
 	std::shared_ptr<LocalUser> GetPtr();
 	ApoapseAddress::UsernameHash GetUsernameHash() const;
+
+	void Send(const std::vector<byte>& bytes);
+	void Send(const std::string& str);
 	
 private:
 	void AssociateConnection(ClientConnection* connection);

@@ -2,7 +2,7 @@
 #include <sstream>
 #include "Database.h"
 #include "SQLValue.h"
-#include "SQLResultContainer.h"
+#include "SQLPackagedResult.h"
 
 #define SELECT		"SELECT "
 #define ALL			" * "
@@ -35,7 +35,7 @@ public:
 		m_values.clear();
 	}
 
-	const SQLResultContainer Exec()
+	const SQLPackagedResult Exec()
 	{
 		const string preparedQuery = GetPreparedFullQuery();
 		const SQLValue** valuesArray = (m_values.size() > 0) ? (const SQLValue**)m_values.data() : NULL;
@@ -48,7 +48,7 @@ public:
 		return result;
 	}
 
-	std::future<SQLResultContainer> ExecAsync()
+	std::future<SQLPackagedResult> ExecAsync()
 	{
 		return global->threadPool->PushTask([this]
 		{
@@ -80,13 +80,6 @@ public:
 	SQLQuery& operator<<(const T& value)
 	{
 		AddValue(new SQLValue(value, SQLValue::GenerateType<T>()));
-
-		return *this;
-	}
-
-	SQLQuery& operator<<(const string& value)
-	{
-		AddValue(new SQLValue(value.c_str(), ValueType::TEXT));
 
 		return *this;
 	}

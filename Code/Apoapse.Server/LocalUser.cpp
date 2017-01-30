@@ -2,7 +2,7 @@
 #include "LocalUser.h"
 #include "Common.h"
 
-LocalUser::LocalUser(ApoapseServer& apoapseServer, UsersManager& usersManager, const ApoapseAddress::UsernameHash& usernameHash) : m_usernameHash(std::move(usernameHash)),
+LocalUser::LocalUser(ApoapseServer& apoapseServer, UsersManager& usersManager, const ApoapseAddress::UsernameHash& usernameHash) : m_usernameHash(usernameHash),
 	m_usersManager(usersManager),
 	server(apoapseServer)
 {
@@ -38,4 +38,20 @@ void LocalUser::RemoveAssociatedConnection(ClientConnection* connection)
 ApoapseAddress::UsernameHash LocalUser::GetUsernameHash() const
 {
 	return m_usernameHash;
+}
+
+void LocalUser::Send(const std::vector<byte>& bytes)
+{
+	for (auto& connection : m_connections)
+	{
+		connection->Send(bytes);
+	}
+}
+
+void LocalUser::Send(const std::string& str)
+{
+	for (auto& connection : m_connections)
+	{
+		connection->Send(str);
+	}
 }

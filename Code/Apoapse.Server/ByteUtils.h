@@ -1,4 +1,7 @@
 #pragma once
+#include "Types.h"
+#include <string>
+
 typedef unsigned char byte;
 
 struct ByteConverter

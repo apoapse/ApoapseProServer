@@ -4,7 +4,7 @@
 
 class LocalUser;
 
-class ClientConnection : public GenericConnection
+class ClientConnection final : public GenericConnection
 {
 	boost::optional<std::shared_ptr<LocalUser>> m_associatedUser;
 

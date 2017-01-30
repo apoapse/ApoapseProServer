@@ -14,7 +14,7 @@ public:
 	bool Open(const char** params, size_t paramsCount) override;
 	void Close() override;
 
-	SQLResultContainer ExecQuery(const char* preparedQuery, const SQLValue** values, size_t valuesCount) override;
+	SQLPackagedResult ExecQuery(const char* preparedQuery, const SQLValue** values, size_t valuesCount) override;
 	const char* GetLastError() override;
 };
 

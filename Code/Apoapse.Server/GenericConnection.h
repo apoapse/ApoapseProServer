@@ -34,6 +34,4 @@ protected:
 
 	virtual bool CheckCommandNetworkInputCompatibility(Command& command) = 0;
 	virtual void ProcessCommandFromNetwork(Command& command) = 0;
-
-	//virtual void PopLastCommand();
 };

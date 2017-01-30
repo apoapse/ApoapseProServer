@@ -1,6 +1,6 @@
 #include "SQLite.h"
 #include "Apoapse.Server/SQLValue.h"
-#include "Apoapse.Server/SQLResultContainer.h"
+#include "Apoapse.Server/SQLPackagedResult.h"
 
 SQLite::~SQLite()
 {
@@ -23,7 +23,7 @@ void SQLite::Close()
 	sqlite3_close_v2(m_database);
 }
 
-SQLResultContainer SQLite::ExecQuery(const char* preparedQuery, const SQLValue** values, size_t valuesCount)
+SQLPackagedResult SQLite::ExecQuery(const char* preparedQuery, const SQLValue** values, size_t valuesCount)
 {
 	sqlite3_stmt* preparedStm;
 	sqlite3_prepare_v2(m_database, preparedQuery, -1, &preparedStm, NULL);
@@ -46,7 +46,7 @@ SQLResultContainer SQLite::ExecQuery(const char* preparedQuery, const SQLValue**
 				break;
 
 			case ValueType::TEXT:
-				sqlite3_bind_text(preparedStm, (int)i + 1, value->GetText(), -1, SQLITE_STATIC);
+				sqlite3_bind_text(preparedStm, (int)i + 1, value->GetText().c_str(), -1, SQLITE_TRANSIENT);
 				break;
 			}
 		}
@@ -56,7 +56,7 @@ SQLResultContainer SQLite::ExecQuery(const char* preparedQuery, const SQLValue**
 	int returnCode;
 	
 	bool hasResults = false;
-	SQLResultContainer resultContainer(true);
+	SQLPackagedResult resultContainer(true);
 	
 	while ((returnCode = sqlite3_step(preparedStm)) == SQLITE_ROW)
 	{
@@ -79,7 +79,7 @@ SQLResultContainer SQLite::ExecQuery(const char* preparedQuery, const SQLValue**
 					break;
 
 				case SQLITE_TEXT:
-					currentRow.AddValue(SQLValue(std::string(std::move((const char*)sqlite3_column_text(preparedStm, i))), ValueType::TEXT_STR_OBJ));
+					currentRow.AddValue(SQLValue(std::move(std::string((const char*)sqlite3_column_text(preparedStm, i))), ValueType::TEXT));
 					break;
 				}
 			}
@@ -93,7 +93,7 @@ SQLResultContainer SQLite::ExecQuery(const char* preparedQuery, const SQLValue**
 	if (returnCode == SQLITE_DONE || hasResults)
 		return resultContainer;
 	else
-		return SQLResultContainer(false);
+		return SQLPackagedResult(false);
 }
 
 const char* SQLite::GetLastError()

@@ -4,6 +4,8 @@
 #include <vector>
 #include <boost/optional.hpp>
 
+#define ROW_HELPER(_columnName, _index)	_index
+
 class SQLRow
 {
 	std::vector<SQLValue> m_values;
@@ -44,17 +46,17 @@ public:
 	}
 };
 
-class SQLResultContainer
+class SQLPackagedResult
 {
 	boost::optional<std::vector<SQLRow>> m_rows;
 	bool m_isSucessfull;
 
 public:
-	SQLResultContainer() : m_isSucessfull(false)
+	SQLPackagedResult() : m_isSucessfull(false)
 	{
 	}
 
-	SQLResultContainer(bool isSucessfull) : m_isSucessfull(isSucessfull)
+	SQLPackagedResult(bool isSucessfull) : m_isSucessfull(isSucessfull)
 	{
 		if (isSucessfull)
 			m_rows = std::vector<SQLRow>();	// Initialize the vector for boost::optional

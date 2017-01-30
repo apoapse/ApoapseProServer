@@ -162,12 +162,12 @@
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="CommandsManager.cpp" />
     <ClCompile Include="ConfigVars.cpp" />
+    <ClCompile Include="Error.cpp" />
     <ClCompile Include="UsersManager.cpp" />
     <ClCompile Include="GenericConnection.cpp" />
     <ClCompile Include="LocalUser.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="LogMessage.cpp" />
-    <ClCompile Include="NetMessage.cpp" />
     <ClCompile Include="Connect.cpp" />
     <ClCompile Include="TCPConnection.cpp" />
     <ClCompile Include="TCPServer.cpp" />
@@ -190,8 +190,11 @@
     <ClInclude Include="CommandsManager.h" />
     <ClInclude Include="ConfigVars.h" />
     <ClInclude Include="Database.h" />
+    <ClInclude Include="ApoapseErrorCode.h" />
+    <ClInclude Include="ICommandSender.h" />
+    <ClInclude Include="INetworkSender.h" />
     <ClInclude Include="SQLQuery.h" />
-    <ClInclude Include="SQLResultContainer.h" />
+    <ClInclude Include="SQLPackagedResult.h" />
     <ClInclude Include="SQLValue.h" />
     <ClInclude Include="static_string.h" />
     <ClInclude Include="UsersManager.h" />
@@ -201,7 +204,6 @@
     <ClInclude Include="Logger.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="LogMessage.h" />
-    <ClInclude Include="NetMessage.h" />
     <ClInclude Include="ObjectsFactory.h" />
     <ClInclude Include="ReadWriteMutexWrapper.h" />
     <ClInclude Include="ThreadPool.h" />
@@ -224,17 +226,17 @@
     <ClInclude Include="LocalUser.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Apoapse.UnitTest\Apoapse.UnitTest.vcxproj">
-      <Project>{0eaaf367-eac1-435b-a90e-2e7c5ab666b9}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="test_config.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="test_config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Apoapse.UnitTest\Apoapse.UnitTest.vcxproj">
+      <Project>{0eaaf367-eac1-435b-a90e-2e7c5ab666b9}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

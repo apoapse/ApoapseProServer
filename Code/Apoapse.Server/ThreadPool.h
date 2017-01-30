@@ -44,7 +44,7 @@ public:
 	// Parameter: const string & threadPoolName - Name of the object, useful for debugging
 	// Parameter: UInt32 nbThreads - Number of worker threads
 	//************************************
-	ThreadPool(const string& threadPoolName, UInt32 nbThreads);
+	ThreadPool(const string& threadPoolName, const UInt32 nbThreads);
 	virtual ~ThreadPool();
 
 	//************************************
@@ -53,7 +53,7 @@ public:
 	// WARNING:   For the return class, std::promise need a default constructor and an copy assignement operator
 	//************************************
 	template<typename T>
-	std::future<typename std::result_of<T()>::type> PushTask(const T func)
+	std::future<typename std::result_of<T()>::type> PushTask(T func)
 	{
 		using TypeResult = std::result_of<T()>::type;
 

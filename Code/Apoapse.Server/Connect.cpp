@@ -23,7 +23,7 @@ public:
 		config.fields =
 		{
 			CommmandField { "username", true, FIELD_VALUE_VALIDATOR(string, ApoapseAddress::UsernameHash::IsValid) },
-			CommmandField{ "password", true, FIELD_VALUE_VALIDATOR(string, Connect::Test) }
+			CommmandField { "password", true, FIELD_VALUE_VALIDATOR(string, Connect::Test) }
 		};
 
 		return config;
@@ -34,6 +34,7 @@ public:
 		return true;
 	}
 
+private:
 	void Process(ClientConnection& connection)
 	{
 		// #TODO_DATABASE_IMPL probably on the user class or connectedUsersManager (in this case, this should be renamed to UsersManager)
@@ -55,6 +56,8 @@ public:
 		else
 		{
 			LOG << "Wrong username or password" << LogSeverity::warning;
+
+			connection.Send("Wrong username or password");
 		}
 	}
 

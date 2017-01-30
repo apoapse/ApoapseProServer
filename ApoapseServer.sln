@@ -9,9 +9,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ServerConsole", "Code\Serve
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Apoapse.Server", "Code\Apoapse.Server\Apoapse.Server.vcxproj", "{4715FBC8-8F7A-45A4-9DF6-5EFF6899418C}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A1FFE00D-482E-473E-87A5-D849319532E2} = {A1FFE00D-482E-473E-87A5-D849319532E2}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestClient", "TestClient\TestClient.csproj", "{0C3EF785-3C24-4F71-9953-F5DE24E26AEC}"
 EndProject

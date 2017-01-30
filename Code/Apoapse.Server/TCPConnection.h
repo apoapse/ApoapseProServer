@@ -1,11 +1,14 @@
 #pragma once
 #include "ByteUtils.h"
+#include "INetworkSender.h"
 #include <boost\asio.hpp>
 #include <boost\bind.hpp>
 #include <functional>
 #include <atomic>
+#include <deque>
+#include <boost/variant.hpp>
 
-class TCPConnection : public std::enable_shared_from_this<TCPConnection>
+class TCPConnection : public std::enable_shared_from_this<TCPConnection>, public INetworkSender
 {
 	using boostTCP = boost::asio::ip::tcp;
 	friend class TCPServer;
@@ -14,7 +17,7 @@ private:
 	boostTCP::socket m_socket;
 	std::atomic<bool> m_isConnected = { false };
 	boost::asio::io_service::strand m_writeStrand;
-
+	std::deque<boost::variant<std::string, std::vector<byte>>> m_sendQueue;
 
 public:
 	typedef std::shared_ptr<TCPConnection> TCPConnection_ptr;
@@ -35,6 +38,9 @@ public:
 	bool IsConnected() const;
 	void Close();
 
+	virtual void Send(const std::vector<byte>& bytes) override;
+	virtual void Send(const std::string& str) override;
+
 private:
 	void HandleConnectAsync(const boost::system::error_code& error);
 	void HandleAcceptedAsync(const boost::system::error_code& error);
@@ -42,7 +48,6 @@ private:
 
 	void HandleReadInternal(const std::function<void(size_t)>& handler, const boost::system::error_code& error, size_t bytesTransferred);
 
-	void QueueSend(const std::vector<byte> data);
 	void InternalSend();
 	void HandleWriteAsync(const boost::system::error_code& error, size_t bytesTransferred);
 

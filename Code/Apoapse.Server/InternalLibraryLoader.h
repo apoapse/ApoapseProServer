@@ -15,7 +15,7 @@ struct InternalLibraryLoader
 		}
 		catch (const std::exception&)
 		{
-			std::cout << "Unable to load the dynamic library " << string(libraryName);
+			std::cout << "Unable to load the dynamic library " << std::string(libraryName);
 			std::abort();
 		}
 

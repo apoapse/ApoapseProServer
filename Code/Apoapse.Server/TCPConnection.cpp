@@ -34,7 +34,7 @@ boost::asio::ip::tcp::endpoint TCPConnection::GetEndpoint() const
 	{
 		return m_socket.remote_endpoint();
 	}
-	catch (...)
+	catch (const std::exception&)
 	{
 		ASSERT_MSG(false, "TCPConnection::GetEndpoint() is probably called too early");
 		return boost::asio::ip::tcp::endpoint();
@@ -80,20 +80,41 @@ void TCPConnection::HandleReadInternal(const std::function<void(size_t)>& handle
 	handler(bytesTransferred);
 }
 
-void TCPConnection::QueueSend(const std::vector<byte> data)
+void TCPConnection::Send(const std::vector<byte>& bytes)
 {
-/*
+
 	const bool writeInProgress = !m_sendQueue.empty();
-	m_sendQueue.push_back(netMessage);
+	m_sendQueue.push_back(bytes);
 
 	if (!writeInProgress)
-		InternalSend();*/
+		InternalSend();
+}
+
+void TCPConnection::Send(const std::string& str)
+{
+	const bool writeInProgress = !m_sendQueue.empty();
+	m_sendQueue.push_back(str);
+
+	if (!writeInProgress)
+	InternalSend();
 }
 
 void TCPConnection::InternalSend()
 {
-	/*auto handler = boost::bind(&TCPConnection::HandleWriteAsync, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred);
-	boost::asio::async_write(m_socket, boost::asio::buffer(m_sendQueue.front()->GetRawData()), handler);*/
+	const auto& item = m_sendQueue.front();
+
+	if (item.type() == typeid(std::string))
+	{
+		auto handler = boost::bind(&TCPConnection::HandleWriteAsync, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred);
+		boost::asio::async_write(m_socket, boost::asio::buffer(boost::get<std::string>(item)), handler);
+	}
+	else if (item.type() == typeid(std::vector<byte>))
+	{
+		auto handler = boost::bind(&TCPConnection::HandleWriteAsync, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred);
+		boost::asio::async_write(m_socket, boost::asio::buffer(boost::get<std::vector<byte>>(item)), handler);
+	}
+	else
+		ASSERT(false);
 }
 
 void TCPConnection::HandleWriteAsync(const boost::system::error_code& error, size_t bytesTransferred)
@@ -101,20 +122,24 @@ void TCPConnection::HandleWriteAsync(const boost::system::error_code& error, siz
 	if (!IsConnected())
 		return;
 
-/*
-	ASSERT(m_sendQueue.front()->GetRawData().size() == bytesTransferred);
-
 	if (!error)
 	{
-		LOG_DEBUG_ONLY("send successfully " << bytesTransferred << " bytes to " << GetEndpoint().address() << ", port " << GetEndpoint().port());
+		const auto& item = m_sendQueue.front();
+		const size_t itemRealSize = (item.type() == typeid(std::string)) ? boost::get<std::string>(item).length() : boost::get<std::vector<byte>>(item).size();
 
-		if (this->OnSentPacket(m_sendQueue.front(), bytesTransferred))
+		if (itemRealSize == bytesTransferred)
+		{
 			m_sendQueue.pop_front();
+			LOG << bytesTransferred << " bytes has been sent successfully to " << GetEndpoint() << LogSeverity::verbose;
+		}
 		else
+		{
+			LOG << itemRealSize << " bytes expected to be sent to " << GetEndpoint() << " but " << bytesTransferred << " bytes has been transferred" << LogSeverity::error;
 			Close();
+		}
 	}
 	else
-		OnReceivedErrorInternal(error);*/
+		OnReceivedErrorInternal(error);
 }
 
 // void TCPConnection::ReadSome(boost::asio::streambuf& streambuf, size_t length, std::function<void(size_t)> externalHandler)

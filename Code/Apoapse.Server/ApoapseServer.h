@@ -1,8 +1,8 @@
 #pragma once
-#include "TCPServer.h"
-#include "UsersManager.h"
 #include "Database.h"
 #include "SQLQuery.h"
+class TCPServer;
+class UsersManager;
 
 class ApoapseServer
 {

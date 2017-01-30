@@ -3,6 +3,7 @@
 #include <boost/optional.hpp>	// #TODO replace with C++17 std
 #include <boost/lexical_cast.hpp>
 #include "ByteUtils.h"
+#include "INetworkSender.h"
 
 class LocalUser;
 class RemoteServer;
@@ -73,7 +74,7 @@ struct CommandConfig
 	Format expectedFormat;
 	std::vector<CommmandField> fields;
 	std::function<void(ClientConnection&)> processFromClient = { NULL };
-	std::function<void(LocalUser&)> processFromUser = { NULL };
+	std::function<void(LocalUser&, ClientConnection&)> processFromUser = { NULL };
 	std::function<void(RemoteServer&)> processFromRemoteServer = { NULL };
 	bool isPayloadExpected = { false };
 };
@@ -90,9 +91,6 @@ class Command
 public:
 	//static const Int16 COMMAND_NAME_MAX_SIZE = 255;	// #TODO
 
-	Command();
-	virtual ~Command();
-
 	void ParseRawCmdBody();
 	void AppendCommandBodyData(const string& data);
 	bool IsValid() const;
@@ -100,12 +98,20 @@ public:
 	void SetInputRealFormat(Format format);
 
 	void ProcessFromNetwork(ClientConnection* connection);
-	void ProcessFromNetwork(LocalUser* user);
+	void ProcessFromNetwork(LocalUser* user, ClientConnection& callingConnection);
 	void ProcessFromNetwork(RemoteServer* remoteServer);
 
 	bool CanProcessFrom(ClientConnection*);
 	bool CanProcessFrom(LocalUser*);
 	bool CanProcessFrom(RemoteServer*);
+
+	void Send(INetworkSender& destination);
+	
+	template <typename T>
+	void InsertFieldValue(const string& path, const T& value)
+	{
+		m_fields.add(path, value);
+	}
 
 	virtual const CommandConfig& GetConfig() = 0;
 
@@ -120,8 +126,6 @@ private:
 	}
 
 protected:
-	//ApoapseServer& m_server;
-
 	//************************************
 	// Method:    Connect::PostValidate - Used to do to additional validations on the fields - called only if the previous automatic validation steps succeeded
 	// Access:    public 

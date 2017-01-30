@@ -1,5 +1,5 @@
 #pragma once
-#include <map>
+#include <unordered_map>
 #include <memory>
 
 template <typename T_INDEX, typename T_BASE_CLASS>
@@ -20,7 +20,7 @@ class ObjectsFactory
 		}
 	};
 
-	std::map<T_INDEX, std::unique_ptr<IObjectCreator>> m_objectFactories;
+	std::unordered_map<T_INDEX, std::unique_ptr<IObjectCreator>> m_objectFactories;
 
 public:
 	bool IsObjectExist(const T_INDEX& index) const
