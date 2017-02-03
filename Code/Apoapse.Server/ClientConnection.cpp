@@ -15,6 +15,11 @@ ClientConnection::~ClientConnection()
 		GetAssociatedUser()->RemoveAssociatedConnection(this);
 }
 
+void ClientConnection::OnConnected()
+{
+	LOG << "Client " << GetEndpoint() << " connected";
+}
+
 bool ClientConnection::HasAssociatedUser() const
 {
 	return m_associatedUser.is_initialized();

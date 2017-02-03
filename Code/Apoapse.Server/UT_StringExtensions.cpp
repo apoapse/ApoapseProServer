@@ -69,4 +69,18 @@ UNIT_TEST("StringExtensions:contains")
 	UnitTest::Assert(StringExtensions::contains(str, ':'));
 } UNIT_TEST_END
 
+UNIT_TEST("StringExtensions:IsOnlyAlphanumeric_alphanumeric")
+{
+	string str = "alpha16897fzeaFAgfHGL";
+
+	UnitTest::Assert(StringExtensions::IsOnlyAlphanumeric(str));
+} UNIT_TEST_END
+
+UNIT_TEST("StringExtensions:IsOnlyAlphanumeric_specialChars")
+{
+	string str = "alph_a16897fzeaFAgfHGL";
+
+	UnitTest::Assert(!StringExtensions::IsOnlyAlphanumeric(str));
+} UNIT_TEST_END
+
 #endif	// UNIT_TESTS

@@ -15,9 +15,6 @@
       <Filter>Network\Socket</Filter>
     </ClCompile>
     <ClCompile Include="Startup.cpp" />
-    <ClCompile Include="ApoapseAddress.cpp">
-      <Filter>Network\Protocol</Filter>
-    </ClCompile>
     <ClCompile Include="ApoapseServer.cpp">
       <Filter>Network</Filter>
     </ClCompile>
@@ -72,6 +69,9 @@
     <ClCompile Include="Error.cpp">
       <Filter>Network\Protocol\CommandSystem\Commands</Filter>
     </ClCompile>
+    <ClCompile Include="ApoapseAddress.cpp">
+      <Filter>Network\Protocol\ApoapseSystems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -119,9 +119,6 @@
       <Filter>Network\Protocol\CommandSystem</Filter>
     </ClInclude>
     <ClInclude Include="Startup.h" />
-    <ClInclude Include="ApoapseAddress.h">
-      <Filter>Network\Protocol</Filter>
-    </ClInclude>
     <ClInclude Include="ApoapseServer.h">
       <Filter>Network</Filter>
     </ClInclude>
@@ -185,11 +182,14 @@
     <ClInclude Include="INetworkSender.h">
       <Filter>Network\Socket</Filter>
     </ClInclude>
-    <ClInclude Include="ICommandSender.h">
-      <Filter>Network\Protocol\CommandSystem</Filter>
+    <ClInclude Include="ApoapseAddress.h">
+      <Filter>Network\Protocol\ApoapseSystems</Filter>
     </ClInclude>
-    <ClInclude Include="ApoapseErrorCode.h">
-      <Filter>Network\Protocol</Filter>
+    <ClInclude Include="ApoapseError.h">
+      <Filter>Network\Protocol\ApoapseSystems</Filter>
+    </ClInclude>
+    <ClInclude Include="ActionsManager.h">
+      <Filter>Network\Protocol\ApoapseSystems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -243,6 +243,9 @@
     </Filter>
     <Filter Include="Network\Protocol\Connections">
       <UniqueIdentifier>{86af4c3d-4e80-4a89-9016-c381e7f4ffed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\Protocol\ApoapseSystems">
+      <UniqueIdentifier>{4c965429-7da6-48d7-8381-f87cd382c99f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -3,6 +3,7 @@
 #include "Command.h"
 #include <deque>
 #include <boost/optional.hpp>
+#include "ApoapseError.h"
 class ApoapseServer;
 
 #define COMMAND_BODY_RECEIVE_BUFFER_SIZE 512
@@ -21,7 +22,8 @@ public:
 private:
 
 protected:
-	virtual bool OnConnectedToServer() override;
+	bool OnConnectedToServer() override;
+	virtual void OnConnected() = 0;
 	virtual bool OnReceivedError(const boost::system::error_code& error) override;
 	virtual void OnCommandBodyComplete(std::unique_ptr<Command>& command);
 
@@ -34,4 +36,6 @@ protected:
 
 	virtual bool CheckCommandNetworkInputCompatibility(Command& command) = 0;
 	virtual void ProcessCommandFromNetwork(Command& command) = 0;
+
+	void ClearReadBuffer();
 };

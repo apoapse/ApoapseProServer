@@ -2,8 +2,9 @@
 #include "UsersManager.h"
 #include "Common.h"
 #include "LocalUser.h"
+#include "ApoapseServer.h"
 
-UsersManager::UsersManager()
+UsersManager::UsersManager(ApoapseServer& apoapseServer) : server(apoapseServer)
 {
 
 }
@@ -11,6 +12,25 @@ UsersManager::UsersManager()
 UsersManager::~UsersManager()
 {
 
+}
+
+std::shared_ptr<LocalUser> UsersManager::Authenticate(const ApoapseAddress::UsernameHash& usernamehash)
+{
+	SQLQuery query(server.database);
+	query << SELECT << "id" << FROM << "local_users" << WHERE << "username" << EQUALS << usernamehash.GetStr();
+	auto result = query.Exec();
+
+	if (result.RowCount() != 1)
+		return nullptr;
+	
+	const Int64 id = result[0][0].GetInt64();
+
+	// #TODO Implement password check
+
+	if (IsConnected(usernamehash))
+		return GetConnectedUser(usernamehash).GetShared();					// User is already connected on another socket: return a new shared_ptr instance to the existing user
+	else
+		return std::make_shared<LocalUser>(*this, usernamehash, id);		// Create a new user
 }
 
 void UsersManager::AddConnectedUser(LocalUser* user)

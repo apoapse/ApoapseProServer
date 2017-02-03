@@ -3,6 +3,7 @@
 #include "ReadWriteMutexWrapper.h"
 #include "ApoapseAddress.h"
 class LocalUser;
+class ApoapseServer;
 
 class UsersManager
 {
@@ -10,8 +11,12 @@ class UsersManager
 	std::map<ApoapseAddress::UsernameHash, LocalUser*> m_connectedUsers;
 
 public:
-	UsersManager();
+	ApoapseServer& server;
+
+	UsersManager(ApoapseServer& apoapseServer);
 	virtual ~UsersManager();
+
+	std::shared_ptr<LocalUser> Authenticate(const ApoapseAddress::UsernameHash& username);
 
 	void AddConnectedUser(LocalUser* user);
 	void RemoveConnectedUser(LocalUser* user);

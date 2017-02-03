@@ -4,6 +4,9 @@
 #include "StringExtensions.h"
 #include <boost/property_tree/json_parser.hpp>
 #include <iosfwd>
+#include "ApoapseError.h"
+#include "LocalUser.h"
+#include "ClientConnection.h"
 
 void Command::ParseRawCmdBody()
 {
@@ -97,7 +100,7 @@ void Command::AutoValidateInternal()
 			LOG << "Command pre-validation (" << GetConfig().name << "), required field " << currentField.name << " is missing" << LogSeverity::warning;
 			m_isValid = false;
 
-			// In debug mode we continue the pre-validation process in order to see all the errors
+			// In debug mode we continue the pre-validation process in order to see all potential errors
 #ifndef DEBUG
 			return;
 #endif
@@ -130,6 +133,8 @@ bool Command::IsValid() const
 
 Format Command::GetInputRealFormat() const
 {
+	ASSERT(m_inputRealFormat != Format::UNDEFINED);
+
 	return m_inputRealFormat;
 }
 
@@ -145,8 +150,15 @@ void Command::ProcessFromNetwork(ClientConnection* connection)
 	if (connection == nullptr)
 		return;
 
-	ASSERT(CanProcessFrom(connection));
-	InternalCmdProcess(*connection, GetConfig().processFromClient);
+	try
+	{
+		GetConfig().processFromClient(*connection);
+	}
+	catch (const std::exception& e)
+	{
+		LOG << e.what() << LogSeverity::error;
+		ApoapseError::SendError(ApoapseErrorCode::INTERNAL_SERVER_ERROR, *connection);
+	}
 }
 
 void Command::ProcessFromNetwork(LocalUser* user, ClientConnection& callingConnection)
@@ -154,18 +166,32 @@ void Command::ProcessFromNetwork(LocalUser* user, ClientConnection& callingConne
 	if (user == nullptr)
 		return;
 
-	ASSERT(CanProcessFrom(user));
-
-	GetConfig().processFromUser(*user, callingConnection);
+	try
+	{
+		GetConfig().processFromUser(*user, callingConnection);
+	}
+	catch (const std::exception& e)
+	{
+		LOG << e.what() << LogSeverity::error;
+		ApoapseError::SendError(ApoapseErrorCode::INTERNAL_SERVER_ERROR, *user);
+	}
 }
 
-void Command::ProcessFromNetwork(RemoteServer* remoteServer)
+void Command::ProcessFromNetwork(RemoteServer* remoteServer/*, ClientConnection& callingConnection*/) // #TODO 
 {
 	if (remoteServer == nullptr)
 		return;
 
-	ASSERT(CanProcessFrom(remoteServer));
-	InternalCmdProcess(*remoteServer, GetConfig().processFromRemoteServer);
+	throw std::logic_error("TODO IMPLEMENT");
+// 	try
+// 	{
+// 		GetConfig().processFromRemoteServer(*remoteServer);
+// 	}
+// 	catch (const std::exception& e)
+// 	{
+// 	LOG << e.what() << LogSeverity::error;
+// 		ApoapseError::SendError(ApoapseErrorCode::INTERNAL_SERVER_ERROR, *remoteServer);
+// 	}
 }
 
 bool Command::CanProcessFrom(ClientConnection*)
@@ -185,7 +211,7 @@ bool Command::CanProcessFrom(RemoteServer*)
 
 void Command::Send(INetworkSender& destination)
 {
-	// In debug and security builds, we check if the system's inputs are valid
+	// In debug and security builds, we check if the system inputs are valid
 #if DEBUG || ENABLE_SEC_ADVANCED_CHECKS
 	AutoValidateInternal();
 	ASSERT(IsValid());

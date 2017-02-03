@@ -7,10 +7,9 @@
 #include "CommandsManager.h"
 #include "Command.h"
 #include "ClientConnection.h"
-#include "LocalUser.h"//TEMP
+
 ApoapseServer::ApoapseServer(UInt16 port, Database& db) : database(db)
 {
-	m_usersManager = std::make_unique<UsersManager>();
 	m_ServerForClients = std::make_unique<TCPServer>(m_IOServiceForClients, port/*, TCPServer::IP_v6*/);
 }
 
@@ -45,6 +44,8 @@ void ApoapseServer::Start()
 // 	}
 // 	else
 // 		LOG "sql res error";
+
+	m_usersManager = std::make_unique<UsersManager>(*this);
 
 	std::thread thread([this]
 	{

@@ -19,6 +19,7 @@ GenericConnection::~GenericConnection()
 bool GenericConnection::OnConnectedToServer()
 {
 	ListenForCommand();
+	OnConnected();
 
 	return true;
 }
@@ -45,15 +46,16 @@ void GenericConnection::OnCommandBodyComplete(std::unique_ptr<Command>& command)
 	if (command->IsValid())
 	{
 		ProcessCommandFromNetwork(*command.get());
-
-		m_commands.pop_front();	// use GenericConnection::PopLastCommand (used to have a mutex) instead? YES
 	}
 	else
 	{
-		// #TODO_NETWORK_ERR_HANDLING
-		LOG << "Command invalid" << LogSeverity::error;
-		//Close();
+		ClearReadBuffer();
+
+		LOG << "Malformed command (" << command->GetConfig().name << ") received from " << GetEndpoint() << LogSeverity::warning;
+		ApoapseError::SendError(ApoapseErrorCode::MALFORMED_CMD, *this);
 	}
+
+	m_commands.pop_front();	// use GenericConnection::PopLastCommand (used to have a mutex) instead? YES
 
 //	#TODO Parallelize this code
 // 	global->threadPool->PushTask([this, &command]
@@ -71,7 +73,7 @@ void GenericConnection::OnCommandBodyComplete(std::unique_ptr<Command>& command)
 // 		}
 // 		else
 // 		{
-// 			// #TODO_NETWORK_ERR_HANDLING
+// 			// TODO_NETWORK_ERR_HANDLING
 // 			LOG << "Command invalid, closing connection" << LogSeverity::error;
 // 			Close();
 // 		}
@@ -102,20 +104,19 @@ void GenericConnection::OnReceivedCommandName(size_t bytesTransferred)
 		}
 		else
 		{
-			// #TODO_NETWORK_ERR_HANDLING
-			LOG << "The command " << currentCommand->GetConfig().name << " does not support the input from this connection, user, or remote server" << LogSeverity::error;
+			LOG << "The command " << currentCommand->GetConfig().name << " requested from " << GetEndpoint() << " does not support the input from this type of connection" << LogSeverity::error;
+			ApoapseError::SendError(ApoapseErrorCode::UNAUTHORIZED_ACTION, *this);
 
 			m_commands.pop_front();
 		}
 	}
 	else
 	{
-		LOG << "The command requested from " << GetEndpoint().address() << " does not exist" << LogSeverity::error;
-		// #TODO_NETWORK_ERR_HANDLING
+		LOG << "The command requested from " << GetEndpoint() << " does not exist" << LogSeverity::warning;
+		ApoapseError::SendError(ApoapseErrorCode::MALFORMED_CMD, *this);
 	}
 
-	if (m_readStreamBuffer.size() > 0)
-		m_readStreamBuffer.consume(m_readStreamBuffer.size());
+	ClearReadBuffer();
 
 	ListenForCommand();
 }
@@ -193,4 +194,10 @@ void GenericConnection::OnReceivedCommandInfoBody(size_t bytesTransferred)
 	command->AppendCommandBodyData(string(boost::asio::buffers_begin(data), boost::asio::buffers_begin(data) + bytesTransferred));
 
 	OnCommandBodyComplete(command);
+}
+
+void GenericConnection::ClearReadBuffer()
+{
+	if (m_readStreamBuffer.size() > 0)
+			m_readStreamBuffer.consume(m_readStreamBuffer.size());
 }

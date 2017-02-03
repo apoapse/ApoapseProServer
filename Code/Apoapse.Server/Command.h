@@ -53,8 +53,9 @@ private:
 		return boost::lexical_cast<T>(str);
 	}
 };
-#define FIELD_VALUE_VALIDATOR(_type, _func)	new FieldValueValidator<_type>(_func)
-#define PROCESS_METHOD(_inputType, _method)	[this](_inputType& input) { _method(input); };
+#define FIELD_VALUE_VALIDATOR(_type, _func)		new FieldValueValidator<_type>(_func)
+#define FIELD_VALUE_CHECK_TYPE(_type)			new FieldValueValidator<_type>([](_type){ return true; })
+#define PROCESS_METHOD(_inputType, _method)		[this](_inputType& input) { _method(input); };
 
 struct CommmandField
 {
@@ -92,8 +93,22 @@ public:
 	//static const Int16 COMMAND_NAME_MAX_SIZE = 255;	// #TODO
 
 	void ParseRawCmdBody();
+
+	//************************************
+	// Method:    Command::AppendCommandBodyData - Each each call append a part of a raw command before been parsed by calling ParseRawCmdBody
+	// Access:    public 
+	// Returns:   void
+	// Parameter: const string & data
+	//************************************
 	void AppendCommandBodyData(const string& data);
+
 	bool IsValid() const;
+
+	//************************************
+	// Method:    Command::GetInputRealFormat - In opposition to GetConfig().expectedFormat, this method return the actual format of a raw command which has been polulated by AppendCommandBodyData
+	// Access:    public 
+	// Returns:   Format
+	//************************************
 	Format GetInputRealFormat() const;
 	void SetInputRealFormat(Format format);
 
@@ -105,6 +120,12 @@ public:
 	bool CanProcessFrom(LocalUser*);
 	bool CanProcessFrom(RemoteServer*);
 
+	//************************************
+	// Method:    Command::Send - Send the full command to specified destination populated by the values provied by InsertFieldValue or ParseRawCmdBody and use GetConfig().expectedFormat as format
+	// Access:    public 
+	// Returns:   void
+	// Parameter: INetworkSender & destination
+	//************************************
 	void Send(INetworkSender& destination);
 	
 	template <typename T>
@@ -116,18 +137,30 @@ public:
 	virtual const CommandConfig& GetConfig() = 0;
 
 private:
+	//************************************
+	// Method:    Command::AutoValidateInternal - This is executed automaticly after a command has been parsed and use the FieldValueValidator defined in the command config to check if the fields are valid or not 
+	// Access:    private 
+	// Returns:   void
+	//************************************
 	void AutoValidateInternal();
 
 	template <typename T>
-	inline void InternalCmdProcess(T& input, const std::function<void(T&)>& func)
+	inline void InternalCmdProcess(T& inputConnection, const std::function<void(T&)>& func)
 	{
-		ASSERT(func);
-		func(input);
+		try
+		{
+			ASSERT(func);
+			func(inputConnection);
+		}
+		catch (const std::exception&)
+		{
+			ApoapseError::SendError(ApoapseErrorCode::INTERNAL_SERVER_ERROR, connection);
+		}
 	}
 
 protected:
 	//************************************
-	// Method:    Connect::PostValidate - Used to do to additional validations on the fields - called only if the previous automatic validation steps succeeded
+	// Method:    Connect::PostValidate - Used to do to additional validations on the fields - called only if the previous automatic validation steps succeeded. No I/O operations should be done at this point.
 	// Access:    public 
 	// Returns:   bool
 	//************************************

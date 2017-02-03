@@ -12,6 +12,8 @@ public:
 	ClientConnection(boost::asio::io_service& io_service, ApoapseServer& apoapseServer);
 	virtual ~ClientConnection();
 
+	void OnConnected() override;
+
 	bool HasAssociatedUser() const;
 	std::shared_ptr<LocalUser> GetAssociatedUser() const;
 	void SetAssociatedUser(std::shared_ptr<LocalUser> user);

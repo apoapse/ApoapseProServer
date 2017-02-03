@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Common.h"
 #include "CommandsManager.h"
-#include "ApoapseErrorCode.h"
+#include "ApoapseError.h"
 
 class Error final : public Command
 {
@@ -13,7 +13,8 @@ public:
 		config.expectedFormat = Format::INLINE;
 		config.fields =
 		{
-			CommmandField{ "error_code", true }
+			CommmandField{ "error_code", true, FIELD_VALUE_CHECK_TYPE(UInt16) }, // TOTEST
+			CommmandField{ "related_item", false }
 		};
 
 		return config;

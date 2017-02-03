@@ -14,16 +14,15 @@ class LocalUser : public std::enable_shared_from_this<LocalUser>, public INetwor
 
 	UsersManager& m_usersManager;
 	std::set<ClientConnection*> m_connections;
-	ApoapseAddress::UsernameHash m_usernameHash;
+	const ApoapseAddress::UsernameHash m_usernameHash;
+	const Int64 m_id;
 	//TCP_IP_ADDRESS (hold a copy)
 
 public:
-	ApoapseServer& server;
-
-	LocalUser(ApoapseServer& apoapseServer, UsersManager& usersManager, const ApoapseAddress::UsernameHash& usernameHash);
+	LocalUser(UsersManager& usersManager, const ApoapseAddress::UsernameHash& usernameHash, Int64 id);
 	virtual ~LocalUser();
 
-	std::shared_ptr<LocalUser> GetPtr();
+	std::shared_ptr<LocalUser> GetShared();
 	ApoapseAddress::UsernameHash GetUsernameHash() const;
 
 	void Send(const std::vector<byte>& bytes);

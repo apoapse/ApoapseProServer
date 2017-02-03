@@ -16,6 +16,21 @@
 #define UPDATE		"UPDATE "
 #define SET			" SET "
 
+class DBException : public std::exception
+{
+	const std::string m_errorMsg;
+
+public:
+	DBException(std::string errorMsg) : m_errorMsg(std::move(errorMsg))
+	{
+	}
+
+	virtual const char* what() const override
+	{
+		return m_errorMsg.c_str();
+	}
+};
+
 class SQLQuery
 {
 	Database& m_database;
@@ -43,7 +58,7 @@ public:
 		const auto result = m_database.ExecQuery(preparedQuery.c_str(), valuesArray, m_values.size());
 
 		if (!result)
-			LOG << "SQL error on query [" << preparedQuery << "] - " << string(m_database.GetLastError()) << LogSeverity::error;
+			throw DBException("SQL error on query [" + preparedQuery + "] - " + string(m_database.GetLastError()));
 
 		return result;
 	}

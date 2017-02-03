@@ -43,8 +43,6 @@ boost::asio::ip::tcp::endpoint TCPConnection::GetEndpoint() const
 
 void TCPConnection::HandleConnectAsync(const boost::system::error_code& error)
 {
-	LOG << "Connected to " << GetEndpoint();
-
 	if (error)
 		OnReceivedErrorInternal(error);
 	else
@@ -130,7 +128,7 @@ void TCPConnection::HandleWriteAsync(const boost::system::error_code& error, siz
 		if (itemRealSize == bytesTransferred)
 		{
 			m_sendQueue.pop_front();
-			LOG << bytesTransferred << " bytes has been sent successfully to " << GetEndpoint() << LogSeverity::verbose;
+			LOG << bytesTransferred << " bytes has been sent successfully to " << GetEndpoint() << LogSeverity::debug;
 		}
 		else
 		{

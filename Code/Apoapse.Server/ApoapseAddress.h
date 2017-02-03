@@ -1,5 +1,6 @@
 #pragma once
 #include "ByteUtils.h"
+#include "StringExtensions.h"
 #define SHA256_SIZE_BYTES 32
 
 class ApoapseAddress
@@ -54,7 +55,7 @@ public:
 		{
 			// #TODO Check if there are no specials characters
 
-			return (usernameHash.length() == username_hash_str_size);
+			return (usernameHash.length() == username_hash_str_size && StringExtensions::IsOnlyAlphanumeric(usernameHash));
 		}
 
 		friend std::ostream& operator<<(std::ostream& stream, const UsernameHash& obj)

@@ -183,6 +183,7 @@
     <ClCompile Include="UT_StringExtensions.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ActionsManager.h" />
     <ClInclude Include="ApoapseAddress.h" />
     <ClInclude Include="ApoapseServer.h" />
     <ClInclude Include="ClientConnection.h" />
@@ -190,8 +191,7 @@
     <ClInclude Include="CommandsManager.h" />
     <ClInclude Include="ConfigVars.h" />
     <ClInclude Include="Database.h" />
-    <ClInclude Include="ApoapseErrorCode.h" />
-    <ClInclude Include="ICommandSender.h" />
+    <ClInclude Include="ApoapseError.h" />
     <ClInclude Include="INetworkSender.h" />
     <ClInclude Include="SQLQuery.h" />
     <ClInclude Include="SQLPackagedResult.h" />

@@ -2,13 +2,14 @@
 #include "LocalUser.h"
 #include "Common.h"
 
-LocalUser::LocalUser(ApoapseServer& apoapseServer, UsersManager& usersManager, const ApoapseAddress::UsernameHash& usernameHash) : m_usernameHash(usernameHash),
+LocalUser::LocalUser(UsersManager& usersManager, const ApoapseAddress::UsernameHash& usernameHash, Int64 id)
+	: m_usernameHash(usernameHash),
 	m_usersManager(usersManager),
-	server(apoapseServer)
+	m_id(id)
 {
 	m_usersManager.AddConnectedUser(this);
 
-	LOG_DEBUG_ONLY("Created new user " << usernameHash.GetStr());
+	LOG << "User " << usernameHash.GetStr() << " (id:" << m_id << ") connected via a new user object";
 }
 
 LocalUser::~LocalUser()
@@ -18,7 +19,7 @@ LocalUser::~LocalUser()
 	LOG << "User " << GetUsernameHash() << " disconnected";
 }
 
-std::shared_ptr<LocalUser> LocalUser::GetPtr()
+std::shared_ptr<LocalUser> LocalUser::GetShared()
 {
 	return shared_from_this();
 }
@@ -27,7 +28,7 @@ void LocalUser::AssociateConnection(ClientConnection* connection)
 {
 	m_connections.insert(connection);
 
-	LOG << "Added connection " << connection->GetEndpoint() << " to connected user " << GetUsernameHash();
+	LOG << "Associated connection " << connection->GetEndpoint() << " to user " << GetUsernameHash();
 }
 
 void LocalUser::RemoveAssociatedConnection(ClientConnection* connection)

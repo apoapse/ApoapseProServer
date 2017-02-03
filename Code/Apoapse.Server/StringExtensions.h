@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <boost/algorithm/string.hpp>
+#include <regex>
 
 namespace StringExtensions
 {
@@ -73,5 +74,17 @@ namespace StringExtensions
 			return true;
 		else
 			return false;
+	}
+
+	//************************************
+	// Method:    StringExtensions::IsOnlyAlphanumeric - Check if a string contains only alphanumerical characters or not
+	// Returns:   bool
+	// Parameter: const std::basic_string<T> & str - input string
+	//************************************
+	template <typename T>
+	bool IsOnlyAlphanumeric(const std::basic_string<T>& str)
+	{
+		std::regex expr("[a-zA-Z0-9]*");
+		return std::regex_match(str, expr);
 	}
 }
