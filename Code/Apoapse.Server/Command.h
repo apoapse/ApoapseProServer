@@ -125,13 +125,20 @@ public:
 	// Access:    public 
 	// Returns:   void
 	// Parameter: INetworkSender & destination
+	// Parameter: Format forceOutputFormat - 
 	//************************************
-	void Send(INetworkSender& destination);
+	void Send(INetworkSender& destination, Format forcedOutputFormat = Format::UNDEFINED);
 	
 	template <typename T>
 	void InsertFieldValue(const string& path, const T& value)
 	{
 		m_fields.add(path, value);
+	}
+
+	template <typename T>
+	boost::optional<T> ReadFieldValue(const string& fieldName)
+	{
+		return m_fields.get_optional<T>(fieldName);
 	}
 
 	virtual const CommandConfig& GetConfig() = 0;
@@ -165,10 +172,4 @@ protected:
 	// Returns:   bool
 	//************************************
 	virtual bool PostValidate() const = 0;
-
-	template <typename T>
-	boost::optional<T> ReadFieldValue(const string& fieldName)
-	{
-		return m_fields.get_optional<T>(fieldName);
-	}
 };

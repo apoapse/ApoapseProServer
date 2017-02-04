@@ -72,6 +72,9 @@
     <ClCompile Include="ApoapseAddress.cpp">
       <Filter>Network\Protocol\ApoapseSystems</Filter>
     </ClCompile>
+    <ClCompile Include="UnitTestCmd.cpp">
+      <Filter>Network\Protocol\CommandSystem\Commands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />

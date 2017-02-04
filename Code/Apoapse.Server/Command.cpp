@@ -43,7 +43,7 @@ void Command::ParseRawCmdBody()
 		}
 
 		{
-			string u16CmdText = commandInfoRawBody;	// #TODO #IMPORTANT Convert to UTF-16
+			string u16CmdText = commandInfoRawBody;	// #TODO #IMPORTANT Convert to UTF-16?
 			std::vector<string> tempValues;
 
 			StringExtensions::split(u16CmdText, tempValues, string(" "));
@@ -51,7 +51,7 @@ void Command::ParseRawCmdBody()
 			for (size_t i = 0; i < GetConfig().fields.size(); i++)
 			{
 				if (i >= tempValues.size())	// Prevent vector overflow in case there are less command arguments than expected
-					return;
+					continue;
 
 				m_fields.add(GetConfig().fields.at(i).name, std::move(tempValues.at(i)));
 			}
@@ -209,7 +209,7 @@ bool Command::CanProcessFrom(RemoteServer*)
 	return GetConfig().processFromRemoteServer != NULL;
 }
 
-void Command::Send(INetworkSender& destination)
+void Command::Send(INetworkSender& destination, Format forcedOutputFormat/* = Format::UNDEFINED*/)
 {
 	// In debug and security builds, we check if the system inputs are valid
 #if DEBUG || ENABLE_SEC_ADVANCED_CHECKS
@@ -217,14 +217,17 @@ void Command::Send(INetworkSender& destination)
 	ASSERT(IsValid());
 #endif
 
+	const Format outputFormat = (forcedOutputFormat == Format::UNDEFINED) ? GetConfig().expectedFormat : forcedOutputFormat;
+	ASSERT_MSG(!(GetConfig().isPayloadExpected && outputFormat == Format::INLINE), "Cannot use an inline format on command with a payload");
+
 	std::stringstream outputStream;
 	outputStream << GetConfig().name << '\n';
 
-	if (GetConfig().expectedFormat == Format::JSON)
+	if (outputFormat == Format::JSON)
 	{
 		// JSON
 		boost::property_tree::write_json(outputStream, m_fields, false);
-		outputStream << '\n' << '\n';
+		outputStream << '\n';	// We add only one line break as boost::property_tree::write_json already add one at the end
 	}
 	else
 	{

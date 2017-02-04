@@ -1,20 +1,22 @@
 #include "stdafx.h"
+
+#ifdef UNIT_TESTS
 #include "Common.h"
 #include "CommandsManager.h"
 #include "ApoapseError.h"
 
-class Error final : public Command
+class UnitTestCmd final : public Command
 {
 public:
 	const CommandConfig& GetConfig() override
 	{
 		static auto config = CommandConfig();
-		config.name = "ERROR";
+		config.name = "UNIT_TEST";
 		config.expectedFormat = Format::INLINE;
 		config.fields =
 		{
-			CommmandField{ "error_code", true, FIELD_VALUE_CHECK_TYPE(UInt16) },
-			CommmandField{ "related_item", false }
+			CommmandField{ "test_uint16", true, FIELD_VALUE_CHECK_TYPE(UInt16) },
+			CommmandField{ "test_string", true }
 		};
 
 		return config;
@@ -26,4 +28,5 @@ public:
 	}
 };
 
-APOAPSE_COMMAND_REGISTER(Error, "ERROR");
+APOAPSE_COMMAND_REGISTER(UnitTestCmd, "UNIT_TEST");
+#endif	// UNIT_TESTS
