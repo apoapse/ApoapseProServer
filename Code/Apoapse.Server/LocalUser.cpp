@@ -41,18 +41,18 @@ ApoapseAddress::UsernameHash LocalUser::GetUsernameHash() const
 	return m_usernameHash;
 }
 
-void LocalUser::Send(const std::vector<byte>& bytes)
+void LocalUser::Send(std::shared_ptr<std::vector<byte>> bytesPtr)
 {
 	for (auto& connection : m_connections)
 	{
-		connection->Send(bytes);
+		connection->Send(std::move(bytesPtr));
 	}
 }
 
-void LocalUser::Send(const std::string& str)
+void LocalUser::Send(std::unique_ptr<std::string> strPtr)
 {
 	for (auto& connection : m_connections)
 	{
-		connection->Send(str);
+		connection->Send(std::move(strPtr));
 	}
 }

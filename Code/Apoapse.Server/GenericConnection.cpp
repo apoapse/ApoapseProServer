@@ -36,6 +36,8 @@ bool GenericConnection::OnReceivedError(const boost::system::error_code& error)
 {
 	LOG << LogSeverity::error << __FUNCTION__ << ": " << error.message() << " (from: " << GetEndpoint() << ")";
 	
+	//auto errorType = (boost::asio::error::basic_errors)error.value();
+
 	// #TODO Handle errors
 	// http://www.boost.org/doc/libs/1_44_0/doc/html/boost_asio/reference/error__basic_errors.html
 	return false;

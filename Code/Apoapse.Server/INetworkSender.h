@@ -2,6 +2,6 @@
 
 struct INetworkSender
 {
-	virtual void Send(const std::vector<byte>& bytes) = 0;
-	virtual void Send(const std::string& str) = 0;
+	virtual void Send(std::shared_ptr<std::vector<byte>> bytesPtr) = 0;
+	virtual void Send(std::unique_ptr<std::string> strPtr) = 0;
 };

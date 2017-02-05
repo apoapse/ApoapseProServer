@@ -8,7 +8,7 @@
 #include "ByteUtils.h"
 class ApoapseServer;
 
-#define COMMAND_BODY_RECEIVE_BUFFER_SIZE 255
+#define COMMAND_BODY_RECEIVE_BUFFER_SIZE 24	// Need to be smaller than the smallest expected command
 #define COMMAND_PAYLOAD_RECEIVE_BUFFER_SIZE 512
 
 class GenericConnection : public TCPConnection

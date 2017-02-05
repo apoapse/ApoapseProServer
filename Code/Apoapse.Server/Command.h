@@ -85,7 +85,7 @@ class Command
 	boost::property_tree::ptree m_fields;
 	bool m_isValid = { true };
 	Format m_inputRealFormat = { Format::UNDEFINED };
-	std::vector<byte> m_payload;
+	std::shared_ptr<std::vector<byte>> m_payload = { std::make_shared<std::vector<byte>>() };
 	boost::optional<string> m_commandInfoRawBody;
 	bool m_isCommandParsed = { false };
 

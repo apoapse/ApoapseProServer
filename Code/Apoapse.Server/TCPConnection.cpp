@@ -78,38 +78,49 @@ void TCPConnection::HandleReadInternal(const std::function<void(size_t)>& handle
 	handler(bytesTransferred);
 }
 
-void TCPConnection::Send(const std::vector<byte>& bytes)
+void TCPConnection::Send(std::shared_ptr<std::vector<byte>> bytesPtr)
 {
+	const bool isWriteInProgress = !m_sendQueue.empty();
+	m_sendQueue.push_back(bytesPtr);
 
-	const bool writeInProgress = !m_sendQueue.empty();
-	m_sendQueue.push_back(bytes);
-
-	if (!writeInProgress)
+	if (!isWriteInProgress)
 		InternalSend();
+
+	// #TODO #IMPORTANT Use the following code to make the Send operation thread safe
+	// m_socket.get_io_service().post(m_writeStrand.wrap([bytesPtr = std::move(bytesPtr), this]() mutable
+	// 	{
+	// 
+	// 	}));
 }
 
-void TCPConnection::Send(const std::string& str)
+void TCPConnection::Send(std::unique_ptr<std::string> strPtr)
 {
-	const bool writeInProgress = !m_sendQueue.empty();
-	m_sendQueue.push_back(str);
+	const bool isWriteInProgress = !m_sendQueue.empty();
+	m_sendQueue.push_back(std::move(strPtr));
 
-	if (!writeInProgress)
-	InternalSend();
+	if (!isWriteInProgress)
+		InternalSend();
+
+	// #TODO #IMPORTANT Use the following code to make the Send operation thread safe
+// 	m_socket.get_io_service().post(m_writeStrand.wrap([strPtr = std::move(strPtr), this]() mutable
+// 	{
+// 
+// 	}));
 }
 
 void TCPConnection::InternalSend()
 {
 	const auto& item = m_sendQueue.front();
 
-	if (item.type() == typeid(std::string))
+	if (item.type() == typeid(std::unique_ptr<std::string>))
 	{
 		auto handler = boost::bind(&TCPConnection::HandleWriteAsync, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred);
-		boost::asio::async_write(m_socket, boost::asio::buffer(boost::get<std::string>(item)), handler);
+		boost::asio::async_write(m_socket, boost::asio::buffer(*boost::get<std::unique_ptr<std::string>>(item)), handler);
 	}
-	else if (item.type() == typeid(std::vector<byte>))
+	else if (item.type() == typeid(std::shared_ptr<std::vector<byte>>))
 	{
 		auto handler = boost::bind(&TCPConnection::HandleWriteAsync, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred);
-		boost::asio::async_write(m_socket, boost::asio::buffer(boost::get<std::vector<byte>>(item)), handler);
+		boost::asio::async_write(m_socket, boost::asio::buffer(*boost::get<std::shared_ptr<std::vector<byte>>>(item)), handler);
 	}
 	else
 		ASSERT(false);
@@ -123,11 +134,10 @@ void TCPConnection::HandleWriteAsync(const boost::system::error_code& error, siz
 	if (!error)
 	{
 		const auto& item = m_sendQueue.front();
-		const size_t itemRealSize = (item.type() == typeid(std::string)) ? boost::get<std::string>(item).length() : boost::get<std::vector<byte>>(item).size();
+		const size_t itemRealSize = (item.type() == typeid(std::unique_ptr<std::string>)) ? boost::get<std::unique_ptr<std::string>>(item)->length() : boost::get<std::shared_ptr<std::vector<byte>>>(item)->size();
 
 		if (itemRealSize == bytesTransferred)
 		{
-			m_sendQueue.pop_front();
 			LOG << bytesTransferred << " bytes has been sent successfully to " << GetEndpoint() << LogSeverity::debug;
 		}
 		else
@@ -138,4 +148,9 @@ void TCPConnection::HandleWriteAsync(const boost::system::error_code& error, siz
 	}
 	else
 		OnReceivedErrorInternal(error);
+
+	m_sendQueue.pop_front();
+
+	if (!m_sendQueue.empty())
+		InternalSend();
 }

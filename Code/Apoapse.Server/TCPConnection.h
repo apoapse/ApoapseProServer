@@ -17,7 +17,9 @@ private:
 	boostTCP::socket m_socket;
 	std::atomic<bool> m_isConnected = { false };
 	boost::asio::io_service::strand m_writeStrand;
-	std::deque<boost::variant<std::string, std::vector<byte>>> m_sendQueue;
+	std::deque<
+		boost::variant<std::unique_ptr<std::string>, std::shared_ptr<std::vector<byte>>>
+	> m_sendQueue;
 
 public:
 	typedef std::shared_ptr<TCPConnection> TCPConnection_ptr;
@@ -38,8 +40,8 @@ public:
 	bool IsConnected() const;
 	void Close();
 
-	virtual void Send(const std::vector<byte>& bytes) override;
-	virtual void Send(const std::string& str) override;
+	virtual void Send(std::shared_ptr<std::vector<byte>> bytesPtr) override;
+	virtual void Send(std::unique_ptr<std::string> strPtr) override;
 
 private:
 	void HandleConnectAsync(const boost::system::error_code& error);

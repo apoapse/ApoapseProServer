@@ -84,9 +84,9 @@ void Command::AppendPayloadData(const byte* bytesArray, size_t length)
 	ASSERT(ActualPayloadSize() + length <= ExpectedPayloadSize());	// #TODO Throw and exception and handle it on GenericConnection
 
 	if (ActualPayloadSize() == 0)
-		m_payload.reserve(ActualPayloadSize());
+		m_payload->reserve(ActualPayloadSize());
 
-	m_payload.insert(m_payload.end(), &bytesArray[0], &bytesArray[length]);
+	m_payload->insert(m_payload->end(), &bytesArray[0], &bytesArray[length]);
 }
 
 void Command::AutoValidateInternal()
@@ -140,7 +140,7 @@ void Command::AutoValidateInternal()
 
 size_t Command::ActualPayloadSize() const
 {
-	return m_payload.size();
+	return m_payload->size();
 }
 
 bool Command::IsValid() const
@@ -272,7 +272,7 @@ void Command::Send(INetworkSender& destination, Format forcedOutputFormat/* = Fo
 		outputStream << '\n';
 	}
 
-	destination.Send(outputStream.str());	// Send command body
+	destination.Send(std::make_unique<string>(outputStream.str()));	// Send command body
 
 	if (outputFormat == Format::JSON && ActualPayloadSize() > 0)
 		destination.Send(m_payload);	// Send payload
@@ -280,5 +280,5 @@ void Command::Send(INetworkSender& destination, Format forcedOutputFormat/* = Fo
 
 const std::vector<byte>& Command::GetPayload() const
 {
-	return m_payload;
+	return *m_payload;
 }

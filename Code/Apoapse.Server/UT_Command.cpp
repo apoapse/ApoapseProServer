@@ -12,12 +12,12 @@ struct TestSend : INetworkSender
 {
 	string sentData;
 
-	void Send(const std::string& str)
+	void Send(std::unique_ptr<std::string> strPtr) override
 	{
-		sentData = str;
+		sentData = *strPtr;
 	}
 
-	void Send(const std::vector<byte>&)
+	void Send(std::shared_ptr<std::vector<byte>> bytesPtr) override
 	{
 		ASSERT(false);
 	}
@@ -26,7 +26,7 @@ struct TestSend : INetworkSender
 UNIT_TEST("CommandSystem:Config")
 {
 	auto command = CommandsManager::GetInstance().CreateCommand("UNIT_TEST");
-	
+
 	UnitTest::Assert(command->GetConfig().name == "UNIT_TEST" && command->GetConfig().expectedFormat == Format::INLINE);
 
 } UNIT_TEST_END

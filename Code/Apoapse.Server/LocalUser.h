@@ -25,8 +25,8 @@ public:
 	std::shared_ptr<LocalUser> GetShared();
 	ApoapseAddress::UsernameHash GetUsernameHash() const;
 
-	void Send(const std::vector<byte>& bytes);
-	void Send(const std::string& str);
+	void Send(std::shared_ptr<std::vector<byte>> bytesPtr);
+	void Send(std::unique_ptr<std::string> strPtr);
 	
 private:
 	void AssociateConnection(ClientConnection* connection);
