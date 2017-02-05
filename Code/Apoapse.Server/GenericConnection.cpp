@@ -16,6 +16,14 @@ GenericConnection::~GenericConnection()
 	LOG_DEBUG_FUNCTION_NAME();
 }
 
+void GenericConnection::ReadPayload(std::unique_ptr<Command>& command)
+{
+	if (command->ActualPayloadSize() < command->ExpectedPayloadSize())
+		ReadSome(m_payloadReadBuffer, [this](size_t bytesTransferred) { OnReceivedPayloadData(bytesTransferred); });
+	else
+		OnCommandReadyForProcessing(command);
+}
+
 bool GenericConnection::OnConnectedToServer()
 {
 	ListenForCommand();
@@ -27,7 +35,7 @@ bool GenericConnection::OnConnectedToServer()
 bool GenericConnection::OnReceivedError(const boost::system::error_code& error)
 {
 	LOG << LogSeverity::error << __FUNCTION__ << ": " << error.message() << " (from: " << GetEndpoint() << ")";
-
+	
 	// #TODO Handle errors
 	// http://www.boost.org/doc/libs/1_44_0/doc/html/boost_asio/reference/error__basic_errors.html
 	return false;
@@ -45,7 +53,25 @@ void GenericConnection::OnCommandBodyComplete(std::unique_ptr<Command>& command)
 
 	if (command->IsValid())
 	{
-		ProcessCommandFromNetwork(*command.get());
+		if (command->ExpectedPayloadSize() > 0)
+		{
+			LOG << "Listening for a payload of " << command->ExpectedPayloadSize() << " bytes" << LogSeverity::debug;
+
+			const size_t bufferDataSize = m_readStreamBuffer.size();
+
+			if (bufferDataSize > 0)
+			{
+				// In the case where the generic stream buffer has data associated with the payload
+				auto data = m_readStreamBuffer.data();
+				command->AppendPayloadData(std::vector<byte>(boost::asio::buffers_begin(data), boost::asio::buffers_end(data)).data(), bufferDataSize);
+
+				m_readStreamBuffer.consume(bufferDataSize);
+			}
+
+			ReadPayload(command);
+		}
+		else
+			OnCommandReadyForProcessing(command);
 	}
 	else
 	{
@@ -53,33 +79,16 @@ void GenericConnection::OnCommandBodyComplete(std::unique_ptr<Command>& command)
 
 		LOG << "Malformed command (" << command->GetConfig().name << ") received from " << GetEndpoint() << LogSeverity::warning;
 		ApoapseError::SendError(ApoapseErrorCode::MALFORMED_CMD, *this);
+		m_commands.pop_front();
+		ListenForCommand();
 	}
+}
+
+void GenericConnection::OnCommandReadyForProcessing(std::unique_ptr<Command>& command)
+{
+	ProcessCommandFromNetwork(*command.get());
 
 	m_commands.pop_front();	// use GenericConnection::PopLastCommand (used to have a mutex) instead? YES
-
-//	#TODO Parallelize this code
-// 	global->threadPool->PushTask([this, &command]
-// 	{
-// 		command->ParseRawCmdBody();
-// 
-// 		if (command->IsValid())
-// 		{
-// 			global->threadPool->PushTask([this, &command]	// #TODO use a specific thread pool -> do it inside Command::ProcessFromNetwork?
-// 			{
-// 				ProcessCommandFromNetwork(*command.get());
-// 
-// 				m_commands.pop_front();	// use GenericConnection::PopLastCommand (used to have a mutex) instead? YES
-// 			});
-// 		}
-// 		else
-// 		{
-// 			// TODO_NETWORK_ERR_HANDLING
-// 			LOG << "Command invalid, closing connection" << LogSeverity::error;
-// 			Close();
-// 		}
-// 	});
-
-	// #TODO Implement payload receiving system here
 	ListenForCommand();
 }
 
@@ -108,17 +117,18 @@ void GenericConnection::OnReceivedCommandName(size_t bytesTransferred)
 			ApoapseError::SendError(ApoapseErrorCode::UNAUTHORIZED_ACTION, *this);
 
 			m_commands.pop_front();
+			ClearReadBuffer();
+			ListenForCommand();
 		}
 	}
 	else
 	{
 		LOG << "The command requested from " << GetEndpoint() << " does not exist" << LogSeverity::warning;
 		ApoapseError::SendError(ApoapseErrorCode::MALFORMED_CMD, *this);
+
+		ClearReadBuffer();
+		ListenForCommand();
 	}
-
-	ClearReadBuffer();
-
-	ListenForCommand();
 }
 
 void GenericConnection::ReadCommandFirstChar(Command& command)
@@ -146,7 +156,8 @@ void GenericConnection::ListenForCommandBody()
 	{
 		auto data = m_readStreamBuffer.data();
 		m_readStreamBuffer.consume(bufferDataSize);
-		auto bufferData = string(boost::asio::buffers_begin(data), boost::asio::buffers_begin(data) + bufferDataSize);
+
+		const auto bufferData = string(boost::asio::buffers_begin(data), boost::asio::buffers_begin(data) + bufferDataSize);
 
 		command->AppendCommandBodyData(bufferData);
 
@@ -185,7 +196,6 @@ void GenericConnection::OnReceivedCommandInfoBody(size_t bytesTransferred)
 		return;
 	}
 
-	ASSERT(bytesTransferred == m_readStreamBuffer.size());
 	auto& command = m_commands.front();
 
 	auto data = m_readStreamBuffer.data();
@@ -194,6 +204,14 @@ void GenericConnection::OnReceivedCommandInfoBody(size_t bytesTransferred)
 	command->AppendCommandBodyData(string(boost::asio::buffers_begin(data), boost::asio::buffers_begin(data) + bytesTransferred));
 
 	OnCommandBodyComplete(command);
+}
+
+void GenericConnection::OnReceivedPayloadData(size_t bytesTransferred)
+{
+	auto& command = m_commands.front();
+	command->AppendPayloadData(m_payloadReadBuffer.data(), bytesTransferred);
+
+	ReadPayload(command);
 }
 
 void GenericConnection::ClearReadBuffer()

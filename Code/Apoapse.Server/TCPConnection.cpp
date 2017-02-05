@@ -139,10 +139,3 @@ void TCPConnection::HandleWriteAsync(const boost::system::error_code& error, siz
 	else
 		OnReceivedErrorInternal(error);
 }
-
-// void TCPConnection::ReadSome(boost::asio::streambuf& streambuf, size_t length, std::function<void(size_t)> externalHandler)
-// {
-// 	auto handler = boost::bind(&TCPConnection::HandleReadInternal, shared_from_this(), externalHandler, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred);
-// 
-// 	boost::asio::async_read(GetSocket(), streambuf, boost::asio::transfer_exactly(length), handler);
-// }

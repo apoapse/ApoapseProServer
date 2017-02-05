@@ -75,6 +75,9 @@
     <ClCompile Include="UnitTestCmd.cpp">
       <Filter>Network\Protocol\CommandSystem\Commands</Filter>
     </ClCompile>
+    <ClCompile Include="Message.cpp">
+      <Filter>Network\Protocol\CommandSystem\Commands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />

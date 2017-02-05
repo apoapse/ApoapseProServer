@@ -53,14 +53,20 @@ private:
 
 protected:
 	template <typename T>
-	void ReadUntil(boost::asio::streambuf& streambuf, T delimiter, std::function<void(size_t)> externalHandler)
+	void ReadUntil(boost::asio::streambuf& streambuf, T delimiter, const std::function<void(size_t)>& externalHandler)
 	{
 		auto handler = boost::bind(&TCPConnection::HandleReadInternal, shared_from_this(), externalHandler, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred);
 
 		boost::asio::async_read_until(GetSocket(), streambuf, delimiter, handler);
 	}
 
-	//void ReadSome(boost::asio::streambuf& streambuf, size_t length, std::function<void(size_t)> externalHandler);
+	template <typename T>
+	void ReadSome(T& buffer, const std::function<void(size_t)>& externalHandler)
+	{
+		auto handler = boost::bind(&TCPConnection::HandleReadInternal, shared_from_this(), externalHandler, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred);
+
+		m_socket.async_read_some(boost::asio::buffer(buffer), handler);
+	}
 
 	virtual bool OnConnectedToServer() = 0;
 	virtual bool OnReceivedError(const boost::system::error_code& error) = 0;

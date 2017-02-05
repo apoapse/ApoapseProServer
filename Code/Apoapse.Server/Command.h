@@ -11,9 +11,9 @@ class ClientConnection;
 
 enum class Format
 {
-	UNDEFINED,
-	JSON,
-	INLINE
+	UNDEFINED		= -1,
+	INLINE			= 1,
+	JSON			= 2
 };
 
 struct IFieldValidator
@@ -85,7 +85,7 @@ class Command
 	boost::property_tree::ptree m_fields;
 	bool m_isValid = { true };
 	Format m_inputRealFormat = { Format::UNDEFINED };
-	boost::optional<std::vector<byte>> m_payload;	//TODO
+	std::vector<byte> m_payload;
 	boost::optional<string> m_commandInfoRawBody;
 	bool m_isCommandParsed = { false };
 
@@ -101,6 +101,18 @@ public:
 	// Parameter: const string & data
 	//************************************
 	void AppendCommandBodyData(const string& data);
+
+	//************************************
+	// Method:    Command::AppendPayloadData - Each call append a part of the command payload
+	// Access:    public 
+	// Returns:   void
+	// Parameter: const byte * bytesArray - 
+	// Parameter: size_t length - 
+	//************************************
+	void AppendPayloadData(const byte* bytesArray, size_t length);
+
+	size_t ActualPayloadSize() const;
+	UInt64 ExpectedPayloadSize();
 
 	bool IsValid() const;
 
@@ -136,10 +148,11 @@ public:
 	}
 
 	template <typename T>
-	boost::optional<T> ReadFieldValue(const string& fieldName)
+	boost::optional<T> ReadFieldValue(const string& fieldName) const
 	{
 		return m_fields.get_optional<T>(fieldName);
 	}
+	const std::vector<byte>& GetPayload() const;
 
 	virtual const CommandConfig& GetConfig() = 0;
 

@@ -75,6 +75,18 @@ void Command::AppendCommandBodyData(const string& data)
 		m_commandInfoRawBody = data;
 	else
 		m_commandInfoRawBody->append(data);
+
+	auto finalt = m_commandInfoRawBody.get();
+}
+
+void Command::AppendPayloadData(const byte* bytesArray, size_t length)
+{
+	ASSERT(ActualPayloadSize() + length <= ExpectedPayloadSize());	// #TODO Throw and exception and handle it on GenericConnection
+
+	if (ActualPayloadSize() == 0)
+		m_payload.reserve(ActualPayloadSize());
+
+	m_payload.insert(m_payload.end(), &bytesArray[0], &bytesArray[length]);
 }
 
 void Command::AutoValidateInternal()
@@ -126,9 +138,21 @@ void Command::AutoValidateInternal()
 		m_isValid = false;
 }
 
+size_t Command::ActualPayloadSize() const
+{
+	return m_payload.size();
+}
+
 bool Command::IsValid() const
 {
 	return m_isValid;
+}
+
+UInt64 Command::ExpectedPayloadSize()
+{
+	const auto payloadSizeField = ReadFieldValue<UInt64>("payload_size");
+
+	return (GetConfig().isPayloadExpected && payloadSizeField.is_initialized()) ? payloadSizeField.get() : 0;
 }
 
 Format Command::GetInputRealFormat() const
@@ -248,5 +272,13 @@ void Command::Send(INetworkSender& destination, Format forcedOutputFormat/* = Fo
 		outputStream << '\n';
 	}
 
-	destination.Send(outputStream.str());
+	destination.Send(outputStream.str());	// Send command body
+
+	if (outputFormat == Format::JSON && ActualPayloadSize() > 0)
+		destination.Send(m_payload);	// Send payload
+}
+
+const std::vector<byte>& Command::GetPayload() const
+{
+	return m_payload;
 }

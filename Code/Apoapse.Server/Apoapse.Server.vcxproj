@@ -163,6 +163,7 @@
     <ClCompile Include="CommandsManager.cpp" />
     <ClCompile Include="ConfigVars.cpp" />
     <ClCompile Include="Error.cpp" />
+    <ClCompile Include="Message.cpp" />
     <ClCompile Include="UnitTestCmd.cpp" />
     <ClCompile Include="UsersManager.cpp" />
     <ClCompile Include="GenericConnection.cpp" />
