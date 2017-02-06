@@ -24,8 +24,6 @@ public:
 
 	const SQLValue& operator[](size_t index) const
 	{
-		ASSERT(ColumnCount() > 0);
-
 		return m_values.at(index);
 	}
 
@@ -69,7 +67,8 @@ public:
 
 	const SQLRow& operator[](size_t rowIndex) const
 	{
-		ASSERT(RowCount() > 0);
+		if (rowIndex > RowCount() - 1)
+			throw std::out_of_range("The requested row index is higher than there are rows in this column");
 
 		return m_rows->at(rowIndex);
 	}

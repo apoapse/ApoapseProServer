@@ -48,6 +48,11 @@ SQLPackagedResult SQLite::ExecQuery(const char* preparedQuery, const SQLValue** 
 			case ValueType::TEXT:
 				sqlite3_bind_text(preparedStm, (int)i + 1, value->GetText().c_str(), -1, SQLITE_TRANSIENT);
 				break;
+
+			case ValueType::BYTE_ARRAY:
+				auto data = value->GetByteArray();
+				sqlite3_bind_blob(preparedStm, (int)i + 1, data.data(), (int)data.size(), SQLITE_TRANSIENT);
+				break;
 			}
 		}
 	}
@@ -80,6 +85,13 @@ SQLPackagedResult SQLite::ExecQuery(const char* preparedQuery, const SQLValue** 
 
 				case SQLITE_TEXT:
 					currentRow.AddValue(SQLValue(std::move(std::string((const char*)sqlite3_column_text(preparedStm, i))), ValueType::TEXT));
+					break;
+
+				case SQLITE_BLOB:
+					auto rawdata = (byte*)sqlite3_column_blob(preparedStm, i);
+					int size = sqlite3_column_bytes(preparedStm, i);
+
+					currentRow.AddValue(SQLValue(std::move(std::vector<byte>(rawdata, rawdata + size)), ValueType::BYTE_ARRAY));
 					break;
 				}
 			}

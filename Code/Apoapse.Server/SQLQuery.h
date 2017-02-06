@@ -15,6 +15,10 @@
 #define VALUES		" VALUES "
 #define UPDATE		"UPDATE "
 #define SET			" SET "
+#define ORDER_BY	" ORDER BY "
+#define DESC		" DESC "
+#define ASC			" ASC "
+#define LIMIT		" LIMIT "
 
 class DBException : public std::exception
 {

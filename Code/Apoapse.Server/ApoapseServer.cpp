@@ -44,6 +44,17 @@ void ApoapseServer::Start()
 // 	}
 // 	else
 // 		LOG "sql res error";
+// 		
+// 	std::vector<byte> data{ 'a', 'o', 'A'};
+// 
+// 	SQLQuery test1(database);
+// 	test1 << INSERT_INTO << "test (blob_field)" << VALUES << "(" << data << ")";
+// 	test1.Exec();
+// 
+// 	SQLQuery test2(database);
+// 	test2 << SELECT << "blob_field" << FROM "test" << ORDER_BY << "id" << DESC << LIMIT << "1";
+// 	auto res = test2.Exec();
+// 	std::vector<byte> dataRes = res[0][0].GetByteArray();
 
 	m_usersManager = std::make_unique<UsersManager>(*this);
 

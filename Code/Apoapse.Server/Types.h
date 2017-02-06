@@ -6,6 +6,7 @@ typedef unsigned short	UInt16;
 typedef unsigned int	UInt32;
 typedef long			Int64;
 typedef unsigned long	UInt64;
+typedef unsigned char	byte;
 
 #include <string>
 using string = std::string;
