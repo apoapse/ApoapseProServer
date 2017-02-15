@@ -171,9 +171,6 @@ void Command::SetInputRealFormat(Format format)
 
 void Command::ProcessFromNetwork(ClientConnection* connection)
 {
-	if (connection == nullptr)
-		return;
-
 	try
 	{
 		GetConfig().processFromClient(*connection);
@@ -181,15 +178,17 @@ void Command::ProcessFromNetwork(ClientConnection* connection)
 	catch (const std::exception& e)
 	{
 		LOG << e.what() << LogSeverity::error;
-		ApoapseError::SendError(ApoapseErrorCode::INTERNAL_SERVER_ERROR, *connection);
+
+		if (connection != nullptr)
+		{
+			ApoapseError::SendError(ApoapseErrorCode::INTERNAL_SERVER_ERROR, *connection);
+			connection->Close();
+		}
 	}
 }
 
 void Command::ProcessFromNetwork(LocalUser* user, ClientConnection& callingConnection)
 {
-	if (user == nullptr)
-		return;
-
 	try
 	{
 		GetConfig().processFromUser(*user, callingConnection);
@@ -197,7 +196,12 @@ void Command::ProcessFromNetwork(LocalUser* user, ClientConnection& callingConne
 	catch (const std::exception& e)
 	{
 		LOG << e.what() << LogSeverity::error;
-		ApoapseError::SendError(ApoapseErrorCode::INTERNAL_SERVER_ERROR, *user);
+
+		if (user != nullptr)
+		{
+			ApoapseError::SendError(ApoapseErrorCode::INTERNAL_SERVER_ERROR, *user);
+			user->Disconnect();
+		}
 	}
 }
 

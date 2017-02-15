@@ -21,9 +21,6 @@
     <ClCompile Include="CommandsManager.cpp">
       <Filter>Network\Protocol\CommandSystem</Filter>
     </ClCompile>
-    <ClCompile Include="Connect.cpp">
-      <Filter>Network\Protocol\CommandSystem\Commands</Filter>
-    </ClCompile>
     <ClCompile Include="ThreadPool.cpp">
       <Filter>Threading</Filter>
     </ClCompile>
@@ -66,16 +63,28 @@
     <ClCompile Include="UsersManager.cpp">
       <Filter>UserSystem</Filter>
     </ClCompile>
-    <ClCompile Include="Error.cpp">
-      <Filter>Network\Protocol\CommandSystem\Commands</Filter>
-    </ClCompile>
     <ClCompile Include="ApoapseAddress.cpp">
       <Filter>Network\Protocol\ApoapseSystems</Filter>
     </ClCompile>
-    <ClCompile Include="UnitTestCmd.cpp">
+    <ClCompile Include="Uuid.cpp">
+      <Filter>Library</Filter>
+    </ClCompile>
+    <ClCompile Include="UT_Uuid.cpp">
+      <Filter>Tests\UnitTests</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdConnect.cpp">
       <Filter>Network\Protocol\CommandSystem\Commands</Filter>
     </ClCompile>
-    <ClCompile Include="Message.cpp">
+    <ClCompile Include="CmdError.cpp">
+      <Filter>Network\Protocol\CommandSystem\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdMessage.cpp">
+      <Filter>Network\Protocol\CommandSystem\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdUnitTest.cpp">
+      <Filter>Network\Protocol\CommandSystem\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdConversation.cpp">
       <Filter>Network\Protocol\CommandSystem\Commands</Filter>
     </ClCompile>
   </ItemGroup>
@@ -196,6 +205,9 @@
     </ClInclude>
     <ClInclude Include="ActionsManager.h">
       <Filter>Network\Protocol\ApoapseSystems</Filter>
+    </ClInclude>
+    <ClInclude Include="Uuid.h">
+      <Filter>Library</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

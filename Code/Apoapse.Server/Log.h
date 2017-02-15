@@ -18,6 +18,12 @@ public:
 		m_logger.Log(LogMessage(m_stream.str(), m_logSeverity));
 	}
 
+	Log& operator<<(LogSeverity logSeverity)
+	{
+		m_logSeverity = logSeverity;
+		return *this;
+	}
+
 	template<typename T>
 	Log& operator<<(const T& item)
 	{
@@ -25,9 +31,9 @@ public:
 		return *this;
 	}
 
-	Log& operator<<(LogSeverity logSeverity)
+	Log& operator<<(bool item)
 	{
-		m_logSeverity = logSeverity;
+		m_stream << string((item) ? "true" : "false");
 		return *this;
 	}
 };

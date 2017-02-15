@@ -3,7 +3,7 @@
 #include "CommandsManager.h"
 #include "ClientConnection.h"
 
-class Message final : public Command
+class CmdMessage final : public Command
 {
 public:
 	const CommandConfig& GetConfig() override
@@ -12,7 +12,7 @@ public:
 		config.name = "MESSAGE";
 		config.expectedFormat = Format::JSON;
 		config.isPayloadExpected = true;
-		config.processFromClient = PROCESS_METHOD(ClientConnection, Message::Process);
+		config.processFromClient = PROCESS_METHOD(ClientConnection, CmdMessage::Process);
 		config.fields =
 		{
 		};
@@ -35,4 +35,4 @@ private:
 	}
 };
 
-APOAPSE_COMMAND_REGISTER(Message, "MESSAGE");
+APOAPSE_COMMAND_REGISTER(CmdMessage, "MESSAGE");

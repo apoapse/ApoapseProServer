@@ -41,18 +41,30 @@ ApoapseAddress::UsernameHash LocalUser::GetUsernameHash() const
 	return m_usernameHash;
 }
 
-void LocalUser::Send(std::shared_ptr<std::vector<byte>> bytesPtr)
+void LocalUser::Send(std::shared_ptr<std::vector<byte>> bytesPtr, TCPConnection* excludedConnection/* = nullptr*/)
 {
 	for (auto& connection : m_connections)
 	{
+		if (excludedConnection != nullptr && connection->GetEndpoint() == excludedConnection->GetEndpoint())
+			continue;
+
 		connection->Send(std::move(bytesPtr));
 	}
 }
 
-void LocalUser::Send(std::unique_ptr<std::string> strPtr)
+void LocalUser::Send(std::unique_ptr<std::string> strPtr, TCPConnection* excludedConnection/* = nullptr*/)
 {
 	for (auto& connection : m_connections)
 	{
+		if (excludedConnection != nullptr && connection->GetEndpoint() == excludedConnection->GetEndpoint())
+			continue;
+
 		connection->Send(std::move(strPtr));
 	}
+}
+
+void LocalUser::Disconnect()
+{
+	for (auto& connection : m_connections)
+		connection->Close();
 }

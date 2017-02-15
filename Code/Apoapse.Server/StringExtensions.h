@@ -6,7 +6,7 @@
 namespace StringExtensions
 {
 	//************************************
-	// Method:    StringExtensions::erase_left - Erease all the characters that are located at the right of the specified character
+	// Method:    StringExtensions::erase_left - Erase all the characters that are located at the right of the specified character
 	// Returns:   void
 	// Parameter: std::basic_string<T> & str - input string (direcly edited)
 	// Parameter: const char delimiter - delimiter character (not erased)
@@ -21,7 +21,7 @@ namespace StringExtensions
 	}
 
 	//************************************
-	// Method:    StringExtensions::erase_right - Erease all the characters that are located at the left of the specified character starting from the end of the string
+	// Method:    StringExtensions::erase_right - Erase all the characters that are located at the left of the specified character starting from the end of the string
 	// Returns:   void
 	// Parameter: std::basic_string<T> & str - input string (direcly edited)
 	// Parameter: const char delimiter - delimiter character (not erased)
@@ -35,6 +35,12 @@ namespace StringExtensions
 			str = str.substr(0, result + 1);	// Offset of 1 because we want to keep the delimiter in string
 	}
 
+	//************************************
+	// Method:    StringExtensions::erase_all - Erase the occurences of the specified character
+	// Returns:   void
+	// Parameter: std::basic_string<T> & str - input string (direcly edited)
+	// Parameter: const char character - character to be removed
+	//************************************
 	template <typename T>
 	void erase_all(std::basic_string<T>& str, const char character)
 	{

@@ -53,8 +53,6 @@ public:
 
 		static bool IsValid(const string& usernameHash)
 		{
-			// #TODO Check if there are no specials characters
-
 			return (usernameHash.length() == username_hash_str_size && StringExtensions::IsOnlyAlphanumeric(usernameHash));
 		}
 

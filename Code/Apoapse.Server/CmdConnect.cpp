@@ -6,10 +6,10 @@
 #include "ApoapseAddress.h"
 #include "ApoapseServer.h"
 
-class Connect final : public Command
+class CmdConnect final : public Command
 {
 public:
-	Connect() : Command()
+	CmdConnect() : Command()
 	{
 	}
 
@@ -18,11 +18,11 @@ public:
 		static auto config = CommandConfig();
 		config.name = "CONNECT";
 		config.expectedFormat = Format::INLINE;
-		config.processFromClient = PROCESS_METHOD(ClientConnection, Connect::Authenticate);
+		config.processFromClient = PROCESS_METHOD(ClientConnection, CmdConnect::Authenticate);
 		config.fields =
 		{
-			CommmandField { "username", true, FIELD_VALUE_VALIDATOR(string, ApoapseAddress::UsernameHash::IsValid) }/*,
-			CommmandField { "password", true, FIELD_VALUE_VALIDATOR(string, Connect::Test) }*/
+			CommmandField { "username", true, FIELD_VALUE_VALIDATOR(string, ApoapseAddress::UsernameHash::IsValid) },
+			CommmandField { "password", true/*, TODO*/ }
 		};
 
 		return config;
@@ -50,4 +50,4 @@ private:
 	}
 };
 
-APOAPSE_COMMAND_REGISTER(Connect, "CONNECT");
+APOAPSE_COMMAND_REGISTER(CmdConnect, "CONNECT");

@@ -14,9 +14,9 @@
 #endif
 
 #ifdef DEBUG
-#define LOG_DEBUG_ONLY(_params)	LOG << LogSeverity::debug << __FUNCTION__ << " " << _params
+#define LOG_DEBUG	LOG << LogSeverity::debug
 #else
-#define LOG_DEBUG_ONLY(_params)
+#define LOG_DEBUG	//
 #endif
 
 #ifdef DEBUG

@@ -5,7 +5,7 @@
 #include "CommandsManager.h"
 #include "ApoapseError.h"
 
-class UnitTestCmd final : public Command
+class CmdUnitTest final : public Command
 {
 public:
 	const CommandConfig& GetConfig() override
@@ -28,5 +28,5 @@ public:
 	}
 };
 
-APOAPSE_COMMAND_REGISTER(UnitTestCmd, "UNIT_TEST");
+APOAPSE_COMMAND_REGISTER(CmdUnitTest, "UNIT_TEST");
 #endif	// UNIT_TESTS

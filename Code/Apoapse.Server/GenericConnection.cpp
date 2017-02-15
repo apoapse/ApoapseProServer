@@ -73,7 +73,10 @@ void GenericConnection::OnCommandBodyComplete(std::unique_ptr<Command>& command)
 			ReadPayload(command);
 		}
 		else
+		{
+			ASSERT(m_readStreamBuffer.size() == 0);
 			OnCommandReadyForProcessing(command);
+		}
 	}
 	else
 	{
@@ -91,6 +94,8 @@ void GenericConnection::OnCommandReadyForProcessing(std::unique_ptr<Command>& co
 	ProcessCommandFromNetwork(*command.get());
 
 	m_commands.pop_front();	// use GenericConnection::PopLastCommand (used to have a mutex) instead? YES
+
+	ASSERT(m_readStreamBuffer.size() == 0);
 	ListenForCommand();
 }
 
@@ -101,17 +106,18 @@ void GenericConnection::OnReceivedCommandName(size_t bytesTransferred)
 	m_readStreamBuffer.consume(bytesTransferred);
 
 	const string commandName = string(boost::asio::buffers_begin(data), boost::asio::buffers_begin(data) + bytesTransferred - newLineCharacterSize);
-
+	
 	if (CommandsManager::GetInstance().CommandExist(commandName))
 	{
 		m_commands.push_front(CommandsManager::GetInstance().CreateCommand(commandName));
 
 		auto& currentCommand = m_commands.front();
+		LOG_DEBUG << "Creating command " << currentCommand->GetConfig().name;
 
 		if (CheckCommandNetworkInputCompatibility(*currentCommand.get()))
 		{
 			ReadCommandFirstChar(*currentCommand.get());
-			ListenForCommandBody();
+			ListenForCommandBody(bytesTransferred);
 		}
 		else
 		{
@@ -120,7 +126,7 @@ void GenericConnection::OnReceivedCommandName(size_t bytesTransferred)
 
 			m_commands.pop_front();
 			ClearReadBuffer();
-			ListenForCommand();
+			Close();
 		}
 	}
 	else
@@ -129,7 +135,7 @@ void GenericConnection::OnReceivedCommandName(size_t bytesTransferred)
 		ApoapseError::SendError(ApoapseErrorCode::MALFORMED_CMD, *this);
 
 		ClearReadBuffer();
-		ListenForCommand();
+		Close();
 	}
 }
 
@@ -148,10 +154,10 @@ void GenericConnection::ReadCommandFirstChar(Command& command)
 	command.AppendCommandBodyData(firstChar);
 }
 
-void GenericConnection::ListenForCommandBody()
+void GenericConnection::ListenForCommandBody(size_t bytesTransferred)
 {
 	auto& command = m_commands.front();
-	const size_t bufferDataSize = m_readStreamBuffer.size();
+	const size_t bufferDataSize = (bytesTransferred == 0) ? m_readStreamBuffer.size() : bytesTransferred;
 	const Format commandRealFormat = command->GetInputRealFormat();
 
 	if (bufferDataSize > 0)
@@ -192,20 +198,7 @@ void GenericConnection::OnReceivedCommandInfoBody(size_t bytesTransferred)
 {
 	ASSERT_MSG(m_commands.size() > 0, "The command queue is empty");
 
-	if (bytesTransferred == 0)	// If the delimiter is not found (when bytesTransferred equal 0), call ListenForCommandInfoBody() which will extract the data from the buffer and call the async network operation agin
-	{
-		ListenForCommandBody();
-		return;
-	}
-
-	auto& command = m_commands.front();
-
-	auto data = m_readStreamBuffer.data();
-	m_readStreamBuffer.consume(bytesTransferred);
-
-	command->AppendCommandBodyData(string(boost::asio::buffers_begin(data), boost::asio::buffers_begin(data) + bytesTransferred));
-
-	OnCommandBodyComplete(command);
+	ListenForCommandBody(bytesTransferred);
 }
 
 void GenericConnection::OnReceivedPayloadData(size_t bytesTransferred)

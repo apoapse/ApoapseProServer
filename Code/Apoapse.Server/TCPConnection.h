@@ -40,8 +40,8 @@ public:
 	bool IsConnected() const;
 	void Close();
 
-	virtual void Send(std::shared_ptr<std::vector<byte>> bytesPtr) override;
-	virtual void Send(std::unique_ptr<std::string> strPtr) override;
+	virtual void Send(std::shared_ptr<std::vector<byte>> bytesPtr, TCPConnection* excludedConnection = nullptr) override;
+	virtual void Send(std::unique_ptr<std::string> strPtr, TCPConnection* excludedConnection = nullptr) override;
 
 private:
 	void HandleConnectAsync(const boost::system::error_code& error);

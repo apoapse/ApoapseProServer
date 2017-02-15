@@ -12,12 +12,12 @@ struct TestSend : INetworkSender
 {
 	string sentData;
 
-	void Send(std::unique_ptr<std::string> strPtr) override
+	void Send(std::unique_ptr<std::string> strPtr, TCPConnection* /*excludedConnection*/ = nullptr) override
 	{
 		sentData = *strPtr;
 	}
 
-	void Send(std::shared_ptr<std::vector<byte>> bytesPtr) override
+	void Send(std::shared_ptr<std::vector<byte>> bytesPtr, TCPConnection* /*excludedConnection*/ = nullptr) override
 	{
 		ASSERT(false);
 	}

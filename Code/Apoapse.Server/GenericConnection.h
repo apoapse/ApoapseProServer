@@ -8,7 +8,7 @@
 #include "ByteUtils.h"
 class ApoapseServer;
 
-#define COMMAND_BODY_RECEIVE_BUFFER_SIZE 24	// Need to be smaller than the smallest expected command
+#define COMMAND_BODY_RECEIVE_BUFFER_SIZE 255
 #define COMMAND_PAYLOAD_RECEIVE_BUFFER_SIZE 512
 
 class GenericConnection : public TCPConnection
@@ -37,7 +37,7 @@ protected:
 
 	virtual void OnReceivedCommandName(size_t bytesTransferred);
 	virtual void ReadCommandFirstChar(Command& command);
-	virtual void ListenForCommandBody();
+	virtual void ListenForCommandBody(size_t bytesTransferred);
 	virtual void OnReceivedCommandInfoBody(size_t bytesTransferred);
 	virtual void OnReceivedPayloadData(size_t bytesTransferred);
 

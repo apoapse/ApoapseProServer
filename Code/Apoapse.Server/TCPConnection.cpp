@@ -54,7 +54,7 @@ void TCPConnection::HandleConnectAsync(const boost::system::error_code& error)
 
 void TCPConnection::HandleAcceptedAsync(const boost::system::error_code& error)
 {
-	LOG_DEBUG_ONLY("TCPConnection accepeted from " << GetEndpoint());
+	LOG_DEBUG << "TCPConnection accepted from " << GetEndpoint();
 	HandleConnectAsync(error);
 }
 
@@ -78,8 +78,10 @@ void TCPConnection::HandleReadInternal(const std::function<void(size_t)>& handle
 	handler(bytesTransferred);
 }
 
-void TCPConnection::Send(std::shared_ptr<std::vector<byte>> bytesPtr)
+void TCPConnection::Send(std::shared_ptr<std::vector<byte>> bytesPtr, TCPConnection* excludedConnection/* = nullptr*/)
 {
+	ASSERT(excludedConnection == nullptr);
+
 	const bool isWriteInProgress = !m_sendQueue.empty();
 	m_sendQueue.push_back(bytesPtr);
 
@@ -93,8 +95,10 @@ void TCPConnection::Send(std::shared_ptr<std::vector<byte>> bytesPtr)
 	// 	}));
 }
 
-void TCPConnection::Send(std::unique_ptr<std::string> strPtr)
+void TCPConnection::Send(std::unique_ptr<std::string> strPtr, TCPConnection* excludedConnection/* = nullptr*/)
 {
+	ASSERT(excludedConnection == nullptr);
+
 	const bool isWriteInProgress = !m_sendQueue.empty();
 	m_sendQueue.push_back(std::move(strPtr));
 

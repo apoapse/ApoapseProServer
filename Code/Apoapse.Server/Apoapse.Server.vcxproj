@@ -159,18 +159,19 @@
     <ClCompile Include="ApoapseAddress.cpp" />
     <ClCompile Include="ApoapseServer.cpp" />
     <ClCompile Include="ClientConnection.cpp" />
+    <ClCompile Include="CmdConversation.cpp" />
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="CommandsManager.cpp" />
     <ClCompile Include="ConfigVars.cpp" />
-    <ClCompile Include="Error.cpp" />
-    <ClCompile Include="Message.cpp" />
-    <ClCompile Include="UnitTestCmd.cpp" />
+    <ClCompile Include="CmdError.cpp" />
+    <ClCompile Include="CmdMessage.cpp" />
+    <ClCompile Include="CmdUnitTest.cpp" />
     <ClCompile Include="UsersManager.cpp" />
     <ClCompile Include="GenericConnection.cpp" />
     <ClCompile Include="LocalUser.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="LogMessage.cpp" />
-    <ClCompile Include="Connect.cpp" />
+    <ClCompile Include="CmdConnect.cpp" />
     <ClCompile Include="TCPConnection.cpp" />
     <ClCompile Include="TCPServer.cpp" />
     <ClCompile Include="UnicodeUtils.cpp" />
@@ -183,6 +184,8 @@
     <ClCompile Include="UT_Command.cpp" />
     <ClCompile Include="UT_SettingsManager.cpp" />
     <ClCompile Include="UT_StringExtensions.cpp" />
+    <ClCompile Include="UT_Uuid.cpp" />
+    <ClCompile Include="Uuid.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActionsManager.h" />
@@ -226,6 +229,7 @@
     <ClInclude Include="StringExtensions.h" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="LocalUser.h" />
+    <ClInclude Include="Uuid.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="test_config.json" />
