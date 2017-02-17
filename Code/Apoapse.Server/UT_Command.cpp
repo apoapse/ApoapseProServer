@@ -52,11 +52,21 @@ UNIT_TEST("CommandSystem:FromRawNetworkInput:JSON")
 	UnitTest::Assert(command->ReadFieldValue<string>("test_string").get() == "teststr" && command->ReadFieldValue<UInt16>("test_uint16").get() == 9);
 } UNIT_TEST_END
 
+UNIT_TEST("CommandSystem:FromRawNetworkInput:JSON:Array")
+{
+	auto command = CommandsManager::GetInstance().CreateCommand("UNIT_TEST");
+	command->SetInputRealFormat(Format::JSON);
+	command->AppendCommandBodyData("{\"test_array\": [9, 58]}\n\n");
+	command->ParseRawCmdBody();
+
+	UnitTest::Assert(command->ReadFieldArray<int>("test_array").at(0) == 9 && command->ReadFieldArray<int>("test_array").at(1) == 58);
+} UNIT_TEST_END
+
 UNIT_TEST("CommandSystem:Validate:WrongInputType")
 {
 	auto command = CommandsManager::GetInstance().CreateCommand("UNIT_TEST");
 	command->SetInputRealFormat(Format::INLINE);
-	command->AppendCommandBodyData("70000 teststr");
+	command->AppendCommandBodyData("2 teststr");
 	command->ParseRawCmdBody();
 
 	UnitTest::Assert(!command->IsValid());

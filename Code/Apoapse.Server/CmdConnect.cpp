@@ -21,8 +21,8 @@ public:
 		config.processFromClient = PROCESS_METHOD(ClientConnection, CmdConnect::Authenticate);
 		config.fields =
 		{
-			CommmandField { "username", true, FIELD_VALUE_VALIDATOR(string, ApoapseAddress::UsernameHash::IsValid) },
-			CommmandField { "password", true/*, TODO*/ }
+			CommandField { "username", FieldRequirement::VALUE_MENDATORY, FIELD_VALUE_VALIDATOR(string, ApoapseAddress::UsernameHash::IsValid) },
+			CommandField { "password", FieldRequirement::VALUE_MENDATORY/*, TODO*/ }
 		};
 
 		return config;

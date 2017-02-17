@@ -15,8 +15,8 @@ public:
 		config.expectedFormat = Format::INLINE;
 		config.fields =
 		{
-			CommmandField{ "test_uint16", true, FIELD_VALUE_CHECK_TYPE(UInt16) },
-			CommmandField{ "test_string", true }
+			CommandField{ "test_uint16", FieldRequirement::VALUE_MENDATORY, FIELD_VALUE_VALIDATOR(UInt16, CmdUnitTest::ValidateField1) },
+			CommandField{ "test_string", FieldRequirement::VALUE_MENDATORY }
 		};
 
 		return config;
@@ -25,6 +25,13 @@ public:
 	bool PostValidate() const override
 	{
 		return true;
+	}
+
+private:
+
+	static bool ValidateField1(UInt16 value)
+	{
+		return (value > 5 && value < 9999);
 	}
 };
 

@@ -3,6 +3,7 @@
 #include "CommandsManager.h"
 #include "LocalUser.h"
 #include "Uuid.h"
+#include "ApoapseAddress.h"
 
 class CmdConversation final : public Command
 {
@@ -15,7 +16,8 @@ public:
 		config.processFromUser = PROCESS_METHOD_FROM_USER(CmdConversation::RegisterConversation);
 		config.fields =
 		{
-			CommmandField{ "uuid", true, FIELD_VALUE_VALIDATOR(string, Uuid::IsValid) }
+			CommandField{ "uuid", FieldRequirement::VALUE_MENDATORY, FIELD_VALUE_VALIDATOR(string, Uuid::IsValid) },
+			CommandField{ "correspondents", FieldRequirement::ARRAY_MENDATORY/*, FIELD_VALUE_VALIDATOR(string, ApoapseAddress::IsValid())*/ }
 		};
 
 		return config;
@@ -30,8 +32,9 @@ private:
 	void RegisterConversation(LocalUser& user, ClientConnection& originConnection)
 	{
 		
-		auto test = ReadFieldValue<string>("correspondents").get();
+		auto test = ReadFieldArray<string>("correspondents");
 
+		InsertFieldArray<int>("testarr", std::vector<int> { -1, 5 });
 		int fe = 1;
 	}
 };

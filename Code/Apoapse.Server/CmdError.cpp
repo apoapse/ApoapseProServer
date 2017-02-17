@@ -13,8 +13,8 @@ public:
 		config.expectedFormat = Format::INLINE;
 		config.fields =
 		{
-			CommmandField{ "error_code", true, FIELD_VALUE_CHECK_TYPE(UInt16) },
-			CommmandField{ "related_item", false }
+			CommandField{ "error_code", FieldRequirement::VALUE_MENDATORY, FIELD_VALUE_CHECK_TYPE(UInt16) },
+			CommandField{ "related_item", FieldRequirement::ANY_OPTIONAL }
 		};
 
 		return config;

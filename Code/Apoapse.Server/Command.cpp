@@ -104,38 +104,74 @@ void Command::AutoValidateInternal()
 	for (size_t i = 0; i < GetConfig().fields.size(); i++)
 	{
 		const auto& currentField = GetConfig().fields.at(i);
-		const auto currentVal = m_fields.get_optional<string>(currentField.name);
-		const bool isValueExist = currentVal.is_initialized();
 
-		if (currentField.isRequired && !isValueExist)
+		if (!ValidateField(currentField))
 		{
-			LOG << "Command pre-validation (" << GetConfig().name << "), required field " << currentField.name << " is missing" << LogSeverity::warning;
 			m_isValid = false;
 
-			// In debug mode we continue the pre-validation process in order to see all potential errors
-#ifndef DEBUG
+#ifndef DEBUG	// In debug mode we continue the pre-validation process in order to see all potential errors
 			return;
 #endif
-		}
-
-		if (isValueExist && currentField.IsValidatorInitialized())
-		{
-			auto validator = currentField.fieldValueValidator;
-
-			if (!validator.get()->ExecValidator(currentVal.get()))
-			{
-				LOG << "Command pre-validation (" << GetConfig().name << "), field " << currentField.name << " is not valid" << LogSeverity::warning;
-				m_isValid = false;
-
-#ifndef DEBUG
-				return;
-#endif
-			}
 		}
 	}
 
 	if (m_isValid && !PostValidate())
 		m_isValid = false;
+}
+
+bool Command::ValidateField(const CommandField& field)
+{
+	if (field.requirement == FieldRequirement::ARRAY_MENDATORY)
+	{
+		const auto values = ReadFieldArray<string>(field.name);
+
+		if (values.size() < 1)
+		{
+			LOG << "Command pre-validation (" << GetConfig().name << "), required field array " << field.name << " is missing or empty" << LogSeverity::warning;
+			return false;
+		}
+
+		for (auto& value : values)
+		{
+			if (!ValidateFieldValue(value, field))
+			{
+#ifndef DEBUG	// In debug mode we continue the pre-validation process in order to see all potential errors
+				return false;
+#endif
+			}
+		}
+
+		return true;
+	}
+	else
+	{
+		const auto value = ReadFieldValue<string>(field.name);
+		const bool valueExist = value.is_initialized();
+
+		if (field.requirement == FieldRequirement::VALUE_MENDATORY && !valueExist)
+		{
+			LOG << "Command pre-validation (" << GetConfig().name << "), required field " << field.name << " is missing" << LogSeverity::warning;
+			return false;
+		}
+		
+		if (valueExist)
+			return ValidateFieldValue(value.get(), field);
+		else
+			return true;
+	}
+}
+
+inline bool Command::ValidateFieldValue(const string& value, const CommandField& field)
+{
+	auto validator = field.fieldValueValidator;
+
+	if (validator.is_initialized() && !validator.get()->ExecValidator(value))
+	{
+		LOG << "Command pre-validation (" << GetConfig().name << "), field " << field.name << " is not valid" << LogSeverity::warning;
+		return false;
+	}
+	else
+		return true;
 }
 
 size_t Command::ActualPayloadSize() const
@@ -205,7 +241,7 @@ void Command::ProcessFromNetwork(LocalUser* user, ClientConnection& callingConne
 	}
 }
 
-void Command::ProcessFromNetwork(RemoteServer* remoteServer/*, ClientConnection& callingConnection*/) // #TODO 
+void Command::ProcessFromNetwork(RemoteServer* remoteServer)
 {
 	if (remoteServer == nullptr)
 		return;
