@@ -94,7 +94,7 @@ void Command::AutoValidateInternal()
 	if (!IsValid())
 		return;
 
-	if (GetConfig().isPayloadExpected && !m_fields.get_optional<string>("payload_size").is_initialized())	//TODO: content length
+	if (GetConfig().payloadExpected && !m_fields.get_optional<string>("payload_size").is_initialized())	//TODO: content length
 	{
 		LOG << "Command pre-validation (" << GetConfig().name << "), a payload is expected but the field payload_size is missing" << LogSeverity::warning;
 		m_isValid = false;
@@ -188,7 +188,7 @@ UInt64 Command::ExpectedPayloadSize()
 {
 	const auto payloadSizeField = ReadFieldValue<UInt64>("payload_size");
 
-	return (GetConfig().isPayloadExpected && payloadSizeField.is_initialized()) ? payloadSizeField.get() : 0;
+	return (GetConfig().payloadExpected && payloadSizeField.is_initialized()) ? payloadSizeField.get() : 0;
 }
 
 Format Command::GetInputRealFormat() const
@@ -282,7 +282,7 @@ void Command::Send(INetworkSender& destination, Format forcedOutputFormat/* = Fo
 #endif
 
 	const Format outputFormat = (forcedOutputFormat == Format::UNDEFINED) ? GetConfig().expectedFormat : forcedOutputFormat;
-	ASSERT_MSG(!(GetConfig().isPayloadExpected && outputFormat == Format::INLINE), "Cannot use an inline format on command with a payload");
+	ASSERT_MSG(!(GetConfig().payloadExpected && outputFormat == Format::INLINE), "Cannot use an inline format on command with a payload");
 
 	std::stringstream outputStream;
 	outputStream << GetConfig().name << '\n';

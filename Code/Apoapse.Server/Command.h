@@ -85,7 +85,7 @@ struct CommandConfig
 	std::function<void(ClientConnection&)> processFromClient = { NULL };
 	std::function<void(LocalUser&, ClientConnection&)> processFromUser = { NULL };
 	std::function<void(RemoteServer&)> processFromRemoteServer = { NULL };
-	bool isPayloadExpected = { false };
+	bool payloadExpected = { false };
 };
 
 class Command

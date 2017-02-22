@@ -16,11 +16,11 @@ class LocalUser : public std::enable_shared_from_this<LocalUser>, public INetwor
 	UsersManager& m_usersManager;
 	std::set<ClientConnection*> m_connections;
 	const ApoapseAddress::UsernameHash m_usernameHash;
-	const Int64 m_id;
+	const DbId m_id;
 	//TCP_IP_ADDRESS (hold a copy)
 
 public:
-	LocalUser(UsersManager& usersManager, const ApoapseAddress::UsernameHash& usernameHash, Int64 id);
+	LocalUser(UsersManager& usersManager, const ApoapseAddress::UsernameHash& usernameHash, DbId id);
 	virtual ~LocalUser();
 
 	std::shared_ptr<LocalUser> GetShared();
@@ -28,6 +28,8 @@ public:
 
 	void Send(std::shared_ptr<std::vector<byte>> bytesPtr, TCPConnection* excludedConnection = nullptr);
 	void Send(std::unique_ptr<std::string> strPtr, TCPConnection* excludedConnection = nullptr);
+
+	DbId GetDatabaseId() const;
 
 	//************************************
 	// Method:    LocalUser::Disconnect - Close all the associated connections

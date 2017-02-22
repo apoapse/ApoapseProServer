@@ -4,6 +4,7 @@
 #include "LocalUser.h"
 #include "Uuid.h"
 #include "ApoapseAddress.h"
+#include "Conversation.h"
 
 class CmdConversation final : public Command
 {
@@ -17,7 +18,7 @@ public:
 		config.fields =
 		{
 			CommandField{ "uuid", FieldRequirement::VALUE_MENDATORY, FIELD_VALUE_VALIDATOR(string, Uuid::IsValid) },
-			CommandField{ "correspondents", FieldRequirement::ARRAY_MENDATORY/*, FIELD_VALUE_VALIDATOR(string, ApoapseAddress::IsValid())*/ }
+			CommandField{ "correspondents", FieldRequirement::ARRAY_MENDATORY, FIELD_VALUE_VALIDATOR(string, [](string address) { return ApoapseAddress(address).IsValid(); }) }
 		};
 
 		return config;
@@ -31,11 +32,22 @@ public:
 private:
 	void RegisterConversation(LocalUser& user, ClientConnection& originConnection)
 	{
-		
-		auto test = ReadFieldArray<string>("correspondents");
+		const auto uuid = Uuid(ReadFieldValue<string>("uuid").get());
+		const std::vector<string>& correspondantsStr = ReadFieldArray<string>("correspondents");
 
-		InsertFieldArray<int>("testarr", std::vector<int> { -1, 5 });
-		int fe = 1;
+		if (correspondantsStr.size() > Conversation::GetMaxAllowedCorespondants())
+		{
+			ApoapseError::SendError(ApoapseErrorCode::MAX_CONVERSATION_CORESPONDANTS_EXCEEDED, uuid.GetStr(), originConnection);
+			return;
+		}
+
+		std::vector<ApoapseAddress> correspondants;
+
+		for (const string& address : correspondantsStr)
+			correspondants.push_back(ApoapseAddress(address));
+
+		Conversation conversation(uuid, correspondants, OperationDirection::RECEIVED, originConnection.server);
+		conversation.SaveToDatabase(user, originConnection);
 	}
 };
 

@@ -12,6 +12,13 @@ UNIT_TEST("uuid:Generate")
 	UnitTest::Assert(Uuid::IsValid(Uuid::Generate()));
 } UNIT_TEST_END
 
+UNIT_TEST("uuid:Object")
+{
+	Uuid uuid("81128ddee533436a9a302c8767bcd458");
+
+	UnitTest::Assert(Uuid::IsValid(uuid.GetStr()));
+} UNIT_TEST_END
+
 UNIT_TEST("uuid:Validate")
 {
 	UnitTest::Assert(Uuid::IsValid("81128ddee533436a9a302c8767bcd458"));

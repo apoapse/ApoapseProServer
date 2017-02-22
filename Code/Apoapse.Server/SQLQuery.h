@@ -1,5 +1,6 @@
 #pragma once
 #include <sstream>
+#include <vector>
 #include "Database.h"
 #include "SQLValue.h"
 #include "SQLPackagedResult.h"
@@ -101,6 +102,23 @@ public:
 		AddValue(new SQLValue(value, SQLValue::GenerateType<T>()));
 
 		return *this;
+	}
+
+	template <typename T>
+	static string FormatArray(const std::vector<T> values)
+	{
+		std::stringstream ss;
+		const size_t nbElements = values.size();
+
+		for (size_t i = 0; i < nbElements; i++)
+		{
+			ss << values[i];
+
+			if (i < nbElements - 1)
+				ss << '\n';
+		}
+
+		return ss.str();
 	}
 
 private:

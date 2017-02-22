@@ -87,6 +87,15 @@
     <ClCompile Include="CmdConversation.cpp">
       <Filter>Network\Protocol\CommandSystem\Commands</Filter>
     </ClCompile>
+    <ClCompile Include="Conversation.cpp">
+      <Filter>Network\Protocol\ApoapseSystems</Filter>
+    </ClCompile>
+    <ClCompile Include="ApoapseOperation.cpp">
+      <Filter>Network\Protocol\ApoapseSystems</Filter>
+    </ClCompile>
+    <ClCompile Include="UT_DateTimeUtils.cpp">
+      <Filter>Tests\UnitTests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -203,11 +212,20 @@
     <ClInclude Include="ApoapseError.h">
       <Filter>Network\Protocol\ApoapseSystems</Filter>
     </ClInclude>
-    <ClInclude Include="ActionsManager.h">
-      <Filter>Network\Protocol\ApoapseSystems</Filter>
-    </ClInclude>
     <ClInclude Include="Uuid.h">
       <Filter>Library</Filter>
+    </ClInclude>
+    <ClInclude Include="Conversation.h">
+      <Filter>Network\Protocol\ApoapseSystems</Filter>
+    </ClInclude>
+    <ClInclude Include="ApoapseOperation.h">
+      <Filter>Network\Protocol\ApoapseSystems</Filter>
+    </ClInclude>
+    <ClInclude Include="DateTimeUtils.h">
+      <Filter>Library</Filter>
+    </ClInclude>
+    <ClInclude Include="Message.h">
+      <Filter>Network\Protocol\ApoapseSystems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

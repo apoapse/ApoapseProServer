@@ -1,16 +1,16 @@
 #pragma once
 #include <boost\assert.hpp>
 
-#define ASSERT(_exp)	BOOST_ASSERT(_exp)
-#define ASSERT_MSG(_exp, _msg)	BOOST_ASSERT_MSG(_exp, _msg)
+#define ASSERT(_exp)						BOOST_ASSERT(_exp)
+#define ASSERT_MSG(_exp, _msg)				BOOST_ASSERT_MSG(_exp, _msg)
 
 // #TODO 
 #ifdef ENABLE_SEC_ADVANCED_CHECKS
-#define SECURITY_ASSERT(_exp)	ASSERT(_exp)
-#define SECURITY_ASSERT_MSG(_exp, _msg)	BOOST_ASSERT_MSG(_exp, _msg)
+#define SECURITY_ASSERT(_exp)				ASSERT(_exp)
+#define SECURITY_ASSERT_MSG(_exp, _msg)		BOOST_ASSERT_MSG(_exp, _msg)
 #else
-#define SECURITY_ASSERT(_exp)
-#define SECURITY_ASSERT_MSG(_exp, _msg)
+#define SECURITY_ASSERT(_exp)				if (!_exp) throw std::exception("SECURITY_ASSERT");
+#define SECURITY_ASSERT_MSG(_exp, _msg)		if (!_exp) throw std::exception("SECURITY_ASSERT: " + _msg);
 #endif
 
 #ifdef DEBUG

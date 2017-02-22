@@ -157,6 +157,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ApoapseAddress.cpp" />
+    <ClCompile Include="ApoapseOperation.cpp" />
     <ClCompile Include="ApoapseServer.cpp" />
     <ClCompile Include="ClientConnection.cpp" />
     <ClCompile Include="CmdConversation.cpp" />
@@ -166,6 +167,7 @@
     <ClCompile Include="CmdError.cpp" />
     <ClCompile Include="CmdMessage.cpp" />
     <ClCompile Include="CmdUnitTest.cpp" />
+    <ClCompile Include="Conversation.cpp" />
     <ClCompile Include="UsersManager.cpp" />
     <ClCompile Include="GenericConnection.cpp" />
     <ClCompile Include="LocalUser.cpp" />
@@ -182,26 +184,30 @@
     <ClCompile Include="SettingsManager.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
     <ClCompile Include="UT_Command.cpp" />
+    <ClCompile Include="UT_DateTimeUtils.cpp" />
     <ClCompile Include="UT_SettingsManager.cpp" />
     <ClCompile Include="UT_StringExtensions.cpp" />
     <ClCompile Include="UT_Uuid.cpp" />
     <ClCompile Include="Uuid.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ActionsManager.h" />
     <ClInclude Include="ApoapseAddress.h" />
+    <ClInclude Include="ApoapseOperation.h" />
     <ClInclude Include="ApoapseServer.h" />
     <ClInclude Include="ClientConnection.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="CommandsManager.h" />
     <ClInclude Include="ConfigVars.h" />
+    <ClInclude Include="Conversation.h" />
     <ClInclude Include="Database.h" />
     <ClInclude Include="ApoapseError.h" />
     <ClInclude Include="INetworkSender.h" />
+    <ClInclude Include="Message.h" />
     <ClInclude Include="SQLQuery.h" />
     <ClInclude Include="SQLPackagedResult.h" />
     <ClInclude Include="SQLValue.h" />
     <ClInclude Include="static_string.h" />
+    <ClInclude Include="DateTimeUtils.h" />
     <ClInclude Include="UsersManager.h" />
     <ClInclude Include="eLogSeverity.h" />
     <ClInclude Include="GenericConnection.h" />

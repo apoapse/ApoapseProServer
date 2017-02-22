@@ -4,7 +4,7 @@
 #include <vector>
 #include <boost/optional.hpp>
 
-#define ROW_HELPER(_columnName, _index)	_index
+#define COLUMN_NAME_HELPER(_columnName, _index)	_index
 
 class SQLRow
 {

@@ -55,6 +55,12 @@ void ApoapseServer::Start()
 // 	test2 << SELECT << "blob_field" << FROM "test" << ORDER_BY << "id" << DESC << LIMIT << "1";
 // 	auto res = test2.Exec();
 // 	std::vector<byte> dataRes = res[0][0].GetByteArray();
+// 	
+
+	SQLQuery test1(database);
+	test1 << SELECT << "timestamp" << FROM << "operations_log";
+	auto res = test1.Exec();
+	if (res.RowCount() > 0) LOG << res[0][0].GetText();
 
 	m_usersManager = std::make_unique<UsersManager>(*this);
 

@@ -8,5 +8,7 @@ typedef long			Int64;
 typedef unsigned long	UInt64;
 typedef unsigned char	byte;
 
+typedef Int64			DbId;
+
 #include <string>
 using string = std::string;

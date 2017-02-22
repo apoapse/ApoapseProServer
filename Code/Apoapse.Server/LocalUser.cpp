@@ -2,8 +2,7 @@
 #include "LocalUser.h"
 #include "Common.h"
 
-LocalUser::LocalUser(UsersManager& usersManager, const ApoapseAddress::UsernameHash& usernameHash, Int64 id)
-	: m_usernameHash(usernameHash),
+LocalUser::LocalUser(UsersManager& usersManager, const ApoapseAddress::UsernameHash& usernameHash, DbId id) : m_usernameHash(usernameHash),
 	m_usersManager(usersManager),
 	m_id(id)
 {
@@ -61,6 +60,11 @@ void LocalUser::Send(std::unique_ptr<std::string> strPtr, TCPConnection* exclude
 
 		connection->Send(std::move(strPtr));
 	}
+}
+
+DbId LocalUser::GetDatabaseId() const
+{
+	return m_id;
 }
 
 void LocalUser::Disconnect()

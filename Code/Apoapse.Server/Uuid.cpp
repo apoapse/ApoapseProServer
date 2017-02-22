@@ -7,6 +7,16 @@
 #include <boost/uuid/uuid_io.hpp>
 #include "StringExtensions.h"
 
+Uuid::Uuid(const string& uuidStr) : m_uuidStr(uuidStr)
+{
+	SECURITY_ASSERT(IsValid(uuidStr));
+}
+
+string Uuid::GetStr() const
+{
+	return m_uuidStr;
+}
+
 string Uuid::Generate()
 {
 	static boost::uuids::random_generator generator;

@@ -126,6 +126,12 @@ public:
 	const ServerDomain& GetDomain() const;
 	const UsernameHash& GetUsernameHash() const;
 
+	friend std::ostream& operator<<(std::ostream& stream, const ApoapseAddress& obj)
+	{
+		stream << obj.GetFullAddress();
+		return stream;
+	}
+
 private:
 	void ParseAddress();
 };
