@@ -30,21 +30,65 @@ void ApoapseOperation::SaveToDatabase(const LocalUser& associatedUser, GenericCo
 		return;
 	}
 
-	m_itemId = SaveToDatabaseInternal();
+	SaveToDatabaseInternal();
+
+	{
+		// Get the id of the newly created database entry for the saved item
+		SQLQuery queryId(server.database);
+		queryId << SELECT << "id" << FROM << STR_TO_QUERY_SYNTAX(m_itemDBTableName) << " " << WHERE << "uuid" << EQUALS << m_uuid.GetStr();
+		auto res = queryId.Exec();
+
+		if (res.RowCount() != 1)
+			throw std::exception();
+
+		SetItemDbId(res[0][0].GetInt64());
+	}
 
 	if (m_itemId.get() < 1)
-		throw std::out_of_range("Invalid database id");
+		throw std::out_of_range("Invalid item database id");
 
 	LogOperation(associatedUser.GetDatabaseId());
+}
+
+void ApoapseOperation::SetItemDbId(DbId id)
+{
+	ASSERT_MSG(!m_itemId.is_initialized(), "ItemDbId already definied");
+
+	m_itemId = id;
+}
+
+DbId ApoapseOperation::GetItemDbId() const
+{
+	ASSERT(m_itemId.is_initialized());
+
+	return m_itemId.get();
 }
 
 bool ApoapseOperation::IsIemRegistered()
 {
 	SQLQuery query(server.database);
-	query << SELECT << "uuid" << FROM << m_itemDBTableName.c_str() << WHERE << "uuid" EQUALS << m_uuid.GetStr();
+	query << SELECT << "uuid" << FROM << STR_TO_QUERY_SYNTAX(m_itemDBTableName) << WHERE << "uuid" EQUALS << m_uuid.GetStr();
 	auto res = query.Exec();
 
 	return (res.RowCount() == 1);
+}
+
+const ApoapseOperation::DBInfo ApoapseOperation::GetOperationInfoFromDatabase(DbId itemId, const string& operationName, ApoapseServer& server)
+{
+	SQLQuery query(server.database);
+	query << SELECT << "id,timestamp,direction,user_id" << FROM << "operations_log" << WHERE << "operation" << EQUALS << operationName << AND << "item_id" << EQUALS << itemId;
+	auto res = query.Exec();
+
+	if (res.RowCount() == 0)
+		throw std::out_of_range("The requested item id does not exist on the database");
+
+	DBInfo output;
+	output.operationId = res[0][0].GetInt64();
+	output.timestamp = res[0][1].GetText();
+	output.direction = (res[0][2].GetText() == "R") ? OperationDirection::RECEIVED : OperationDirection::SENT;
+	output.associatedUserId = res[0][3].GetInt64();
+
+	return output;
 }
 
 void ApoapseOperation::LogOperation(DbId associatedUserId)

@@ -2,6 +2,11 @@
 #include "Common.h"
 #include "CommandsManager.h"
 #include "ClientConnection.h"
+#include "LocalUser.h"
+#include "Uuid.h"
+#include "DateTimeUtils.h"
+#include "Message.h"
+#include "Conversation.h"
 
 class CmdMessage final : public Command
 {
@@ -11,10 +16,15 @@ public:
 		static auto config = CommandConfig();
 		config.name = "MESSAGE";
 		config.expectedFormat = Format::JSON;
-		config.isPayloadExpected = true;
-		config.processFromClient = PROCESS_METHOD(ClientConnection, CmdMessage::Process);
+		config.payloadExpected = true;
+		config.processFromUser = PROCESS_METHOD_FROM_USER(CmdMessage::FromUser);
+		//config.processFromRemoteServer = PROCESS_METHOD(RemoteServer&, )
 		config.fields =
 		{
+			CommandField{ "uuid", FieldRequirement::VALUE_MENDATORY, FIELD_VALUE_VALIDATOR(string, Uuid::IsValid) },
+			CommandField{ "from", FieldRequirement::ANY_OPTIONAL, FIELD_VALUE_VALIDATOR(string, [](string address) { return ApoapseAddress(address).IsValid(); }) },
+			CommandField{ "conversation", FieldRequirement::VALUE_MENDATORY, FIELD_VALUE_VALIDATOR(string, Uuid::IsValid) },
+			CommandField{ "sent", FieldRequirement::VALUE_MENDATORY, FIELD_VALUE_VALIDATOR(string, DateTimeUtils::UTCDateTime::ValidateFormat) }
 		};
 
 		return config;
@@ -26,12 +36,30 @@ public:
 	}
 
 private:
-
-	void Process(ClientConnection& client)
+	void FromUser(LocalUser& user, ClientConnection& originConnection)
 	{
-		LOG << "PROCESSING" << LogSeverity::debug;
+		const auto uuid = Uuid(ReadFieldValue<string>("uuid").get());
+		const auto conversationUuid = Uuid(ReadFieldValue<string>("conversation").get());
+		const auto sentTime = DateTimeUtils::UTCDateTime(ReadFieldValue<string>("sent").get());
 
-		Send(client);
+		if (sentTime > DateTimeUtils::UTCDateTime::CurrentTime())
+		{
+			ApoapseError::SendError(ApoapseErrorCode::DATETIME_MISMATCH, uuid, originConnection);
+			return;
+		}
+
+		try
+		{
+			Conversation conv = Conversation::Create(conversationUuid, originConnection.server);
+
+			Message message(uuid, user.GetFullAddress(), conv, sentTime, GetPayload(), OperationDirection::SENT, originConnection.server);
+			//message.Send(user, originConnection);
+			message.SaveToDatabase(user, originConnection);
+		}
+		catch (const std::out_of_range&)
+		{
+			ApoapseError::SendError(ApoapseErrorCode::CONVERSATION_NONEEXISTENT, uuid, originConnection);
+		}
 	}
 };
 

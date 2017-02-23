@@ -168,6 +168,8 @@
     <ClCompile Include="CmdMessage.cpp" />
     <ClCompile Include="CmdUnitTest.cpp" />
     <ClCompile Include="Conversation.cpp" />
+    <ClCompile Include="Message.cpp" />
+    <ClCompile Include="SQLQuery.cpp" />
     <ClCompile Include="UsersManager.cpp" />
     <ClCompile Include="GenericConnection.cpp" />
     <ClCompile Include="LocalUser.cpp" />

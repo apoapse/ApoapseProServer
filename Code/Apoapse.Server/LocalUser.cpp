@@ -40,6 +40,11 @@ ApoapseAddress::UsernameHash LocalUser::GetUsernameHash() const
 	return m_usernameHash;
 }
 
+ApoapseAddress LocalUser::GetFullAddress() const
+{
+	return ApoapseAddress(ApoapseAddress::ServerDomain(global->settings->ReadConfigValue_string("server.domain")), GetUsernameHash());
+}
+
 void LocalUser::Send(std::shared_ptr<std::vector<byte>> bytesPtr, TCPConnection* excludedConnection/* = nullptr*/)
 {
 	for (auto& connection : m_connections)

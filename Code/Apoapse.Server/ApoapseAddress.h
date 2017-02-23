@@ -119,6 +119,7 @@ private:
 
 public:
 	ApoapseAddress(const string& fullAddress);
+	ApoapseAddress(const ServerDomain& domain, const UsernameHash& usernameHash);
 	virtual ~ApoapseAddress();
 
 	bool IsValid() const;
@@ -130,6 +131,16 @@ public:
 	{
 		stream << obj.GetFullAddress();
 		return stream;
+	}
+
+	bool operator!=(const ApoapseAddress& secondObj) const
+	{
+		return !(*this == secondObj.GetFullAddress());
+	}
+
+	bool operator==(const ApoapseAddress& secondObj) const
+	{
+		return (GetDomain() == secondObj.GetDomain() && GetUsernameHash() == secondObj.GetUsernameHash());
 	}
 
 private:

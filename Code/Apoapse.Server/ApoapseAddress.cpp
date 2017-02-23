@@ -8,6 +8,11 @@ ApoapseAddress::ApoapseAddress(const string& address) : m_fullAddress(address)
 	ParseAddress();
 }
 
+ApoapseAddress::ApoapseAddress(const ServerDomain& domain, const UsernameHash& usernameHash) : m_domain(domain), m_username(usernameHash)
+{
+	m_isValid = true;
+}
+
 ApoapseAddress::~ApoapseAddress()
 {
 

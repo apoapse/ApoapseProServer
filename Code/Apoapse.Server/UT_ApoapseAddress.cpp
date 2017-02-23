@@ -26,14 +26,24 @@ UNIT_TEST("ApoapseAddress:ServerDomain:ValidateWrongValue")
 	UnitTest::Assert(!ApoapseAddress::ServerDomain::IsValid(".apspace"));
 } UNIT_TEST_END
 
-UNIT_TEST("ApoapseAddressObj")
+UNIT_TEST("ApoapseAddress:Obj")
 {
 	UnitTest::Assert(ApoapseAddress("apoapse.space:9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08").IsValid());
 } UNIT_TEST_END
 
-UNIT_TEST("ApoapseAddressObjWrongValue")
+UNIT_TEST("ApoapseAddress:Obj:WrongValue")
 {
 	UnitTest::Assert(!ApoapseAddress("apoapsespace:9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08").IsValid());
+} UNIT_TEST_END
+
+UNIT_TEST("ApoapseAddress:Obj:Compare")
+{
+	UnitTest::Assert(ApoapseAddress("apoapse.space:9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08") == ApoapseAddress("apoapse.space:9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"));
+} UNIT_TEST_END
+
+UNIT_TEST("ApoapseAddress:Obj:CompareInvert")
+{
+	UnitTest::Assert(ApoapseAddress("apoapse.space:9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08") != ApoapseAddress("apoapse.spvce:9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"));
 } UNIT_TEST_END
 
 #endif	// UNIT_TESTS

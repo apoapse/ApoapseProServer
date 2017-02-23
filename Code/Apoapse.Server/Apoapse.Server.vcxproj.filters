@@ -96,6 +96,12 @@
     <ClCompile Include="UT_DateTimeUtils.cpp">
       <Filter>Tests\UnitTests</Filter>
     </ClCompile>
+    <ClCompile Include="Message.cpp">
+      <Filter>Network\Protocol\ApoapseSystems</Filter>
+    </ClCompile>
+    <ClCompile Include="SQLQuery.cpp">
+      <Filter>DataAbstractionLayers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />

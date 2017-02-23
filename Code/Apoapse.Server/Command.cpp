@@ -207,6 +207,9 @@ void Command::SetInputRealFormat(Format format)
 
 void Command::ProcessFromNetwork(ClientConnection* connection)
 {
+#ifdef DEBUG
+	GetConfig().processFromClient(*connection);
+#else
 	try
 	{
 		GetConfig().processFromClient(*connection);
@@ -221,10 +224,14 @@ void Command::ProcessFromNetwork(ClientConnection* connection)
 			connection->Close();
 		}
 	}
+#endif
 }
 
 void Command::ProcessFromNetwork(LocalUser* user, ClientConnection& callingConnection)
 {
+#ifdef DEBUG
+	GetConfig().processFromUser(*user, callingConnection);
+#else
 	try
 	{
 		GetConfig().processFromUser(*user, callingConnection);
@@ -239,6 +246,7 @@ void Command::ProcessFromNetwork(LocalUser* user, ClientConnection& callingConne
 			user->Disconnect();
 		}
 	}
+#endif
 }
 
 void Command::ProcessFromNetwork(RemoteServer* remoteServer)

@@ -20,16 +20,29 @@ class ApoapseOperation
 
 protected:
 	const ApoapseServer& server;
-	const string m_itemDBTableName;
+	const string& m_itemDBTableName;
 	const Uuid m_uuid;
 
 public:
+	struct DBInfo
+	{
+		DbId operationId;
+		string timestamp;	// #TODO Put timestamp into a Datetime type
+		OperationDirection direction;
+		DbId associatedUserId;
+	};
+
 	ApoapseOperation(const Uuid& uuid, const string& name, const string& itemDbTableName, OperationDirection dir, ApoapseServer& serverRef);
 	OperationDirection GetDirection() const;
 
 	void SaveToDatabase(const LocalUser& associatedUser, GenericConnection& originConnection);
+	void SetItemDbId(DbId id);
+	DbId GetItemDbId() const;
+	//void SaveToDatabase(const std::vector<LocalUser&> associatedUsers, GenericConnection& originConnection);
 
+	static const DBInfo GetOperationInfoFromDatabase(DbId itemId, const string& operationName, ApoapseServer& server);
 
+protected:
 	//************************************
 	// Method:    ApoapseOperation::IsIemRegistered - Return true if the current item is registered on the database
 	// Access:    public 
@@ -37,8 +50,7 @@ public:
 	//************************************
 	bool IsIemRegistered();
 
-protected:
-	virtual DbId SaveToDatabaseInternal() = 0;
+	virtual void SaveToDatabaseInternal() = 0;
 
 private:
 	void LogOperation(DbId associatedUserId);

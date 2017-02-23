@@ -21,6 +21,8 @@
 #define ASC			" ASC "
 #define LIMIT		" LIMIT "
 
+#define STR_TO_QUERY_SYNTAX(_str)	_str.c_str()
+
 class DBException : public std::exception
 {
 	const std::string m_errorMsg;
@@ -120,6 +122,8 @@ public:
 
 		return ss.str();
 	}
+
+	static std::vector<string> TextToArray(const string& str);
 
 private:
 	void AddValue(SQLValue* sqlValue)	// #TODO Add safety checks (when ENABLE_SEC_ADVANCED_CHECKS is defined)

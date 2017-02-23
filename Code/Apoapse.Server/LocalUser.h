@@ -25,6 +25,7 @@ public:
 
 	std::shared_ptr<LocalUser> GetShared();
 	ApoapseAddress::UsernameHash GetUsernameHash() const;
+	ApoapseAddress GetFullAddress() const;
 
 	void Send(std::shared_ptr<std::vector<byte>> bytesPtr, TCPConnection* excludedConnection = nullptr);
 	void Send(std::unique_ptr<std::string> strPtr, TCPConnection* excludedConnection = nullptr);
@@ -33,7 +34,7 @@ public:
 
 	//************************************
 	// Method:    LocalUser::Disconnect - Close all the associated connections
-	// Access:    public 
+	// Access:    public
 	// Returns:   void
 	//************************************
 	void Disconnect();
