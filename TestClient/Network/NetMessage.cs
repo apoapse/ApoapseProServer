@@ -24,21 +24,10 @@ public struct NetMessage
 
     public byte[] ContentData { get; private set; }
     public Direction MsgDirection { get; private set; }
-    public bool UseApoapseTransportLayer { get; private set; }
-
-    public NetMessage(byte[] message, Direction direction, bool useApoapseTransportLayer)
+    public NetMessage(byte[] message, Direction direction)
     {
         ContentData = message;
         MsgDirection = direction;
-        UseApoapseTransportLayer = useApoapseTransportLayer;
-    }
-
-
-    public byte[] GenerateHeader()
-    {
-        Debug.Assert(UseApoapseTransportLayer);
-
-        return BitConverter.GetBytes((UInt32)ContentData.Length);
     }
 
     public static byte[] EncodeString(NetMessageEncoding encoding, string data)

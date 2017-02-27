@@ -65,12 +65,7 @@ class TCPClient
         m_lastMessage = netMessage;
         byte[] finalData;
 
-        if (netMessage.UseApoapseTransportLayer)
-        {
-            finalData = CombineByteArrays(netMessage.GenerateHeader(), netMessage.ContentData);
-        }
-        else
-            finalData = netMessage.ContentData;
+        finalData = netMessage.ContentData;
 
         m_socket.BeginSend(finalData, 0, finalData.Length, 0, new AsyncCallback(SendCallback), m_socket);
     }
@@ -82,10 +77,7 @@ class TCPClient
             // Complete sending the data to the remote device.
             int bytesSent = m_socket.EndSend(ar);
 
-            if (m_lastMessage.UseApoapseTransportLayer)
-                Debug.Assert(bytesSent == m_lastMessage.ContentData.Length + NetMessage.HEADER_SIZE_BYTES);
-            else
-                Debug.Assert(bytesSent == m_lastMessage.ContentData.Length);
+            Debug.Assert(bytesSent == m_lastMessage.ContentData.Length);
 
             m_mainwindow.AddNetMessageToUI(m_lastMessage, bytesSent);
         }
@@ -133,13 +125,7 @@ class TCPClient
             NetMessage message;
             byte[] data = state.bytes.ToArray();
 
-            if (m_mainwindow.IsApoapseTransportProtocolUsed())
-            {
-                var contentSize = BitConverter.ToUInt32(data, 0);
-                message = new NetMessage(SubArray(data, 4, (int)contentSize), NetMessage.Direction.received, true);
-            }
-            else
-                message = new NetMessage(data, NetMessage.Direction.received, false);
+            message = new NetMessage(data, NetMessage.Direction.received);
 
             m_mainwindow.AddNetMessageToUI(message, bytesRead);
 

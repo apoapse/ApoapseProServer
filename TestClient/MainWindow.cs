@@ -23,7 +23,6 @@ namespace TestClient
             buttonDisconnect.Visible = false;
             mainList.FullRowSelect = true;
             connectButton.Select();
-
             //UInt32 test = 29626497;
             //byte[] zd = BitConverter.GetBytes(test);
         }
@@ -130,7 +129,7 @@ namespace TestClient
                 encoding = NetMessageEncoding.ASCII;
 
 
-            NetMessage netMessage = new NetMessage(NetMessage.EncodeString(encoding, writeTextBox.Text), NetMessage.Direction.send, useApoapseTransportProtocol.Checked);
+            NetMessage netMessage = new NetMessage(NetMessage.EncodeString(encoding, writeTextBox.Text), NetMessage.Direction.send);
 
             m_tcpClient.Send(netMessage);
             writeTextBox.Text = string.Empty;
@@ -176,14 +175,38 @@ namespace TestClient
             SetReadTextBoxContent();
         }
 
-        public bool IsApoapseTransportProtocolUsed()
-        {
-            return useApoapseTransportProtocol.Checked;
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
             mainList.Items.Clear();
         }
-    }
+
+        private void richConnectButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+				m_tcpClient = new TCPClient(this, ipAddressRich.Text, UInt16.Parse(portRich.Text));
+				m_tcpClient.Send(new NetMessage(NetMessage.EncodeString(NetMessageEncoding.UTF8, "CONNECT\n" + textBoxRichUsername.Text + " " + "TODOpassword" + "\n"), NetMessage.Direction.send));
+
+                buttonSendApoapseMsg.Enabled = true;
+                sendButton.Enabled = true;
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex.Message);
+                return;
+            }
+        }
+
+        private void buttonSendApoapseMsg_Click(object sender, EventArgs e)
+        {
+			var conversationUuid = Uuid.Generate();
+			
+			m_tcpClient.Send(new NetMessage(NetMessage.EncodeString(NetMessageEncoding.UTF8, "CONVERSATION\n" + "{\"uuid\": \"" + conversationUuid + "\", \"correspondents\": [\"" + textBoxRichDestination.Text + "\"]}" + "\n\n"), NetMessage.Direction.send));
+
+			string dateTime = DateTime.UtcNow.ToString("yyyy-MM-ddTHH\\:mm\\:ss") + "Z";
+			var msgContent = NetMessage.EncodeString(NetMessageEncoding.UTF8, apoapseMsgContent.Text);
+
+			m_tcpClient.Send(new NetMessage(NetMessage.EncodeString(NetMessageEncoding.UTF8, "MESSAGE\n" + "{\"uuid\": \"" + Uuid.Generate() + "\", \"from\": \"apoapse.space:" + textBoxRichUsername.Text + "\", \"conversation\": \"" + conversationUuid + "\", \"sent\": \"" + dateTime + "\", \"payload_size\": " + msgContent.Count() + "}" + "\n\n" + apoapseMsgContent.Text), NetMessage.Direction.send));
+		}
+	}
 }
