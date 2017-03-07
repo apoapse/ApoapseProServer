@@ -103,7 +103,7 @@ UNIT_TEST("CommandSystem:Send:ForceJson")
 	command->ParseRawCmdBody();
 
 	TestSend sender;
-	command->Send(sender, Format::JSON);
+	command->Send(sender, nullptr, Format::JSON);
 
 	UnitTest::Assert(sender.sentData == "UNIT_TEST\n{\"test_uint16\":\"9\",\"test_string\":\"teststr\"}\n\n", sender.sentData.c_str());
 } UNIT_TEST_END

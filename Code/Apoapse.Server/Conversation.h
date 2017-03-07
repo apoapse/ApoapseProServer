@@ -24,4 +24,5 @@ public:
 
 private:
 	void SaveToDatabaseInternal() override;
+	std::unique_ptr<Command> PrepareCommandToBeSent() override;
 };

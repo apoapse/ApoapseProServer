@@ -7,20 +7,20 @@ using namespace DateTimeUtils;
 
 class Message final : public ApoapseOperation
 {
-	const std::vector<byte>& m_messageBody;
-	const Conversation m_conversation;
+	std::shared_ptr<std::vector<byte>> m_messageBody;
+	const Conversation& m_conversation;
 	UTCDateTime m_sentTime;
-	const ApoapseAddress m_sender;
+	ApoapseAddress m_sender;
 
 protected:
 	static string databaseTableName;
 	static string databaseOperationName;
 
 public:
-	Message(const Uuid& uuid, const ApoapseAddress& sender, Conversation& conversation, const UTCDateTime& sentTime, const std::vector<byte>& messageBody, OperationDirection dir, ApoapseServer& serverRef);
-	
-	//void Send(const LocalUser& user, GenericConnection& originConnection);
+	Message(const Uuid& uuid, const ApoapseAddress& sender, Conversation& conversation, const UTCDateTime& sentTime, std::shared_ptr<std::vector<byte>> messageBody, OperationDirection dir, ApoapseServer& serverRef);
+	const std::vector<ApoapseAddress>& GetCorrespondents() const;
 
 private:
 	void SaveToDatabaseInternal() override;
+	std::unique_ptr<Command> PrepareCommandToBeSent() override;
 };

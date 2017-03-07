@@ -9,10 +9,10 @@ TCPConnection::TCPConnection(boost::asio::io_service& io_service)
 {
 }
 
-void TCPConnection::Connect(const std::string& adress, const UInt16 port)
+void TCPConnection::Connect(const std::string& ipAddress, const UInt16 port)
 {
 	ASSERT(!IsConnected());
-	auto destination = boostTCP::endpoint(boost::asio::ip::address::from_string(adress), port);
+	auto destination = boostTCP::endpoint(boost::asio::ip::address::from_string(ipAddress), port);
 
 	m_socket.async_connect(destination, boost::bind(&TCPConnection::HandleConnectAsync, shared_from_this(), boost::asio::placeholders::error));
 }

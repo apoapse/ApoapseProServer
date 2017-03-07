@@ -56,7 +56,7 @@ private:
 #define FIELD_VALUE_VALIDATOR(_type, _func)			new FieldValueValidator<_type>(_func)
 #define FIELD_VALUE_CHECK_TYPE(_type)				new FieldValueValidator<_type>([](_type){ return true; })	// WARNING: In the case of integers, FieldValueValidator::ConvertFromStr is only able to know if the value is a number or not without cheking his size or if it is signed or unsigned.
 #define PROCESS_METHOD(_inputType, _method)			[this](_inputType& input) { _method(input); };
-#define PROCESS_METHOD_FROM_USER(_method)			[this](LocalUser& user, ClientConnection& connection) { _method(user, connection); };
+#define PROCESS_METHOD_FROM_USER(_method)			[this](LocalUser& user, ClientConnection& connection) { return _method(user, connection); };
 
 enum class FieldRequirement : UInt8
 {
@@ -83,9 +83,10 @@ struct CommandConfig
 	Format expectedFormat;
 	std::vector<CommandField> fields;
 	std::function<void(ClientConnection&)> processFromClient = { NULL };
-	std::function<void(LocalUser&, ClientConnection&)> processFromUser = { NULL };
+	std::function<bool(LocalUser&, ClientConnection&)> processFromUser = { NULL };
 	std::function<void(RemoteServer&)> processFromRemoteServer = { NULL };
 	bool payloadExpected = { false };
+	bool propagateToUser = { false };
 };
 
 class Command
@@ -119,6 +120,8 @@ public:
 	//************************************
 	void AppendPayloadData(const byte* bytesArray, size_t length);
 
+	void SetPayload(std::shared_ptr<std::vector<byte>> data);
+
 	size_t ActualPayloadSize() const;
 	UInt64 ExpectedPayloadSize();
 
@@ -147,7 +150,7 @@ public:
 	// Parameter: INetworkSender & destination
 	// Parameter: Format forceOutputFormat - 
 	//************************************
-	void Send(INetworkSender& destination, Format forcedOutputFormat = Format::UNDEFINED);
+	void Send(INetworkSender& destination, TCPConnection* excludedConnection = nullptr, Format forcedOutputFormat = Format::UNDEFINED);
 	
 	template <typename T>
 	void InsertFieldValue(const string& path, const T& value)
@@ -193,6 +196,7 @@ public:
 	}
 
 	const std::vector<byte>& GetPayload() const;
+	std::shared_ptr<std::vector<byte>> GetPayloadPtr() const;
 	virtual const CommandConfig& GetConfig() = 0;
 
 private:

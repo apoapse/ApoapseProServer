@@ -62,3 +62,20 @@ bool UsersManager::IsConnected(const ApoapseAddress::UsernameHash& usernameHash)
 {
 	return (m_connectedUsers.count(usernameHash) > 0);
 }
+
+DbId UsersManager::TryGetUser(const ApoapseAddress::UsernameHash& username)
+{
+	SQLQuery query(server.database);
+	query << SELECT << "id" << FROM << "local_users" << WHERE << "username" << EQUALS << username.GetStr();
+	auto result = query.Exec();
+
+	if (result.RowCount() != 1)
+		return 0;
+	else
+		return result[0][0].GetInt64();
+}
+
+ApoapseAddress::ServerDomain UsersManager::GetCurrentServerDomain()
+{
+	return ApoapseAddress::ServerDomain(global->settings->ReadConfigValue_string("server.domain"));
+}

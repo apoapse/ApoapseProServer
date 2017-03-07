@@ -31,6 +31,7 @@ public:
 	void Send(std::unique_ptr<std::string> strPtr, TCPConnection* excludedConnection = nullptr);
 
 	DbId GetDatabaseId() const;
+	size_t GetConnectionsCount() const;
 
 	//************************************
 	// Method:    LocalUser::Disconnect - Close all the associated connections

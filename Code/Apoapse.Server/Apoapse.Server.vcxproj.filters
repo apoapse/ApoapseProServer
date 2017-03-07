@@ -102,6 +102,15 @@
     <ClCompile Include="SQLQuery.cpp">
       <Filter>DataAbstractionLayers</Filter>
     </ClCompile>
+    <ClCompile Include="RemoteServer.cpp">
+      <Filter>Network\Protocol\Connections</Filter>
+    </ClCompile>
+    <ClCompile Include="RemoteServersManager.cpp">
+      <Filter>Network\Protocol\Connections</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdRemoteServerInfo.cpp">
+      <Filter>Network\Protocol\CommandSystem\Commands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -232,6 +241,12 @@
     </ClInclude>
     <ClInclude Include="Message.h">
       <Filter>Network\Protocol\ApoapseSystems</Filter>
+    </ClInclude>
+    <ClInclude Include="RemoteServer.h">
+      <Filter>Network\Protocol\Connections</Filter>
+    </ClInclude>
+    <ClInclude Include="RemoteServersManager.h">
+      <Filter>Network\Protocol\Connections</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

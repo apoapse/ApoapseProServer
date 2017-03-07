@@ -5,6 +5,9 @@
 #include "LocalUser.h"
 #include "Uuid.h"
 #include "GenericConnection.h"
+#include "Command.h"
+#include "RemoteServersManager.h"
+#include "RemoteServer.h"
 
 ApoapseOperation::ApoapseOperation(const Uuid& uuid, const string& name, const string& itemDbTableName, OperationDirection dir, ApoapseServer& serverRef)
 	: m_uuid(uuid),
@@ -20,7 +23,7 @@ OperationDirection ApoapseOperation::GetDirection() const
 	return m_direction;
 }
 
-void ApoapseOperation::SaveToDatabase(const LocalUser& associatedUser, GenericConnection& originConnection)
+void ApoapseOperation::SaveToDatabase(GenericConnection& originConnection)
 {
 	if (IsIemRegistered())
 	{
@@ -45,10 +48,7 @@ void ApoapseOperation::SaveToDatabase(const LocalUser& associatedUser, GenericCo
 	}
 
 	if (m_itemId.get() < 1)
-		throw std::out_of_range("Invalid item database id");
-
-	LogOperation(associatedUser.GetDatabaseId());
-}
+		throw std::out_of_range("Invalid item database id");}
 
 void ApoapseOperation::SetItemDbId(DbId id)
 {
@@ -62,6 +62,61 @@ DbId ApoapseOperation::GetItemDbId() const
 	ASSERT(m_itemId.is_initialized());
 
 	return m_itemId.get();
+}
+
+void ApoapseOperation::Send(const std::vector<ApoapseAddress>& recipients, GenericConnection& originConnection)
+{
+	auto cmd = PrepareCommandToBeSent();
+
+	for (auto& address : recipients)
+	{
+		// Recipient on the current server
+		if (address.GetDomain() == UsersManager::GetCurrentServerDomain())
+		{
+			if (server.GetUsersManager().IsConnected(address.GetUsernameHash()))
+			{
+				// The recipient is currently connected
+				auto user = server.GetUsersManager().GetConnectedUser(address.GetUsernameHash());
+
+				LogOperation(user.GetDatabaseId(), OperationDirection::RECEIVED);
+				cmd->Send(user);
+			}
+			else
+			{
+				// The recipient is not connected
+				if (DbId userDbId = server.GetUsersManager().TryGetUser(address.GetUsernameHash()))
+				{
+					LogOperation(userDbId, OperationDirection::RECEIVED);
+				}
+				else
+				{
+					ApoapseError::SendError(ApoapseErrorCode::RECIPIENT_DOES_NOT_EXIST, address.GetFullAddress(), originConnection);
+					continue;
+				}
+			}
+		}
+		else
+		{
+			// Recipient is on a remote server
+			if (RemoteServer* connectedServer = server.GetRemoteServersManager().TryGetRemoteServer(address.GetDomain()))
+			{
+				// The remote server is connected
+				connectedServer->EnqueCommandToBeSend(std::move(cmd));
+			}
+			else
+			{
+				// A connection to a remote server need to be created
+				std::shared_ptr<RemoteServer> remoteServer = server.GetRemoteServersManager().CreateConnection(server);
+				remoteServer->EnqueCommandToBeSend(std::move(cmd));
+				remoteServer->ConnectToRemoteServer(address.GetDomain());
+			}
+		}
+	}
+}
+
+Uuid ApoapseOperation::GetItemUuid() const
+{
+	return m_uuid;
 }
 
 bool ApoapseOperation::IsIemRegistered()
@@ -91,14 +146,14 @@ const ApoapseOperation::DBInfo ApoapseOperation::GetOperationInfoFromDatabase(Db
 	return output;
 }
 
-void ApoapseOperation::LogOperation(DbId associatedUserId)
+void ApoapseOperation::LogOperation(DbId associatedUserId, OperationDirection direction /*= OperationDirection::SENT*/)
 {
-	ASSERT_MSG(!m_operationId.is_initialized(), "The operation already have a database id which should not be know since we are attempting to save the operation on the database for the first time.");
+	ASSERT_MSG(m_itemId.is_initialized(), "ApoapseOperation::SaveToDatabase might not have been called");
 
-	const string dir = (m_direction == OperationDirection::RECEIVED) ? "R" : "S";
+	string dirStr = (direction == OperationDirection::RECEIVED) ? "R" : "S";
 
 	SQLQuery query(server.database);
-	query << INSERT_INTO << "operations_log (operation, direction, item_id, user_id)" << VALUES << "(" << m_name << "," << dir << "," << m_itemId.get() << "," << associatedUserId << ")";
+	query << INSERT_INTO << "operations_log (operation, direction, item_id, user_id)" << VALUES << "(" << m_name << "," << dirStr << "," << m_itemId.get() << "," << associatedUserId << ")";
 	//query << INSERT_INTO << "operations_log (timestamp, operation, direction, item_id, user_id)" << VALUES << "(" << TIMESTAMP << "," << m_name << "," << dir << "," << m_itemId.get() << "," << associatedUserId << ")";
 	query.ExecAsync();
 

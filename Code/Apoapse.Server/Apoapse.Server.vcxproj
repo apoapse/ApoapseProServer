@@ -161,6 +161,7 @@
     <ClCompile Include="ApoapseServer.cpp" />
     <ClCompile Include="ClientConnection.cpp" />
     <ClCompile Include="CmdConversation.cpp" />
+    <ClCompile Include="CmdRemoteServerInfo.cpp" />
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="CommandsManager.cpp" />
     <ClCompile Include="ConfigVars.cpp" />
@@ -169,6 +170,8 @@
     <ClCompile Include="CmdUnitTest.cpp" />
     <ClCompile Include="Conversation.cpp" />
     <ClCompile Include="Message.cpp" />
+    <ClCompile Include="RemoteServer.cpp" />
+    <ClCompile Include="RemoteServersManager.cpp" />
     <ClCompile Include="SQLQuery.cpp" />
     <ClCompile Include="UsersManager.cpp" />
     <ClCompile Include="GenericConnection.cpp" />
@@ -205,6 +208,8 @@
     <ClInclude Include="ApoapseError.h" />
     <ClInclude Include="INetworkSender.h" />
     <ClInclude Include="Message.h" />
+    <ClInclude Include="RemoteServer.h" />
+    <ClInclude Include="RemoteServersManager.h" />
     <ClInclude Include="SQLQuery.h" />
     <ClInclude Include="SQLPackagedResult.h" />
     <ClInclude Include="SQLValue.h" />

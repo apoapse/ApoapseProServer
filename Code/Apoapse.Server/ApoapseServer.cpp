@@ -8,9 +8,13 @@
 #include "Command.h"
 #include "ClientConnection.h"
 
-ApoapseServer::ApoapseServer(UInt16 port, Database& db) : database(db)
+#include "RemoteServersManager.h"
+#include "RemoteServer.h"
+
+ApoapseServer::ApoapseServer(UInt16 port, UInt16 serversPort, Database& db) : database(db)
 {
 	m_ServerForClients = std::make_unique<TCPServer>(m_IOServiceForClients, port/*, TCPServer::IP_v6*/);
+	m_ServerForRemoteServers = std::make_unique<TCPServer>(m_IOServiceForRemoteServers, serversPort/*, TCPServer::IP_v6*/);
 }
 
 ApoapseServer::~ApoapseServer()
@@ -57,22 +61,37 @@ void ApoapseServer::Start()
 // 	std::vector<byte> dataRes = res[0][0].GetByteArray();
 // 	
 
-	SQLQuery test1(database);
-	test1 << SELECT << "timestamp" << FROM << "operations_log";
-	auto res = test1.Exec();
-	if (res.RowCount() > 0) LOG << res[0][0].GetText();
+// 	SQLQuery test1(database);
+// 	test1 << SELECT << "timestamp" << FROM << "operations_log";
+// 	auto res = test1.Exec();
+// 	if (res.RowCount() > 0) LOG << res[0][0].GetText();
 
 	m_usersManager = std::make_unique<UsersManager>(*this);
+	m_remoteServersManager = std::make_unique<RemoteServersManager>(m_IOServiceForRemoteServers);
 
-	std::thread thread([this]
+	// Clients connections
+	std::thread threadClients([this]
 	{
 		m_ServerForClients->StartAccept<ClientConnection>(std::ref(*this));
 		m_IOServiceForClients.run();
 	});
-	thread.detach();
+	threadClients.detach();
+
+	// Remote servers connections
+	std::thread threadServers([this]
+	{
+		m_ServerForRemoteServers->StartAccept<RemoteServer>(RemoteServer::Direction::REMOTE_CONNECTED_TO_CURRENT_SERVER, std::ref(*this));
+		m_IOServiceForRemoteServers.run();
+	});
+	threadServers.detach();
 }
 
 UsersManager& ApoapseServer::GetUsersManager() const
 {
 	return *m_usersManager;
+}
+
+RemoteServersManager& ApoapseServer::GetRemoteServersManager() const
+{
+	return *m_remoteServersManager;
 }

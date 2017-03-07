@@ -42,7 +42,7 @@ ApoapseAddress::UsernameHash LocalUser::GetUsernameHash() const
 
 ApoapseAddress LocalUser::GetFullAddress() const
 {
-	return ApoapseAddress(ApoapseAddress::ServerDomain(global->settings->ReadConfigValue_string("server.domain")), GetUsernameHash());
+	return ApoapseAddress(UsersManager::GetCurrentServerDomain(), GetUsernameHash());
 }
 
 void LocalUser::Send(std::shared_ptr<std::vector<byte>> bytesPtr, TCPConnection* excludedConnection/* = nullptr*/)
@@ -70,6 +70,11 @@ void LocalUser::Send(std::unique_ptr<std::string> strPtr, TCPConnection* exclude
 DbId LocalUser::GetDatabaseId() const
 {
 	return m_id;
+}
+
+size_t LocalUser::GetConnectionsCount() const
+{
+	return m_connections.size();
 }
 
 void LocalUser::Disconnect()

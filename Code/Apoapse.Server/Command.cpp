@@ -89,6 +89,11 @@ void Command::AppendPayloadData(const byte* bytesArray, size_t length)
 	m_payload->insert(m_payload->end(), &bytesArray[0], &bytesArray[length]);
 }
 
+void Command::SetPayload(std::shared_ptr<std::vector<byte>> data)
+{
+	m_payload = data;
+}
+
 void Command::AutoValidateInternal()
 {
 	if (!IsValid())
@@ -229,12 +234,14 @@ void Command::ProcessFromNetwork(ClientConnection* connection)
 
 void Command::ProcessFromNetwork(LocalUser* user, ClientConnection& callingConnection)
 {
+	bool success;
+
 #ifdef DEBUG
-	GetConfig().processFromUser(*user, callingConnection);
+	success = GetConfig().processFromUser(*user, callingConnection);
 #else
 	try
 	{
-		GetConfig().processFromUser(*user, callingConnection);
+		success = GetConfig().processFromUser(*user, callingConnection);
 	}
 	catch (const std::exception& e)
 	{
@@ -247,6 +254,10 @@ void Command::ProcessFromNetwork(LocalUser* user, ClientConnection& callingConne
 		}
 	}
 #endif
+
+	// Propagate the command to the others connections of the user
+	if (success && GetConfig().propagateToUser && user->GetConnectionsCount() > 1)
+		Send(*user, &callingConnection);
 }
 
 void Command::ProcessFromNetwork(RemoteServer* remoteServer)
@@ -254,16 +265,19 @@ void Command::ProcessFromNetwork(RemoteServer* remoteServer)
 	if (remoteServer == nullptr)
 		return;
 
-	throw std::logic_error("TODO IMPLEMENT");
-// 	try
-// 	{
-// 		GetConfig().processFromRemoteServer(*remoteServer);
-// 	}
-// 	catch (const std::exception& e)
-// 	{
-// 	LOG << e.what() << LogSeverity::error;
-// 		ApoapseError::SendError(ApoapseErrorCode::INTERNAL_SERVER_ERROR, *remoteServer);
-// 	}
+#ifdef DEBUG
+	GetConfig().processFromRemoteServer(*remoteServer);
+#else
+	try
+	{
+		GetConfig().processFromRemoteServer(*remoteServer);
+	}
+	catch (const std::exception& e)
+	{
+	LOG << e.what() << LogSeverity::error;
+		ApoapseError::SendError(ApoapseErrorCode::INTERNAL_SERVER_ERROR, *remoteServer);
+	}
+#endif
 }
 
 bool Command::CanProcessFrom(ClientConnection*)
@@ -281,16 +295,23 @@ bool Command::CanProcessFrom(RemoteServer*)
 	return GetConfig().processFromRemoteServer != NULL;
 }
 
-void Command::Send(INetworkSender& destination, Format forcedOutputFormat/* = Format::UNDEFINED*/)
+void Command::Send(INetworkSender& destination, TCPConnection* excludedConnection /*= nullptr*/, Format forcedOutputFormat /*= Format::UNDEFINED*/)
 {
+	bool sendPayload = false;
+	const Format outputFormat = (forcedOutputFormat == Format::UNDEFINED) ? GetConfig().expectedFormat : forcedOutputFormat;
+	ASSERT_MSG(!(GetConfig().payloadExpected && outputFormat == Format::INLINE), "Cannot use an inline format on command with a payload");
+
+	if (GetConfig().payloadExpected && ActualPayloadSize() > 0)
+	{
+		InsertFieldValue<UInt64>("payload_size", (UInt64)ActualPayloadSize());
+		sendPayload = true;
+	}
+
 	// In debug and security builds, we check if the system inputs are valid
 #if DEBUG || ENABLE_SEC_ADVANCED_CHECKS
 	AutoValidateInternal();
 	ASSERT(IsValid());
 #endif
-
-	const Format outputFormat = (forcedOutputFormat == Format::UNDEFINED) ? GetConfig().expectedFormat : forcedOutputFormat;
-	ASSERT_MSG(!(GetConfig().payloadExpected && outputFormat == Format::INLINE), "Cannot use an inline format on command with a payload");
 
 	std::stringstream outputStream;
 	outputStream << GetConfig().name << '\n';
@@ -320,13 +341,18 @@ void Command::Send(INetworkSender& destination, Format forcedOutputFormat/* = Fo
 		outputStream << '\n';
 	}
 
-	destination.Send(std::make_unique<string>(outputStream.str()));	// Send command body
+	destination.Send(std::make_unique<string>(outputStream.str()), excludedConnection);	// Send command body
 
-	if (outputFormat == Format::JSON && ActualPayloadSize() > 0)
-		destination.Send(m_payload);	// Send payload
+	if (sendPayload)
+		destination.Send(m_payload, excludedConnection);	// Send the payload
 }
 
 const std::vector<byte>& Command::GetPayload() const
 {
 	return *m_payload;
+}
+
+std::shared_ptr<std::vector<byte>> Command::GetPayloadPtr() const
+{
+	return m_payload;
 }

@@ -54,16 +54,16 @@ private:
 	void HandleWriteAsync(const boost::system::error_code& error, size_t bytesTransferred);
 
 protected:
-	template <typename T>
-	void ReadUntil(boost::asio::streambuf& streambuf, T delimiter, const std::function<void(size_t)>& externalHandler)
+	template <typename T, typename FUNC>	// FUNC = std::function<void(size_t)>
+	void ReadUntil(boost::asio::streambuf& streambuf, T delimiter, FUNC&& externalHandler)
 	{
 		auto handler = boost::bind(&TCPConnection::HandleReadInternal, shared_from_this(), externalHandler, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred);
 
 		boost::asio::async_read_until(GetSocket(), streambuf, delimiter, handler);
 	}
 
-	template <typename T>
-	void ReadSome(T& buffer, const std::function<void(size_t)>& externalHandler)
+	template <typename T, typename FUNC>	// FUNC = std::function<void(size_t)>
+	void ReadSome(T& buffer, FUNC&& externalHandler)
 	{
 		auto handler = boost::bind(&TCPConnection::HandleReadInternal, shared_from_this(), externalHandler, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred);
 

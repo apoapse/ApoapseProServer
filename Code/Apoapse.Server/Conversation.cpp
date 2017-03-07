@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Conversation.h"
 #include "Common.h"
+#include "CommandsManager.h"
 
 string Conversation::databaseTableName = "conversations";
 string Conversation::databaseOperationName = "CONVERSATION";
@@ -49,4 +50,12 @@ Conversation Conversation::Create(const Uuid& uuid, ApoapseServer& server)
 const std::vector<ApoapseAddress>& Conversation::GetCorrespondents() const
 {
 	return m_correspondents;
+}
+
+std::unique_ptr<Command> Conversation::PrepareCommandToBeSent()
+{
+	std::unique_ptr<Command> cmd = CommandsManager::GetInstance().CreateCommand("CONVERSATION");
+	//TODO
+
+	return cmd;
 }

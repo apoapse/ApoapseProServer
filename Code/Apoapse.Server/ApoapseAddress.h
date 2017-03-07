@@ -82,6 +82,11 @@ public:
 			m_data = domain;
 		}
 
+		bool operator<(const ApoapseAddress::ServerDomain& domain) const	// Comparaison operator for std::map
+		{
+			return (domain.GetStr() > m_data);
+		}
+
 		string GetStr() const
 		{
 			return m_data;

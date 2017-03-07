@@ -51,6 +51,9 @@ bool ApoapseAddress::IsValid() const
 
 string ApoapseAddress::GetFullAddress() const
 {
+	if (m_fullAddress.size() == 0)	// a string representation does not exist
+		return GetDomain().GetStr() + ":" + GetUsernameHash().GetStr();
+
 	return m_fullAddress;
 }
 

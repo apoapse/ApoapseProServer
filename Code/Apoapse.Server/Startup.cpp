@@ -48,7 +48,7 @@ void ApoapseServerStartup::Start(std::vector<std::string>& params)
 	}
 
 	// Apoapse Server
-	/*new*/ ApoapseServer apoapseServer((UInt16)global->settings->ReadConfigValue_uint("server.port"), *database.get());
+	/*new*/ ApoapseServer apoapseServer((UInt16)global->settings->ReadConfigValue_uint("server.clients_port"), (UInt16)global->settings->ReadConfigValue_uint("server.servers_port"), *database.get());
 	apoapseServer.Start();
 	
 	string s;

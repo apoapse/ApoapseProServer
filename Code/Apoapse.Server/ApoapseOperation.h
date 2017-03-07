@@ -2,11 +2,14 @@
 #include <boost/optional.hpp>
 #include "Uuid.h"
 #include "ApoapseServer.h"
+#include "ApoapseAddress.h"
 class LocalUser;
 class GenericConnection;
+class Command;
 
 enum class OperationDirection : UInt8
 {
+	UNDEFINDED,
 	SENT,
 	RECEIVED
 };
@@ -19,7 +22,7 @@ class ApoapseOperation
 	const string m_name;
 
 protected:
-	const ApoapseServer& server;
+	ApoapseServer& server;
 	const string& m_itemDBTableName;
 	const Uuid m_uuid;
 
@@ -35,10 +38,13 @@ public:
 	ApoapseOperation(const Uuid& uuid, const string& name, const string& itemDbTableName, OperationDirection dir, ApoapseServer& serverRef);
 	OperationDirection GetDirection() const;
 
-	void SaveToDatabase(const LocalUser& associatedUser, GenericConnection& originConnection);
+	void SaveToDatabase(GenericConnection& originConnection);
+	void LogOperation(DbId associatedUserId, OperationDirection direction = OperationDirection::SENT);
 	void SetItemDbId(DbId id);
 	DbId GetItemDbId() const;
-	//void SaveToDatabase(const std::vector<LocalUser&> associatedUsers, GenericConnection& originConnection);
+	void Send(const std::vector<ApoapseAddress>& recipients, GenericConnection& originConnection);
+
+	Uuid GetItemUuid() const;
 
 	static const DBInfo GetOperationInfoFromDatabase(DbId itemId, const string& operationName, ApoapseServer& server);
 
@@ -51,8 +57,8 @@ protected:
 	bool IsIemRegistered();
 
 	virtual void SaveToDatabaseInternal() = 0;
+	virtual std::unique_ptr<Command> PrepareCommandToBeSent() = 0;
 
 private:
-	void LogOperation(DbId associatedUserId);
-
+	
 };
