@@ -12,7 +12,8 @@ RemoteServer::RemoteServer(boost::asio::io_service& io_service, Direction direct
 
 RemoteServer::~RemoteServer()
 {
-	server.GetRemoteServersManager().RemoveConnectedServer(this);
+	if (IsAuthenticated())
+		server.GetRemoteServersManager().RemoveConnectedServer(this);
 
 	if (!m_commandsTobeSent.empty())
 	{

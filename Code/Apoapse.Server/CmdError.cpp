@@ -2,6 +2,7 @@
 #include "Common.h"
 #include "CommandsManager.h"
 #include "ApoapseError.h"
+#include "RemoteServer.h"
 
 class Error final : public Command
 {
@@ -10,6 +11,8 @@ public:
 	{
 		static auto config = CommandConfig();
 		config.name = "ERROR";
+		//config.processFromUser = PROCESS_METHOD_FROM_USER(Error::FromInternal);
+		config.processFromRemoteServer = PROCESS_METHOD(RemoteServer, Error::FromExternal);
 		config.expectedFormat = Format::INLINE;
 		config.fields =
 		{
@@ -23,6 +26,19 @@ public:
 	bool PostValidate() const override
 	{
 		return true;
+	}
+
+private:
+// 	bool FromInternal(LocalUser& user, ClientConnection& originConnection)
+// 	{
+// 		return true;
+// 	}
+
+	void FromExternal(RemoteServer& remoteServer)
+	{
+		LOG << "Received error " << ReadFieldValue<string>("error_code").get() << " from remote server " << remoteServer.GetServerDomain().GetStr() << LogSeverity::warning;
+
+		// #TODO 
 	}
 };
 
