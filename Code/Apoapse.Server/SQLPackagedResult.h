@@ -1,4 +1,5 @@
 #pragma once
+#include "Types.h"
 #include "Apoapse.Server/SQLValue.h"
 #include "Apoapse.Server/Diagnostics.h"
 #include <vector>

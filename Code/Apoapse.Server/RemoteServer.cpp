@@ -33,7 +33,10 @@ void RemoteServer::ConnectToRemoteServer(const ApoapseAddress::ServerDomain& dom
 
 bool RemoteServer::CheckCommandNetworkInputCompatibility(Command& command)
 {
-	return command.CanProcessFrom(this);
+	if (IsAuthenticated() || command.GetConfig().name == "SERVER_INFO")	// If not authenticated, only allows the SERVER_INFO command
+		return command.CanProcessFrom(this);
+	else
+		return false;
 }
 
 void RemoteServer::ProcessCommandFromNetwork(Command& command)

@@ -61,10 +61,10 @@ void ApoapseServer::Start()
 // 	std::vector<byte> dataRes = res[0][0].GetByteArray();
 // 	
 
-// 	SQLQuery test1(database);
-// 	test1 << SELECT << "timestamp" << FROM << "operations_log";
-// 	auto res = test1.Exec();
-// 	if (res.RowCount() > 0) LOG << res[0][0].GetText();
+	SQLQuery test1(database);
+	test1 << SELECT << "timestamp" << FROM << "operations_log" << ORDER_BY << "id" << DESC;
+	auto res = test1.Exec();
+	if (res.RowCount() > 0) LOG << res[0][0].GetInt64();
 
 	m_usersManager = std::make_unique<UsersManager>(*this);
 	m_remoteServersManager = std::make_unique<RemoteServersManager>(m_IOServiceForRemoteServers);

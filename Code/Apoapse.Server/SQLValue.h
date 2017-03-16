@@ -63,7 +63,7 @@ public:
 			throw std::bad_typeid();
 	}
 
-	int GetInt64() const
+	Int64 GetInt64() const
 	{
 		if (GetType() == ValueType::INT_64)
 			return boost::get<Int64>(m_data);
