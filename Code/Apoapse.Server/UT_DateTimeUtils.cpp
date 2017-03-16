@@ -47,4 +47,9 @@ UNIT_TEST("DateTimeUtils:UTCDateTime:CompareMore")
 	UnitTest::Assert(t2 > t1);
 } UNIT_TEST_END
 
+UNIT_TEST("DateTimeUtils:UnixTimestampNow")
+{
+	UnitTest::Assert(UnixTimestampNow() > 1);	// #TODO write a better test
+} UNIT_TEST_END
+
 #endif	// UNIT_TESTS

@@ -8,6 +8,7 @@
 #include "Command.h"
 #include "RemoteServersManager.h"
 #include "RemoteServer.h"
+#include "DateTimeUtils.h"
 
 ApoapseOperation::ApoapseOperation(const Uuid& uuid, const string& name, const string& itemDbTableName, OperationDirection dir, ApoapseServer& serverRef)
 	: m_uuid(uuid),
@@ -139,7 +140,7 @@ const ApoapseOperation::DBInfo ApoapseOperation::GetOperationInfoFromDatabase(Db
 
 	DBInfo output;
 	output.operationId = res[0][0].GetInt64();
-	output.timestamp = res[0][1].GetText();
+	output.timestamp = res[0][1].GetInt64();
 	output.direction = (res[0][2].GetText() == "R") ? OperationDirection::RECEIVED : OperationDirection::SENT;
 	output.associatedUserId = res[0][3].GetInt64();
 
@@ -153,8 +154,7 @@ void ApoapseOperation::LogOperation(DbId associatedUserId, OperationDirection di
 	string dirStr = (direction == OperationDirection::RECEIVED) ? "R" : "S";
 
 	SQLQuery query(server.database);
-	query << INSERT_INTO << "operations_log (operation, direction, item_id, user_id)" << VALUES << "(" << m_name << "," << dirStr << "," << m_itemId.get() << "," << associatedUserId << ")";
-	//query << INSERT_INTO << "operations_log (timestamp, operation, direction, item_id, user_id)" << VALUES << "(" << TIMESTAMP << "," << m_name << "," << dir << "," << m_itemId.get() << "," << associatedUserId << ")";
+	query << INSERT_INTO << "operations_log (timestamp, operation, direction, item_id, user_id)" << VALUES << "(" << DateTimeUtils::UnixTimestampNow() << "," << m_name << "," << dirStr << "," << m_itemId.get() << "," << associatedUserId << ")";
 	query.ExecAsync();
 
 	LOG << "Logged new operation on the database for item " << m_name << ":" << m_uuid << " DbId: " << m_itemId.get() << LogSeverity::verbose;

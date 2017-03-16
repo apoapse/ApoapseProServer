@@ -1,6 +1,7 @@
 #pragma once
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <regex>
+#include <chrono>
 
 namespace DateTimeUtils
 {
@@ -49,4 +50,8 @@ namespace DateTimeUtils
 		}
 	};
 
+	inline Int64 UnixTimestampNow()
+	{
+		return static_cast<Int64>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
+	}
 }
