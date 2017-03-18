@@ -6,11 +6,10 @@ class Conversation final : public ApoapseOperation
 {
 	const std::vector<ApoapseAddress> m_correspondents;
 
-protected:
+public:
 	static string databaseTableName;
 	static string databaseOperationName;
 
-public:
 	Conversation(const Uuid& uuid, std::vector<ApoapseAddress>& correspondents, OperationDirection dir, ApoapseServer& serverRef);
 
 	const std::vector<ApoapseAddress>& GetCorrespondents() const;
@@ -20,9 +19,11 @@ public:
 // 	static Conversation Create(const Command& command, Dirrection dir, /*Int64 userId*/);
 // 	static Conversation Create(Int64 idOnDatabase);
 
-	static Conversation Create(const Uuid& uuid, ApoapseServer& server);
+	static std::shared_ptr<Conversation> Create(const Uuid& uuid, ApoapseServer& server);
+	static std::shared_ptr<Conversation> Create(Int64 idOnDatabase, ApoapseServer& server, OperationDirection dir = OperationDirection::UNDEFINDED);
+
+	std::unique_ptr<Command> PrepareCommandToBeSent() override;
 
 private:
 	void SaveToDatabaseInternal() override;
-	std::unique_ptr<Command> PrepareCommandToBeSent() override;
 };

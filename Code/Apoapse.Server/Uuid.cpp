@@ -12,7 +12,7 @@ Uuid::Uuid(const string& uuidStr) : m_uuidStr(uuidStr)
 	SECURITY_ASSERT(IsValid(uuidStr));
 }
 
-string Uuid::GetStr() const
+string Uuid::ToStr() const
 {
 	return m_uuidStr;
 }

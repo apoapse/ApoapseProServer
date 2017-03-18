@@ -23,7 +23,7 @@ public:
 		return config;
 	}
 
-	bool PostValidate() const override
+	bool PostValidate() override
 	{
 		return true;
 	}

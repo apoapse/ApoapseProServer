@@ -83,4 +83,15 @@ public:
 	{
 		return (m_rows.is_initialized()) ? m_rows->size() : 0;
 	}
+
+	// For range based loop
+	std::vector<SQLRow>::const_iterator begin() const
+	{
+		return m_rows.get().begin();
+	}
+
+	std::vector<SQLRow>::const_iterator end() const
+	{
+		return m_rows.get().end();
+	}
 };

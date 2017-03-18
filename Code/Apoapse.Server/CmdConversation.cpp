@@ -29,7 +29,7 @@ public:
 		return config;
 	}
 
-	bool PostValidate() const override
+	bool PostValidate() override
 	{
 		return true;
 	}
@@ -62,9 +62,11 @@ private:
 		}
 		else if (correspondentCount > Conversation::GetMaxAllowedCorespondants())
 		{
-			ApoapseError::SendError(ApoapseErrorCode::MAX_CONVERSATION_CORESPONDANTS_EXCEEDED, uuid.GetStr(), originConnection);
+			ApoapseError::SendError(ApoapseErrorCode::MAX_CONVERSATION_CORESPONDANTS_EXCEEDED, uuid.ToStr(), originConnection);
 			return false;
 		}
+
+		// #TODO Check if there are users on the local server in the correspondents list which does not exist
 
 		Conversation conversation(uuid, m_correspondents, OperationDirection::RECEIVED, originConnection.server);
 		conversation.Send(m_correspondents, originConnection);

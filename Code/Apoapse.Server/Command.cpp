@@ -43,7 +43,7 @@ void Command::ParseRawCmdBody()
 		}
 
 		{
-			string u16CmdText = commandInfoRawBody;	// #TODO #IMPORTANT Convert to UTF-16?
+			string u16CmdText = commandInfoRawBody;
 			std::vector<string> tempValues;
 
 			StringExtensions::split(u16CmdText, tempValues, string(" "));

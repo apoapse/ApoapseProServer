@@ -28,8 +28,8 @@ void ApoapseOperation::SaveToDatabase(GenericConnection& originConnection)
 {
 	if (IsIemRegistered())
 	{
-		LOG << "The item uuid is already registered in the database table " << m_itemDBTableName << " (" << m_uuid.GetStr() << ")" << LogSeverity::warning;
-		ApoapseError::SendError(ApoapseErrorCode::ITEM_UUID_ALREADY_REGISTERED, m_uuid.GetStr(), originConnection);
+		LOG << "The item uuid is already registered in the database table " << m_itemDBTableName << " (" << m_uuid.ToStr() << ")" << LogSeverity::warning;
+		ApoapseError::SendError(ApoapseErrorCode::ITEM_UUID_ALREADY_REGISTERED, m_uuid.ToStr(), originConnection);
 
 		return;
 	}
@@ -39,7 +39,7 @@ void ApoapseOperation::SaveToDatabase(GenericConnection& originConnection)
 	{
 		// Get the id of the newly created database entry for the saved item
 		SQLQuery queryId(server.database);
-		queryId << SELECT << "id" << FROM << STR_TO_QUERY_SYNTAX(m_itemDBTableName) << " " << WHERE << "uuid" << EQUALS << m_uuid.GetStr();
+		queryId << SELECT << "id" << FROM << STR_TO_QUERY_SYNTAX(m_itemDBTableName) << " " << WHERE << "uuid" << EQUALS << m_uuid.ToStr();
 		auto res = queryId.Exec();
 
 		if (res.RowCount() != 1)
@@ -123,7 +123,7 @@ Uuid ApoapseOperation::GetItemUuid() const
 bool ApoapseOperation::IsIemRegistered()
 {
 	SQLQuery query(server.database);
-	query << SELECT << "uuid" << FROM << STR_TO_QUERY_SYNTAX(m_itemDBTableName) << WHERE << "uuid" EQUALS << m_uuid.GetStr();
+	query << SELECT << "uuid" << FROM << STR_TO_QUERY_SYNTAX(m_itemDBTableName) << WHERE << "uuid" EQUALS << m_uuid.ToStr();
 	auto res = query.Exec();
 
 	return (res.RowCount() == 1);
@@ -136,15 +136,22 @@ const ApoapseOperation::DBInfo ApoapseOperation::GetOperationInfoFromDatabase(Db
 	auto res = query.Exec();
 
 	if (res.RowCount() == 0)
-		throw std::out_of_range("The requested item id does not exist on the database");
+		throw std::out_of_range("The requested item id does not exist in the database");
 
 	DBInfo output;
 	output.operationId = res[0][0].GetInt64();
 	output.timestamp = res[0][1].GetInt64();
-	output.direction = (res[0][2].GetText() == "R") ? OperationDirection::RECEIVED : OperationDirection::SENT;
+	output.direction = ReadDirectionFromDatabase(res[0][2].GetText());
 	output.associatedUserId = res[0][3].GetInt64();
 
 	return output;
+}
+
+OperationDirection ApoapseOperation::ReadDirectionFromDatabase(const string& rawDbDirectionText)
+{
+	ASSERT(rawDbDirectionText == "R" || rawDbDirectionText == "S");
+
+	return (rawDbDirectionText == "R") ? OperationDirection::RECEIVED : OperationDirection::SENT;
 }
 
 void ApoapseOperation::LogOperation(DbId associatedUserId, OperationDirection direction /*= OperationDirection::SENT*/)

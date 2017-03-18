@@ -33,7 +33,7 @@ public:
 		return config;
 	}
 
-	bool PostValidate() const override
+	bool PostValidate() override
 	{
 		return true;
 	}
@@ -63,7 +63,7 @@ private:
 
 		try
 		{
-			Conversation conv = Conversation::Create(conversationUuid, originConnection.server);
+			auto conv = Conversation::Create(conversationUuid, originConnection.server);
 
 			Message message(uuid, sender, conv, sentTime, GetPayloadPtr(), OperationDirection::SENT, originConnection.server);
 			message.Send(message.GetCorrespondents(), originConnection);

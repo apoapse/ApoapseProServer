@@ -6,14 +6,14 @@ class Uuid
 
 public:
 	Uuid(const string& uuidStr);
-	string GetStr() const;
+	string ToStr() const;
 
 	static string Generate();
 	static bool IsValid(const string& uuidStr);
 
 	friend std::ostream& operator<<(std::ostream& stream, const Uuid& obj)
 	{
-		stream << obj.GetStr();
+		stream << obj.ToStr();
 		return stream;
 	}
 };

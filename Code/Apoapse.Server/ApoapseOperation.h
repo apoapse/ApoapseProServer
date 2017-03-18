@@ -30,7 +30,7 @@ public:
 	struct DBInfo
 	{
 		DbId operationId;
-		string timestamp;	// #TODO Put timestamp into a Datetime type
+		Int64 timestamp;
 		OperationDirection direction;
 		DbId associatedUserId;
 	};
@@ -47,6 +47,9 @@ public:
 	Uuid GetItemUuid() const;
 
 	static const DBInfo GetOperationInfoFromDatabase(DbId itemId, const string& operationName, ApoapseServer& server);
+	static OperationDirection ReadDirectionFromDatabase(const string& rawDbDirectionText);
+
+	virtual std::unique_ptr<Command> PrepareCommandToBeSent() = 0;
 
 protected:
 	//************************************
@@ -57,8 +60,4 @@ protected:
 	bool IsIemRegistered();
 
 	virtual void SaveToDatabaseInternal() = 0;
-	virtual std::unique_ptr<Command> PrepareCommandToBeSent() = 0;
-
-private:
-	
 };

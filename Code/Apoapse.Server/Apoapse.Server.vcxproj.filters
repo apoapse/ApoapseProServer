@@ -111,6 +111,9 @@
     <ClCompile Include="CmdRemoteServerInfo.cpp">
       <Filter>Network\Protocol\CommandSystem\Commands</Filter>
     </ClCompile>
+    <ClCompile Include="CmdSyncRequest.cpp">
+      <Filter>Network\Protocol\CommandSystem\Commands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />

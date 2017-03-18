@@ -216,5 +216,5 @@ protected:
 	// Access:    public 
 	// Returns:   bool
 	//************************************
-	virtual bool PostValidate() const = 0;
+	virtual bool PostValidate() = 0;
 };

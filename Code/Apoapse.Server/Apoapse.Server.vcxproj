@@ -162,6 +162,7 @@
     <ClCompile Include="ClientConnection.cpp" />
     <ClCompile Include="CmdConversation.cpp" />
     <ClCompile Include="CmdRemoteServerInfo.cpp" />
+    <ClCompile Include="CmdSyncRequest.cpp" />
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="CommandsManager.cpp" />
     <ClCompile Include="ConfigVars.cpp" />

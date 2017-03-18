@@ -157,7 +157,9 @@ void GenericConnection::ReadCommandFirstChar(Command& command)
 void GenericConnection::ListenForCommandBody(size_t bytesTransferred)
 {
 	auto& command = m_commands.front();
-	const size_t bufferDataSize = (bytesTransferred == 0) ? m_readStreamBuffer.size() : bytesTransferred;
+	const size_t realBufferSize = m_readStreamBuffer.size();
+	const size_t bufferDataSize = (bytesTransferred > realBufferSize || bytesTransferred == 0) ? realBufferSize : bytesTransferred;
+	
 	const Format commandRealFormat = command->GetInputRealFormat();
 
 	if (bufferDataSize > 0)
