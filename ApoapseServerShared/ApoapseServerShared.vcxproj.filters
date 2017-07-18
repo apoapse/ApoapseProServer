@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="ServerEntryPoint.cpp" />
+    <ClCompile Include="ServerSettings.cpp">
+      <Filter>Settings</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerSettingsVariables.cpp">
+      <Filter>Settings</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ServerEntryPoint.h" />
+    <ClInclude Include="ServerSettings.h">
+      <Filter>Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerSettingsVariables.h">
+      <Filter>Settings</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Settings">
+      <UniqueIdentifier>{57549d65-a2f9-4c03-b19e-6e8358f6186c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
