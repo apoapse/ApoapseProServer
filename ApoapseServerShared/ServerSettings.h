@@ -1,5 +1,4 @@
 #pragma once
-#include "ISettings.hpp"
 #include "ServerSettingsVariables.h"
 #include <typeindex>
 #include <map>
@@ -8,8 +7,7 @@
 #include <boost/optional.hpp>
 #include "Common.h"
 
-
-class ServerSettings : public ISettings
+class ServerSettings
 {
 	friend ServerSettingsVars;
 
@@ -45,7 +43,7 @@ public:
 	ServerSettingsVars vars;
 	ServerSettings();
 
-	void Load(const std::string& configFile) override;
+	void Load(const std::string& configFile);
 
 private:
 	//void Set

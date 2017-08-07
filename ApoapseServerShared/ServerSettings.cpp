@@ -2,9 +2,7 @@
 #include "ServerSettings.h"
 #include "Common.h"
 
-
 #include <boost/property_tree/ini_parser.hpp>
-
 
 ServerSettings::ServerSettings() : vars(ServerSettingsVars())
 {
@@ -25,6 +23,7 @@ void ServerSettings::Load(const std::string& configFile)
 	catch (const std::exception&)
 	{
 		LOG << LogSeverity::error << "Unable to load or parse the config file " << configFile << ". The default values will the used instead.";
+		return;
 	}
 
 	// Set the variable to their values defined in the ini config file
@@ -32,4 +31,6 @@ void ServerSettings::Load(const std::string& configFile)
 	{
 		registeredVar.second->SetParsedValue(propertyTree, registeredVar.first);
 	}
+
+	LOG << "Loaded settings from " << configFile;
 }

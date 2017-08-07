@@ -9,6 +9,12 @@
     <ClCompile Include="ServerSettingsVariables.cpp">
       <Filter>Settings</Filter>
     </ClCompile>
+    <ClCompile Include="ApoapseServer.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerConnection.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ServerEntryPoint.h" />
@@ -18,10 +24,19 @@
     <ClInclude Include="ServerSettingsVariables.h">
       <Filter>Settings</Filter>
     </ClInclude>
+    <ClInclude Include="ApoapseServer.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerConnection.h">
+      <Filter>Network</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Settings">
       <UniqueIdentifier>{57549d65-a2f9-4c03-b19e-6e8358f6186c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network">
+      <UniqueIdentifier>{c5f0ae96-76f3-454b-bdf7-28a474a9dd30}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

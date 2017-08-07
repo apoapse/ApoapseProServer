@@ -3,8 +3,8 @@
 
 #include "Logger.h"
 #include "Common.h"
-#include <iostream>
 #include "ServerSettings.h"
+#include "ApoapseServer.h"
 
 #ifdef UNIT_TESTS
 #include "UnitTestsManager.h"
@@ -12,6 +12,7 @@
 
 int ServerMain(const std::vector<std::string>& launchArgs)
 {
+	// Starting global
 	ASSERT(global == nullptr);
 	global = Global::CreateGlobal();
 
@@ -21,7 +22,6 @@ int ServerMain(const std::vector<std::string>& launchArgs)
 	global->settings = new ServerSettings();
 	global->settings->Load("ServerConfig.ini");
 
-	LOG << "server_port: " << global->settings->vars.server_port;
 
 #ifdef UNIT_TESTS
 	if (std::find(launchArgs.begin(), launchArgs.end(), "-run_unit_tests") != launchArgs.end())
@@ -31,6 +31,15 @@ int ServerMain(const std::vector<std::string>& launchArgs)
 	}
 #endif // UNIT_TESTS
 
+	// Starting Apoapse server
+	ApoapseServer server{};
+	server.StartMainServer(global->settings->vars.server_port);
+
+	// Make sure the console do not stop right away
+	std::string inputstr;
+	getline(std::cin, inputstr);
+
+	// Cleanup
 	delete global->settings;
 	return 0;
 }
