@@ -2,6 +2,7 @@
 #include "ServerConnection.h"
 #include "Common.h"
 #include "ApoapseServer.h"
+#include "SecurityAlert.h"
 
 ServerConnection::ServerConnection(boost::asio::io_service& ioService, ApoapseServer* server)
 	: GenericConnection(ioService)
@@ -12,7 +13,33 @@ ServerConnection::ServerConnection(boost::asio::io_service& ioService, ApoapseSe
 
 ServerConnection::~ServerConnection()
 {
+	if (IsAuthenticated())
+	{
+		m_relatedUser.value()->RemoveConnection(this);
+	}
+}
 
+bool ServerConnection::IsAuthenticated() const
+{
+	return m_relatedUser.has_value();
+}
+
+void ServerConnection::Authenticate(const User::Address& address)
+{
+	ASSERT(!m_relatedUser.has_value());
+
+	if (m_server->usersManager->IsUserConnected(address))
+	{
+		// User already connected
+		m_relatedUser = m_server->usersManager->GetUserByAddress(address).lock()->GetObjectShared();
+		m_relatedUser.value()->AddConnection(this);
+	}
+	else
+	{
+		// New user
+		m_relatedUser = std::make_shared<User>(address, this, m_server);
+		m_server->usersManager->AddConnectedUser(m_relatedUser->get());
+	}
 }
 
 bool ServerConnection::OnConnectedToServer()
@@ -20,7 +47,26 @@ bool ServerConnection::OnConnectedToServer()
 	return true;
 }
 
-void ServerConnection::OnReceivedPayload(std::shared_ptr<NetworkPayload> payload)
+void ServerConnection::OnReceivedCommand(std::unique_ptr<Command> cmd)
 {
+	LOG_DEBUG << "Received command " << static_cast<UInt16>(cmd->GetInfo().command);
 
+	const bool authenticated = IsAuthenticated();
+
+	if (cmd->GetInfo().requireAuthentication && authenticated)
+	{
+		cmd->Process(*m_relatedUser.value(), *this);
+	}
+	else if (cmd->GetInfo().onlyNonAuthenticated && !authenticated)
+	{
+		cmd->Process(*this);
+	}
+	else if (!cmd->GetInfo().requireAuthentication && !authenticated)
+	{
+		cmd->Process(*this);
+	}
+	else
+	{
+		SecurityLog::LogAlert(ApoapseErrorCode::cannot_processs_cmd_from_this_connection_type, *this);
+	}
 }

@@ -5,6 +5,8 @@
 #include "Common.h"
 #include "ServerSettings.h"
 #include "ApoapseServer.h"
+#include "Database.hpp"
+#include "LibraryLoader.hpp"
 
 #ifdef UNIT_TESTS
 #include "UnitTestsManager.h"
@@ -22,6 +24,19 @@ int ServerMain(const std::vector<std::string>& launchArgs)
 	global->settings = new ServerSettings();
 	global->settings->Load("ServerConfig.ini");
 
+	// Database
+	boost::shared_ptr<IDatabase> databaseSharedPtr = LibraryLoader::LoadLibrary<IDatabase>("DatabaseImpl.sqlite");
+	global->database = databaseSharedPtr.get();
+	const char* dbParams[1];
+	dbParams[0] = "server_database.db";
+	if (databaseSharedPtr->Open(dbParams, 1))
+	{
+		LOG << "Database accessed successfully. Params: " << *dbParams;
+	}
+	else
+	{
+		FatalError("Unable to access the database");
+	}
 
 #ifdef UNIT_TESTS
 	if (std::find(launchArgs.begin(), launchArgs.end(), "-run_unit_tests") != launchArgs.end())

@@ -1,3 +1,0 @@
-On the Visual Studio Developer Command Prompt:
-
-LIB /MACHINE:x64 /DEF:sqlite.def

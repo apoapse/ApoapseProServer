@@ -7,6 +7,7 @@
 void ApoapseServer::StartMainServer(UInt16 port)
 {
 	m_mainServer = std::make_unique<TCPServer>(m_mainServerIOService, port, TCPServer::Protocol::ip_v6);
+	usersManager = std::make_unique<UsersManager>();
 
 	std::thread threadMainServer([this]
 	{

@@ -15,6 +15,12 @@
     <ClCompile Include="ServerConnection.cpp">
       <Filter>Network</Filter>
     </ClCompile>
+    <ClCompile Include="UsersManager.cpp">
+      <Filter>UserSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="User.cpp">
+      <Filter>UserSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ServerEntryPoint.h" />
@@ -30,6 +36,12 @@
     <ClInclude Include="ServerConnection.h">
       <Filter>Network</Filter>
     </ClInclude>
+    <ClInclude Include="UsersManager.h">
+      <Filter>UserSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="User.h">
+      <Filter>UserSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Settings">
@@ -37,6 +49,9 @@
     </Filter>
     <Filter Include="Network">
       <UniqueIdentifier>{c5f0ae96-76f3-454b-bdf7-28a474a9dd30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UserSystem">
+      <UniqueIdentifier>{103ca720-39e0-4f4a-9b1d-3ce4002ac447}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
