@@ -47,10 +47,8 @@ bool ServerConnection::OnConnectedToServer()
 	return true;
 }
 
-void ServerConnection::OnReceivedCommand(std::unique_ptr<Command> cmd)
+void ServerConnection::OnReceivedValidCommand(std::unique_ptr<Command> cmd)
 {
-	LOG_DEBUG << "Received command " << static_cast<UInt16>(cmd->GetInfo().command);
-
 	const bool authenticated = IsAuthenticated();
 
 	if (cmd->GetInfo().requireAuthentication && authenticated)

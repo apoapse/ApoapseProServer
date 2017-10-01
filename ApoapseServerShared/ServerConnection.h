@@ -18,7 +18,7 @@ public:
 	
 private:
 	bool OnConnectedToServer() override;
-	void OnReceivedCommand(std::unique_ptr<Command> cmd) override;
+	void OnReceivedValidCommand(std::unique_ptr<Command> cmd) override;
 	
 
 };
