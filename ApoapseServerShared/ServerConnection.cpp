@@ -51,20 +51,28 @@ void ServerConnection::OnReceivedValidCommand(std::unique_ptr<Command> cmd)
 {
 	const bool authenticated = IsAuthenticated();
 
-	if (cmd->GetInfo().requireAuthentication && authenticated)
+	try
 	{
-		cmd->Process(*m_relatedUser.value(), *this);
+		if (cmd->GetInfo().requireAuthentication && authenticated)
+		{
+			cmd->Process(*m_relatedUser.value(), *this);
+		}
+		else if (cmd->GetInfo().onlyNonAuthenticated && !authenticated)
+		{
+			cmd->Process(*this);
+		}
+		else if (!cmd->GetInfo().requireAuthentication && !authenticated)
+		{
+			cmd->Process(*this);
+		}
+		else
+		{
+			SecurityLog::LogAlert(ApoapseErrorCode::cannot_processs_cmd_from_this_connection_type, *this);
+		}
 	}
-	else if (cmd->GetInfo().onlyNonAuthenticated && !authenticated)
+	catch (const std::exception& e)
 	{
-		cmd->Process(*this);
-	}
-	else if (!cmd->GetInfo().requireAuthentication && !authenticated)
-	{
-		cmd->Process(*this);
-	}
-	else
-	{
-		SecurityLog::LogAlert(ApoapseErrorCode::cannot_processs_cmd_from_this_connection_type, *this);
+		LOG << LogSeverity::error << "Exception trigged while processing a command of type " << static_cast<UInt16>(cmd->GetInfo().command) << ": " << e;
+		Close();
 	}
 }

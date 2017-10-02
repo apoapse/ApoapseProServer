@@ -1,15 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.15
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ApoapseCore", "..\ApoapseCore\Code\ApoapseCore.vcxproj", "{8F57335E-BE7D-466B-9860-74AD3ED4F810}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ServerConsole", "ServerConsole\ServerConsole.vcxproj", "{FFED83BA-CAA4-4F9C-943A-157B4418672A}"
-	ProjectSection(ProjectDependencies) = postProject
-		{8F57335E-BE7D-466B-9860-74AD3ED4F810} = {8F57335E-BE7D-466B-9860-74AD3ED4F810}
-		{189F8797-4C05-43B2-A5F2-5242E52DE550} = {189F8797-4C05-43B2-A5F2-5242E52DE550}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ApoapseServerShared", "ApoapseServerShared\ApoapseServerShared.vcxproj", "{189F8797-4C05-43B2-A5F2-5242E52DE550}"
 	ProjectSection(ProjectDependencies) = postProject
