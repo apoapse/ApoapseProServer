@@ -51,6 +51,12 @@ void ServerConnection::OnReceivedValidCommand(std::unique_ptr<Command> cmd)
 {
 	const bool authenticated = IsAuthenticated();
 
+	if (cmd->GetInfo().clientOnly)
+	{
+		SecurityLog::LogAlert(ApoapseErrorCode::cannot_processs_cmd_from_this_connection_type, *this);
+		return;
+	}
+
 	try
 	{
 		if (cmd->GetInfo().requireAuthentication && authenticated)
