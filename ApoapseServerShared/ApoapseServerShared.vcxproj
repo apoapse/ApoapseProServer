@@ -100,7 +100,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <AdditionalIncludeDirectories>..\..\ApoapseCore\Code\;</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>DYN_LIBRARY;UNIT_TESTS;_WIN32_WINNT=0x0501;_SCL_SECURE_NO_WARNINGS;DEBUG;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>APOAPSE_SERVER;DYN_LIBRARY;UNIT_TESTS;_WIN32_WINNT=0x0501;_SCL_SECURE_NO_WARNINGS;DEBUG;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -135,7 +135,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <AdditionalIncludeDirectories>..\..\ApoapseCore\Code\;</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>DYN_LIBRARY;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>APOAPSE_SERVER;DYN_LIBRARY;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
