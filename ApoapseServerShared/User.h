@@ -1,28 +1,49 @@
 #pragma once
 #include "INetworkSender.h"
 #include <set>
+#include "HashTypes.hpp"
+#include "ByteUtils.hpp"
 class ServerConnection;
 class ApoapseServer;
 
 class User : public std::enable_shared_from_this<User>, public INetworkSender
 {
 public:
-	class Address
+	class Username
 	{
+		hash_SHA3_256 m_usernameHash;
+
 	public:
-		Address();//TODODODOD
-
-		std::array<byte, 32> username;	// SHA-256 hash
-
-		bool operator<(const Address& other) const;
-		bool operator==(const Address& other) const;
-
-		std::string ToStr() const;
-
-		friend std::ostream& operator<<(std::ostream& stream, const Address& address)
+		Username(const hash_SHA3_256& hash) : m_usernameHash(hash)
 		{
-			stream << address.ToStr();
+		}
+
+		Username(const std::vector<byte>& hash);
+
+		const hash_SHA3_256& GetRaw() const
+		{
+			return m_usernameHash;
+		}
+
+		std::string ToStr() const
+		{
+			return BytesToHexString(m_usernameHash);
+		}
+
+		friend std::ostream& operator<<(std::ostream& stream, const Username& username)
+		{
+			stream << username.ToStr();
 			return stream;
+		}
+
+		bool operator<(const Username& other) const
+		{
+			return (m_usernameHash < other.GetRaw());
+		}
+
+		bool operator==(const Username& other) const
+		{
+			return (m_usernameHash == other.GetRaw());
 		}
 	};
 
@@ -32,13 +53,14 @@ private:
 
 	std::set<ServerConnection*> m_associatedConnections;
 	ApoapseServer* server;
-	Address m_address;
+	Username m_username;
+	DbId m_databaseId = 0;
 
 public:
-	User(const Address& address, ServerConnection* connection, ApoapseServer* apoapseServer);
+	User(DbId databaseId, const Username& username, ServerConnection* connection, ApoapseServer* apoapseServer);
 	virtual ~User() override;
 
-	Address GetAddress() const;
+	const Username& GetUsername() const;
 	
 	// INetworkSender
 	virtual void Send(BytesWrapper bytesPtr, TCPConnection* excludedConnection = nullptr) override;

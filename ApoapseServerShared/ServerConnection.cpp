@@ -6,7 +6,7 @@
 
 ServerConnection::ServerConnection(boost::asio::io_service& ioService, ApoapseServer* server)
 	: GenericConnection(ioService)
-	, m_server(server)
+	, server(*server)
 {
 
 }
@@ -24,21 +24,20 @@ bool ServerConnection::IsAuthenticated() const
 	return m_relatedUser.has_value();
 }
 
-void ServerConnection::Authenticate(const User::Address& address)
+void ServerConnection::Authenticate(const User::Username& username)
 {
 	ASSERT(!m_relatedUser.has_value());
 
-	if (m_server->usersManager->IsUserConnected(address))
+	if (server.usersManager->IsUserConnected(username))
 	{
 		// User already connected
-		m_relatedUser = m_server->usersManager->GetUserByAddress(address).lock()->GetObjectShared();
+		m_relatedUser = server.usersManager->GetUserByName(username).lock()->GetObjectShared();
 		m_relatedUser.value()->AddConnection(this);
 	}
 	else
 	{
 		// New user
-		m_relatedUser = std::make_shared<User>(address, this, m_server);
-		m_server->usersManager->AddConnectedUser(m_relatedUser->get());
+		m_relatedUser = server.usersManager->CreateUserObject(username, *this);
 	}
 }
 
@@ -57,8 +56,10 @@ void ServerConnection::OnReceivedValidCommand(std::unique_ptr<Command> cmd)
 		return;
 	}
 
-	try
-	{
+#if !DEBUG	// We disable exception handling on the debug build so that we can catch the exceptions with the debugger
+ 	try
+ 	{
+#endif
 		if (cmd->GetInfo().requireAuthentication && authenticated)
 		{
 			cmd->Process(*m_relatedUser.value(), *this);
@@ -75,10 +76,13 @@ void ServerConnection::OnReceivedValidCommand(std::unique_ptr<Command> cmd)
 		{
 			SecurityLog::LogAlert(ApoapseErrorCode::cannot_processs_cmd_from_this_connection_type, *this);
 		}
+
+#if !DEBUG
 	}
 	catch (const std::exception& e)
 	{
 		LOG << LogSeverity::error << "Exception trigged while processing a command of type " << static_cast<UInt16>(cmd->GetInfo().command) << ": " << e;
 		Close();
 	}
+#endif
 }

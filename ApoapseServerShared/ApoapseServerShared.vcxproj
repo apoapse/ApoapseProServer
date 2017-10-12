@@ -147,6 +147,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ApoapseServer.cpp" />
+    <ClCompile Include="CmdConnect.cpp" />
     <ClCompile Include="ServerConnection.cpp" />
     <ClCompile Include="ServerSettings.cpp" />
     <ClCompile Include="ServerSettingsVariables.cpp" />

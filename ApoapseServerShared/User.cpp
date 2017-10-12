@@ -5,41 +5,34 @@
 #include "ApoapseServer.h"
 #include "ByteUtils.hpp"
 
-bool User::Address::operator<(const Address& other) const
+User::Username::Username(const std::vector<byte>& hash) : m_usernameHash()
 {
-	return (username < other.username);
+	SECURITY_ASSERT(hash.size() == sha256Length);
+
+	std::copy(hash.begin(), hash.end(), m_usernameHash.begin());
 }
 
-std::string User::Address::ToStr() const
-{
-	return BytesToHexString(username);
-}
-
-bool User::Address::operator==(const Address& other) const
-{
-	return (username == other.username);
-}
-
-User::User(const Address& address, ServerConnection* connection, ApoapseServer* apoapseServer)
-	: m_address(address)
+User::User(DbId databaseId, const Username& username, ServerConnection* connection, ApoapseServer* apoapseServer)
+	: m_username(username)
 	, server(apoapseServer)
+	, m_databaseId(databaseId)
 {
-	ASSERT_MSG(!server->usersManager->IsUserConnected(address), "Trying to create a new user object ");
+	ASSERT_MSG(!server->usersManager->IsUserConnected(username), "Trying to create a new user object ");
 		
 	AddConnection(connection);
 
-	LOG << "User " << GetAddress() << " authenticated";
+	LOG << "User " << GetUsername() << " authenticated";
 }
 
 User::~User()
 {
-	LOG << "User " << GetAddress() << " disconnected";
+	LOG << "User " << GetUsername() << " disconnected";
 	server->usersManager->RemoveConnectedUser(*this);
 }
 
-User::Address User::GetAddress() const
+const User::Username& User::GetUsername() const
 {
-	return m_address;
+	return m_username;
 }
 
 std::shared_ptr<User> User::GetObjectShared()
@@ -56,7 +49,7 @@ void User::AddConnection(ServerConnection* connection)
 {
 	m_associatedConnections.insert(connection);
 
-	LOG << "Added connection " << connection->GetEndpoint() << " to user " << GetAddress();
+	LOG << "Added connection " << connection->GetEndpoint() << " to user " << GetUsername();
 }
 
 void User::Send(BytesWrapper bytesPtr, TCPConnection* excludedConnection /*= nullptr*/)
@@ -85,7 +78,7 @@ void User::Send(std::unique_ptr<class NetworkPayload> data, TCPConnection* exclu
 
 std::string User::GetEndpointStr() const
 {
-	return "user " + GetAddress().ToStr() +" (" + std::to_string(m_associatedConnections.size()) + " connections)";
+	return "user " + GetUsername().ToStr() +" (" + std::to_string(m_associatedConnections.size()) + " connections)";
 }
 
 void User::Close()

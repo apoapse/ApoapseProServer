@@ -6,15 +6,16 @@ class ApoapseServer;
 
 class ServerConnection : public GenericConnection
 {
-	ApoapseServer* m_server;
 	std::optional<std::shared_ptr<User>> m_relatedUser;
 
 public:
+	ApoapseServer& server;
+
 	ServerConnection(boost::asio::io_service& ioService, ApoapseServer* server);
 	virtual ~ServerConnection() override;
 
 	bool IsAuthenticated() const;
-	void Authenticate(const User::Address& address);
+	void Authenticate(const User::Username& username);
 	
 private:
 	bool OnConnectedToServer() override;

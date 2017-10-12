@@ -21,6 +21,9 @@
     <ClCompile Include="User.cpp">
       <Filter>UserSystem</Filter>
     </ClCompile>
+    <ClCompile Include="CmdConnect.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ServerEntryPoint.h" />
@@ -52,6 +55,9 @@
     </Filter>
     <Filter Include="UserSystem">
       <UniqueIdentifier>{103ca720-39e0-4f4a-9b1d-3ce4002ac447}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Commands">
+      <UniqueIdentifier>{e97f7789-1106-4b60-aca4-ef6bf7c56135}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
