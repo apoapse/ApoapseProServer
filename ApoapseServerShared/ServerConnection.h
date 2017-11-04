@@ -15,7 +15,7 @@ public:
 	virtual ~ServerConnection() override;
 
 	bool IsAuthenticated() const;
-	void Authenticate(const User::Username& username);
+	void Authenticate(const Username& username);
 	
 private:
 	bool OnConnectedToServer() override;

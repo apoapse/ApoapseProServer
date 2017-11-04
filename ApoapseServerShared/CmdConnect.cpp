@@ -3,7 +3,7 @@
 #include "Command.h"
 #include "CommandsManager.h"
 #include "ServerConnection.h"
-#include "HashTypes.hpp"
+#include "CryptographyTypes.hpp"
 #include "ProtocolVersion.hpp"
 #include "SecurityAlert.h"
 #include "UsersManager.h"
@@ -34,7 +34,7 @@ class CmdConnect final : public Command
 			return;
 		}
 
-		auto username = User::Username(GetFieldsData().GetValue<std::vector<byte>>("username"));
+		auto username = Username(GetFieldsData().GetValue<std::vector<byte>>("username"));
 		hash_SHA256 password;
 		{
 			auto passwordVector = GetFieldsData().GetValue<std::vector<byte>>("password");

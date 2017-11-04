@@ -1,14 +1,15 @@
 #pragma once
 #include <map>
-#include "HashTypes.hpp"
+#include "CryptographyTypes.hpp"
 #include "User.h"
+#include "IUsersManager.h"
 class ServerConnection;
 
-class UsersManager
+class UsersManager: public IUsersManager
 {
 	friend class User;
 	friend class ServerConnection;
-	std::map<User::Username, User*> m_connectedUsers; // #THREADING
+	std::map<Username, User*> m_connectedUsers; // #THREADING
 
 public:
 
@@ -17,11 +18,15 @@ public:
 // 	virtual ~UsersManager();
 
 	
-	bool IsUserConnected(const User::Username& username) const;
-	std::weak_ptr<User> GetUserByName(const User::Username& username) const;
+	bool IsUserConnected(const Username& username) const;
+	std::weak_ptr<User> GetUserByUsername(const Username& username) const;
 
-	std::shared_ptr<User> CreateUserObject(const User::Username& username, ServerConnection& connection);
-	static bool LoginIsValid(const User::Username& username, const hash_SHA3_256& password);
+	std::shared_ptr<User> CreateUserObject(const Username& username, ServerConnection& connection);
+	static bool LoginIsValid(const Username& username, const hash_SHA3_256& password);
+
+
+	bool DoesUserExist(const Username& username) const override;
+	PublicKeyBytes GetUserIdentityPublicKey(const Username& username) const override;
 
 private:
 	void RemoveConnectedUser(User& user);

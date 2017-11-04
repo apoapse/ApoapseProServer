@@ -3,13 +3,15 @@
 #include "Common.h"
 #include "SQLQuery.h"
 #include "ServerConnection.h"
+#include "ApoapseServer.h"
+#include "UsergroupsManager.h"
 
-bool UsersManager::IsUserConnected(const User::Username& username) const
+bool UsersManager::IsUserConnected(const Username& username) const
 {
 	return (m_connectedUsers.count(username) > 0);
 }
 
-std::weak_ptr<User> UsersManager::GetUserByName(const User::Username& username) const
+std::weak_ptr<User> UsersManager::GetUserByUsername(const Username& username) const
 {
 	try
 	{
@@ -22,7 +24,7 @@ std::weak_ptr<User> UsersManager::GetUserByName(const User::Username& username) 
 	}
 }
 
-std::shared_ptr<User> UsersManager::CreateUserObject(const User::Username& username, ServerConnection& connection)
+std::shared_ptr<User> UsersManager::CreateUserObject(const Username& username, ServerConnection& connection)
 {
 	SQLQuery query(*global->database);
 	query << SELECT << "user_id,identity_key_public" << FROM << "users" << WHERE << "username_hash" << EQUALS << username.GetRaw();
@@ -32,27 +34,52 @@ std::shared_ptr<User> UsersManager::CreateUserObject(const User::Username& usern
 		throw std::exception("Unable to find the user on the database");
 
 	const auto user_id = res[0][0].GetInt64();
+	const Uuid usergroupUuid = connection.server.usergroupsManager->GetUsergroupOfUser(username).uuid;
 
-	auto userPtr = std::make_shared<User>(user_id, username, &connection, &connection.server);
+	auto userPtr = std::make_shared<User>(user_id, username, usergroupUuid, &connection, &connection.server);
 	AddConnectedUser(userPtr.get());
 
 	return userPtr;
 }
 
-bool UsersManager::LoginIsValid(const User::Username& username, const hash_SHA3_256& password)
+bool UsersManager::LoginIsValid(const Username& username, const hash_SHA3_256& password)
 {
 	SQLQuery query(*global->database);
 	query << SELECT << "password,password_salt" << FROM << "users" << WHERE << "username_hash" << EQUALS << username.GetRaw();
 	auto res = query.Exec();
 
-	if (!res || res.RowCount() != 1)
+	if (!res || res.RowCount() == 0)
 		return false;
 
 	const auto dbPassword = res[0][0].GetByteArray();
 	const auto dbPassword_salt = res[0][1].GetByteArray();
 
-	//check
+	// #TODO check
 	return false;//temp
+}
+
+bool UsersManager::DoesUserExist(const Username& username) const
+{
+	SQLQuery query(*global->database);
+	query << SELECT << "username_hash" << FROM << "users" << WHERE << "username_hash" << EQUALS << username.GetRaw();
+	auto res = query.Exec();
+
+	if (res && res.RowCount() == 1)
+		return true;
+	else
+		return false;
+}
+
+PublicKeyBytes UsersManager::GetUserIdentityPublicKey(const Username& username) const
+{
+	SQLQuery query(*global->database);
+	query << SELECT << "identity_key_public" << FROM << "users" << WHERE << "username_hash" << EQUALS << username.GetRaw();
+	auto res = query.Exec();
+
+	if (!res || res.RowCount() != 1)
+		throw std::exception("");
+
+	return res[0][0].GetByteArray();
 }
 
 void UsersManager::RemoveConnectedUser(User& user)

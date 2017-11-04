@@ -3,6 +3,7 @@
 #include "Common.h"
 #include "ApoapseServer.h"
 #include "SecurityAlert.h"
+#include "UsersManager.h"
 
 ServerConnection::ServerConnection(boost::asio::io_service& ioService, ApoapseServer* server)
 	: GenericConnection(ioService)
@@ -24,14 +25,14 @@ bool ServerConnection::IsAuthenticated() const
 	return m_relatedUser.has_value();
 }
 
-void ServerConnection::Authenticate(const User::Username& username)
+void ServerConnection::Authenticate(const Username& username)
 {
 	ASSERT(!m_relatedUser.has_value());
 
 	if (server.usersManager->IsUserConnected(username))
 	{
 		// User already connected
-		m_relatedUser = server.usersManager->GetUserByName(username).lock()->GetObjectShared();
+		m_relatedUser = server.usersManager->GetUserByUsername(username).lock()->GetObjectShared();
 		m_relatedUser.value()->AddConnection(this);
 	}
 	else

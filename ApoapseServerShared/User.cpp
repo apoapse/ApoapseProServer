@@ -4,18 +4,13 @@
 #include "ServerConnection.h"
 #include "ApoapseServer.h"
 #include "ByteUtils.hpp"
+#include "UsersManager.h"
 
-User::Username::Username(const std::vector<byte>& hash) : m_usernameHash()
-{
-	SECURITY_ASSERT(hash.size() == sha256Length);
-
-	std::copy(hash.begin(), hash.end(), m_usernameHash.begin());
-}
-
-User::User(DbId databaseId, const Username& username, ServerConnection* connection, ApoapseServer* apoapseServer)
+User::User(DbId databaseId, const Username& username, const Uuid& usergroupUuid, ServerConnection* connection, ApoapseServer* apoapseServer)
 	: m_username(username)
 	, server(apoapseServer)
 	, m_databaseId(databaseId)
+	, m_usergroupUuid(usergroupUuid)
 {
 	ASSERT_MSG(!server->usersManager->IsUserConnected(username), "Trying to create a new user object ");
 		
@@ -30,9 +25,19 @@ User::~User()
 	server->usersManager->RemoveConnectedUser(*this);
 }
 
-const User::Username& User::GetUsername() const
+const Username& User::GetUsername() const
 {
 	return m_username;
+}
+
+const Uuid& User::GetUsergroup() const
+{
+	return m_usergroupUuid;
+}
+
+void User::SetUsergroup(const Uuid& usergroupUuid)
+{
+	m_usergroupUuid = usergroupUuid;
 }
 
 std::shared_ptr<User> User::GetObjectShared()
