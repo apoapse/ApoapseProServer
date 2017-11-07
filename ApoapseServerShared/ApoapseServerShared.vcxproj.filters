@@ -24,6 +24,9 @@
     <ClCompile Include="CmdConnect.cpp">
       <Filter>Commands</Filter>
     </ClCompile>
+    <ClCompile Include="CmdServerInfo.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ServerEntryPoint.h" />

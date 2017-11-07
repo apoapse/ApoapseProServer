@@ -20,6 +20,8 @@ public:
 	
 	bool IsUserConnected(const Username& username) const;
 	std::weak_ptr<User> GetUserByUsername(const Username& username) const;
+	size_t GetConnectedUsersCount() const;
+	size_t GetRegisteredUsersCount() const;
 
 	std::shared_ptr<User> CreateUserObject(const Username& username, ServerConnection& connection);
 	static bool LoginIsValid(const Username& username, const hash_SHA3_256& password);

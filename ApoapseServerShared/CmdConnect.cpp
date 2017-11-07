@@ -7,6 +7,9 @@
 #include "ProtocolVersion.hpp"
 #include "SecurityAlert.h"
 #include "UsersManager.h"
+#include "UsergroupsManager.h"
+#include "ApoapseServer.h"
+#include "CmdServerInfo.h"
 
 class CmdConnect final : public Command
 {
@@ -31,6 +34,15 @@ class CmdConnect final : public Command
 		if (GetFieldsData().GetValue<int>("protocol_version") != protocolVersion)
 		{
 			SecurityLog::LogAlert(ApoapseErrorCode::protocol_version_not_supported, sender);
+			return;
+		}
+
+		if (sender.server.usersManager->GetRegisteredUsersCount() == 0 && sender.server.usergroupsManager->GetUsegroupsCount() == 0)
+		{
+			LOG << "No users and usergroups registered: first setup state";
+			CmdServerInfo cmd;
+			cmd.SendSetupState(sender);
+
 			return;
 		}
 

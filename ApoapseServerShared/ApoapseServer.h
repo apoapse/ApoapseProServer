@@ -1,6 +1,7 @@
 #pragma once
 #include "TCPServer.h"
-#include "UsersManager.h"
+class UsersManager;
+class UsergroupsManager;
 
 class ApoapseServer
 {
@@ -8,10 +9,11 @@ class ApoapseServer
 	boost::asio::io_service m_mainServerIOService;
 
 public:
-	std::unique_ptr<UsersManager> usersManager;
+	UsersManager* usersManager;
+	UsergroupsManager* usergroupsManager;
 
 	//ApoapseServer();
-// 	virtual ~ApoapseServer();
+ 	virtual ~ApoapseServer();
 	void StartMainServer(UInt16 port);
 
 private:

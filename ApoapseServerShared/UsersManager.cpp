@@ -24,6 +24,20 @@ std::weak_ptr<User> UsersManager::GetUserByUsername(const Username& username) co
 	}
 }
 
+size_t UsersManager::GetConnectedUsersCount() const
+{
+	return m_connectedUsers.size();
+}
+
+size_t UsersManager::GetRegisteredUsersCount() const
+{
+	SQLQuery query(*global->database);
+	query << SELECT << "username_hash" << FROM << "users";
+	auto res = query.Exec();
+
+	return (res) ? res.RowCount() : 0;
+}
+
 std::shared_ptr<User> UsersManager::CreateUserObject(const Username& username, ServerConnection& connection)
 {
 	SQLQuery query(*global->database);
