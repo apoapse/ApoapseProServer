@@ -112,3 +112,8 @@ bool User::ComparePasswords(const std::vector<byte>& password, const std::vector
 
 	return (std::vector<byte>(res.begin(), res.end()) == storedPassword);
 }
+
+bool User::IsEncryptedPasswordValid(const std::vector<byte>& encryptedPassword)
+{
+	return (encryptedPassword.size() == sha256Length);
+}

@@ -56,7 +56,7 @@ std::shared_ptr<User> UsersManager::CreateUserObject(const Username& username, S
 	return userPtr;
 }
 
-bool UsersManager::LoginIsValid(const Username& username, const hash_SHA3_256& password)
+bool UsersManager::LoginIsValid(const Username& username, const std::vector<byte>& password)
 {
 	SQLQuery query(*global->database);
 	query << SELECT << "password,password_salt" << FROM << "users" << WHERE << "username_hash" << EQUALS << username.GetRaw();
@@ -68,8 +68,7 @@ bool UsersManager::LoginIsValid(const Username& username, const hash_SHA3_256& p
 	const auto dbPassword = res[0][0].GetByteArray();
 	const auto dbPassword_salt = res[0][1].GetByteArray();
 
-	// #TODO check
-	return false;//temp
+	return User::ComparePasswords(password, dbPassword, dbPassword_salt);
 }
 
 bool UsersManager::DoesUserExist(const Username& username) const
@@ -94,6 +93,26 @@ PublicKeyBytes UsersManager::GetUserIdentityPublicKey(const Username& username) 
 		throw std::exception("");
 
 	return res[0][0].GetByteArray();
+}
+
+void UsersManager::RegisterNewUser(const Username& username, const std::vector<byte>& encryptedTemporaryPassword)
+{
+	const auto salt = User::GenerateRandomSalt();
+
+	SQLQuery query(*global->database);
+	query << INSERT_INTO << "users" << "(username_hash, password, password_salt)" << VALUES << "(" << username.GetRaw() << "," << User::HashPassword(encryptedTemporaryPassword, salt) << "," << salt << ")";
+
+	query.Exec();
+}
+
+void UsersManager::SetUserIdentity(const Username& username, const std::vector<byte>& encryptedPassword, const PublicKeyBytes& identityKey, const EncryptedPrivateKeyBytes& identityPrivateKey)
+{
+	const auto salt = User::GenerateRandomSalt();
+	const auto passwordForStorage = User::HashPassword(encryptedPassword, salt);
+
+	SQLQuery query(*global->database);
+	query << UPDATE << "users" << SET << "password=" << passwordForStorage << ",password_salt=" << salt << ",identity_key_public=" << identityKey << ",identity_key_private_encrypted=" << identityPrivateKey;
+	query.Exec();
 }
 
 void UsersManager::RemoveConnectedUser(User& user)

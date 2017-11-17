@@ -41,6 +41,7 @@ public:
 	static std::vector<byte> GenerateRandomSalt();
 	static std::vector<byte> HashPassword(const std::vector<byte>& encryptedPassword, const std::vector<byte>& salt);
 	static bool ComparePasswords(const std::vector<byte>& password, const std::vector<byte>& storedPassword, const std::vector<byte>& salt);
+	static bool IsEncryptedPasswordValid(const std::vector<byte>& encryptedPassword);
 
 private:
  	void RemoveConnection(ServerConnection* connection);

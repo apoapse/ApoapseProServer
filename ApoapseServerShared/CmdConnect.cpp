@@ -47,13 +47,8 @@ class CmdConnect final : public Command
 		}
 
 		auto username = Username(GetFieldsData().GetValue<std::vector<byte>>("username"));
-		hash_SHA256 password;
-		{
-			auto passwordVector = GetFieldsData().GetValue<std::vector<byte>>("password");
-			std::copy(passwordVector.begin(), passwordVector.end(), password.begin());
-		}
 
-		if (UsersManager::LoginIsValid(username, password))
+		if (UsersManager::LoginIsValid(username, GetFieldsData().GetValue<std::vector<byte>>("password")))
 		{
 			sender.Authenticate(username);
 			//SEND CMD

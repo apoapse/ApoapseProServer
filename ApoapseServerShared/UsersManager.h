@@ -24,11 +24,13 @@ public:
 	size_t GetRegisteredUsersCount() const;
 
 	std::shared_ptr<User> CreateUserObject(const Username& username, ServerConnection& connection);
-	static bool LoginIsValid(const Username& username, const hash_SHA3_256& password);
-
+	static bool LoginIsValid(const Username& username, const std::vector<byte>& password);
 
 	bool DoesUserExist(const Username& username) const override;
 	PublicKeyBytes GetUserIdentityPublicKey(const Username& username) const override;
+
+	void RegisterNewUser(const Username& username, const std::vector<byte>& encryptedTemporaryPassword);
+	void SetUserIdentity(const Username& username, const std::vector<byte>& encryptedPassword, const PublicKeyBytes& indentityKey, const EncryptedPrivateKeyBytes& identityPrivateKey);
 
 private:
 	void RemoveConnectedUser(User& user);
