@@ -148,6 +148,7 @@
   <ItemGroup>
     <ClCompile Include="ApoapseServer.cpp" />
     <ClCompile Include="CmdConnect.cpp" />
+    <ClCompile Include="CmdCreateInitialAdmin.cpp" />
     <ClCompile Include="CmdServerInfo.cpp" />
     <ClCompile Include="ServerConnection.cpp" />
     <ClCompile Include="ServerSettings.cpp" />
@@ -162,6 +163,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ApoapseServer.h" />
+    <ClInclude Include="CmdServerInfo.h" />
     <ClInclude Include="ServerConnection.h" />
     <ClInclude Include="ServerEntryPoint.h" />
     <ClInclude Include="ServerSettings.h" />

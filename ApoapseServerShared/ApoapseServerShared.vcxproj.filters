@@ -27,6 +27,12 @@
     <ClCompile Include="CmdServerInfo.cpp">
       <Filter>Commands</Filter>
     </ClCompile>
+    <ClCompile Include="CmdCreateInitialAdmin.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="UT_User.cpp">
+      <Filter>UnitTests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ServerEntryPoint.h" />
@@ -48,6 +54,9 @@
     <ClInclude Include="User.h">
       <Filter>UserSystem</Filter>
     </ClInclude>
+    <ClInclude Include="CmdServerInfo.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Settings">
@@ -61,6 +70,9 @@
     </Filter>
     <Filter Include="Commands">
       <UniqueIdentifier>{e97f7789-1106-4b60-aca4-ef6bf7c56135}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UnitTests">
+      <UniqueIdentifier>{971bdf56-2bf0-4203-a8aa-97d576166450}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
