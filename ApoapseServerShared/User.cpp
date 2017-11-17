@@ -5,6 +5,9 @@
 #include "ApoapseServer.h"
 #include "ByteUtils.hpp"
 #include "UsersManager.h"
+#include "Random.hpp"
+#include "Hash.hpp"
+#include "MemoryUtils.hpp"
 
 User::User(DbId databaseId, const Username& username, const Uuid& usergroupUuid, ServerConnection* connection, ApoapseServer* apoapseServer)
 	: m_username(username)
@@ -90,4 +93,22 @@ void User::Close()
 {
 	for (auto* connection : m_associatedConnections)
 		connection->Close();
+}
+
+std::vector<byte> User::GenerateRandomSalt()
+{
+	return Cryptography::GenerateRandomBytes(sha512Length);
+}
+
+std::vector<byte> User::HashPassword(const std::vector<byte>& encryptedPassword, const std::vector<byte>& salt)
+{
+	const auto res = Cryptography::PBKDF2_SHA512(encryptedPassword, salt, passwordAlgorithmIterations);
+	return std::vector<byte>(res.begin(), res.end());
+}
+
+bool User::ComparePasswords(const std::vector<byte>& password, const std::vector<byte>& storedPassword, const std::vector<byte>& salt)
+{
+	const auto res = Cryptography::PBKDF2_SHA512(password, salt, passwordAlgorithmIterations);
+
+	return (std::vector<byte>(res.begin(), res.end()) == storedPassword);
 }

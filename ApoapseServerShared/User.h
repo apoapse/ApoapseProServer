@@ -20,13 +20,15 @@ private:
 	DbId m_databaseId = 0;
 	Uuid m_usergroupUuid;
 
+	static constexpr UInt32 passwordAlgorithmIterations = 5000;
+
 public:
 	User(DbId databaseId, const Username& username, const Uuid& usergroupUuid, ServerConnection* connection, ApoapseServer* apoapseServer);
 	virtual ~User() override;
 
-	const Username& GetUsername() const;
-	const Uuid& GetUsergroup() const;
-	void SetUsergroup(const Uuid& usergroupUuid);
+	const Username& GetUsername() const override;
+	const Uuid& GetUsergroup() const override;
+	void SetUsergroup(const Uuid& usergroupUuid) override;
 	
 	// INetworkSender
 	virtual void Send(BytesWrapper bytesPtr, TCPConnection* excludedConnection = nullptr) override;
@@ -35,6 +37,10 @@ public:
 
 	virtual std::string GetEndpointStr() const override;
 	virtual void Close() override;
+
+	static std::vector<byte> GenerateRandomSalt();
+	static std::vector<byte> HashPassword(const std::vector<byte>& encryptedPassword, const std::vector<byte>& salt);
+	static bool ComparePasswords(const std::vector<byte>& password, const std::vector<byte>& storedPassword, const std::vector<byte>& salt);
 
 private:
  	void RemoveConnection(ServerConnection* connection);
