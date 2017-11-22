@@ -108,6 +108,7 @@ std::vector<byte> User::HashPassword(const std::vector<byte>& encryptedPassword,
 
 bool User::ComparePasswords(const std::vector<byte>& password, const std::vector<byte>& storedPassword, const std::vector<byte>& salt)
 {
+	SECURITY_ASSERT(storedPassword.size() == salt.size());
 	const auto res = Cryptography::PBKDF2_SHA512(password, salt, passwordAlgorithmIterations);
 
 	return (std::vector<byte>(res.begin(), res.end()) == storedPassword);

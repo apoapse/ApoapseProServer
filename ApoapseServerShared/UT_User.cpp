@@ -21,7 +21,7 @@ UNIT_TEST("User:HashAndComparePassword:WrongPassword")
 {
 	const auto salt = User::GenerateRandomSalt();
 	const auto testPassword = Cryptography::GenerateRandomBytes(sha256Length);
-	const auto randomStoredPassword = Cryptography::GenerateRandomBytes(sha256Length);
+	const auto randomStoredPassword = Cryptography::GenerateRandomBytes(sha512Length);
 
 	UnitTest::Assert(!User::ComparePasswords(testPassword, randomStoredPassword, salt));
 } UNIT_TEST_END
