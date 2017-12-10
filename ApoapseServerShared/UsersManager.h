@@ -30,7 +30,7 @@ public:
 	PublicKeyBytes GetUserIdentityPublicKey(const Username& username) const override;
 
 	void RegisterNewUser(const Username& username, const std::vector<byte>& encryptedTemporaryPassword);
-	void SetUserIdentity(const Username& username, const std::vector<byte>& encryptedPassword, const PublicKeyBytes& indentityKey, const EncryptedPrivateKeyBytes& identityPrivateKey);
+	void SetUserIdentity(const Username& username, const std::vector<byte>& encryptedPassword, const PublicKeyBytes& identityKey, const EncryptedPrivateKeyBytes& identityPrivateKey, const IV& identityIV);
 
 private:
 	void RemoveConnectedUser(User& user);

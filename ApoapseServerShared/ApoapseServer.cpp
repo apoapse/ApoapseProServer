@@ -2,9 +2,10 @@
 #include "ApoapseServer.h"
 #include "Common.h"
 #include "ServerConnection.h"
-#include "CommandsManager.h"
 #include "UsersManager.h"
 #include "UsergroupsManager.h"
+#include "SQLQuery.h"
+
 ApoapseServer::~ApoapseServer()
 {
 	delete usergroupsManager;
@@ -15,11 +16,40 @@ void ApoapseServer::StartMainServer(UInt16 port)
 {
 	m_mainServer = std::make_unique<TCPServer>(m_mainServerIOService, port, TCPServer::Protocol::ip_v6);
 
+	// TEMP
+	/*{
+		SQLQuery query(*global->database);
+		query << DELETE_FROM << "usergroups";
+		query.Exec();
+	}
+
+	{
+		SQLQuery query(*global->database);
+		query << DELETE_FROM << "usergroups_blockchain";
+		query.Exec();
+	}
+
+	{
+		SQLQuery query(*global->database);
+		query << DELETE_FROM << "users";
+		query.Exec();
+	}*/
+	// END TEMP
+
+	{
+		SQLQuery query(*global->database);
+		query << SELECT << "username_hash" << FROM << "users";
+		auto res = query.Exec();
+
+		for (const auto& item : res)
+		{
+			LOG_DEBUG << "username_hash: " << item[0].GetByteArray();
+		}
+	}
+
 	usersManager = new UsersManager;
 	usergroupsManager = new UsergroupsManager(*usersManager);
 	usergroupsManager->Init();
-
-	TestNewBlock(*this);
 
 	std::thread threadMainServer([this]
 	{

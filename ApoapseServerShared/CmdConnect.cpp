@@ -39,24 +39,24 @@ class CmdConnect final : public Command
 
 		if (sender.server.usersManager->GetRegisteredUsersCount() == 0 && sender.server.usergroupsManager->GetUsegroupsCount() == 0)
 		{
-			LOG << "No users and usergroups registered: first setup state";
+			LOG << "No users and usergroups registered: in first setup state";
 			CmdServerInfo cmd;
 			cmd.SendSetupState(sender);
-
-			return;
-		}
-
-		auto username = Username(GetFieldsData().GetValue<std::vector<byte>>("username"));
-
-		if (UsersManager::LoginIsValid(username, GetFieldsData().GetValue<std::vector<byte>>("password")))
-		{
-			sender.Authenticate(username);
-			//SEND CMD
-			LOG << "LoginIsValid";
 		}
 		else
 		{
-			LOG << "LoginIsNOTValid";
+			const auto username = Username(GetFieldsData().GetValue<std::vector<byte>>("username"));
+			LOG_DEBUG << "username: " << username;
+			if (UsersManager::LoginIsValid(username, GetFieldsData().GetValue<std::vector<byte>>("password")))
+			{
+				sender.Authenticate(username);
+				//SEND CMD
+				LOG << "LoginIsValid";
+			}
+			else
+			{
+				LOG << "LoginIsNOTValid";
+			}
 		}
 	}
 };

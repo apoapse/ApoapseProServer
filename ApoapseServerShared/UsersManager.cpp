@@ -97,21 +97,26 @@ PublicKeyBytes UsersManager::GetUserIdentityPublicKey(const Username& username) 
 
 void UsersManager::RegisterNewUser(const Username& username, const std::vector<byte>& encryptedTemporaryPassword)
 {
+	SECURITY_ASSERT(!DoesUserExist(username));
+
 	const auto salt = User::GenerateRandomSalt();
 
 	SQLQuery query(*global->database);
-	query << INSERT_INTO << "users" << "(username_hash, password, password_salt)" << VALUES << "(" << username.GetRaw() << "," << User::HashPassword(encryptedTemporaryPassword, salt) << "," << salt << ")";
+	query << INSERT_INTO << "users" << " (username_hash, password, password_salt)" << VALUES << "(" << username.GetRaw() << "," << User::HashPassword(encryptedTemporaryPassword, salt) << "," << salt << ")";
 
 	query.Exec();
 }
 
-void UsersManager::SetUserIdentity(const Username& username, const std::vector<byte>& encryptedPassword, const PublicKeyBytes& identityKey, const EncryptedPrivateKeyBytes& identityPrivateKey)
+void UsersManager::SetUserIdentity(const Username& username, const std::vector<byte>& encryptedPassword, const PublicKeyBytes& identityKey, const EncryptedPrivateKeyBytes& identityPrivateKey, const IV& identityIV)
 {
+	SECURITY_ASSERT(DoesUserExist(username));
+
 	const auto salt = User::GenerateRandomSalt();
 	const auto passwordForStorage = User::HashPassword(encryptedPassword, salt);
 
 	SQLQuery query(*global->database);
-	query << UPDATE << "users" << SET << "password=" << passwordForStorage << ",password_salt=" << salt << ",identity_key_public=" << identityKey << ",identity_key_private_encrypted=" << identityPrivateKey;
+	query << UPDATE << "users" << SET << "password=" << passwordForStorage << ",password_salt=" << salt << ",identity_key_public=" << identityKey << ",identity_key_private_encrypted=" << identityPrivateKey
+		<< ",identity_key_iv=" << identityIV << WHERE "username_hash" << EQUALS << username.GetRaw();
 	query.Exec();
 }
 
