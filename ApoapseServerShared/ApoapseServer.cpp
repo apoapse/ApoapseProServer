@@ -36,6 +36,8 @@ void ApoapseServer::StartMainServer(UInt16 port)
 	}*/
 	// END TEMP
 
+	/*
+	// List registered users
 	{
 		SQLQuery query(*global->database);
 		query << SELECT << "username_hash" << FROM << "users";
@@ -45,7 +47,7 @@ void ApoapseServer::StartMainServer(UInt16 port)
 		{
 			LOG_DEBUG << "username_hash: " << item[0].GetByteArray();
 		}
-	}
+	}*/
 
 	usersManager = new UsersManager;
 	usergroupsManager = new UsergroupsManager(*usersManager);

@@ -16,6 +16,7 @@ public:
 
 	bool IsAuthenticated() const;
 	void Authenticate(const Username& username);
+	User* GetRelatedUser() const;
 	
 private:
 	bool OnConnectedToServer() override;

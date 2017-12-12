@@ -43,6 +43,11 @@ void ServerConnection::Authenticate(const Username& username)
 	}
 }
 
+User* ServerConnection::GetRelatedUser() const
+{
+	return (m_relatedUser.has_value()) ? m_relatedUser.value().get() : nullptr;
+}
+
 bool ServerConnection::OnConnectedToServer()
 {
 	return true;

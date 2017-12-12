@@ -8,12 +8,13 @@
 #include "Random.hpp"
 #include "Hash.hpp"
 #include "MemoryUtils.hpp"
+#include "SQLQuery.h"
 
-User::User(DbId databaseId, const Username& username, const Uuid& usergroupUuid, ServerConnection* connection, ApoapseServer* apoapseServer)
-	: m_username(username)
+User::User(DbId databaseId, const Username& username, const Uuid& usergroupUuid, const PublicKeyBytes& identityPublicKey, ServerConnection* connection, ApoapseServer* apoapseServer) : m_username(username)
 	, server(apoapseServer)
 	, m_databaseId(databaseId)
 	, m_usergroupUuid(usergroupUuid)
+	, m_identityPublicKey(identityPublicKey)
 {
 	ASSERT_MSG(!server->usersManager->IsUserConnected(username), "Trying to create a new user object ");
 		
@@ -41,6 +42,30 @@ const Uuid& User::GetUsergroup() const
 void User::SetUsergroup(const Uuid& usergroupUuid)
 {
 	m_usergroupUuid = usergroupUuid;
+}
+
+const PublicKeyBytes& User::GetPublicKey() const
+{
+	ASSERT(!m_identityPublicKey.empty());
+
+	return m_identityPublicKey;
+}
+
+std::pair<EncryptedPrivateKeyBytes, IV> User::GetEncryptedPrivateKey() const
+{
+	SQLQuery query(*global->database);
+	query << SELECT << "identity_key_private_encrypted,identity_key_iv" << FROM << "users" << WHERE << "username_hash" << EQUALS << GetUsername().GetRaw();
+	const auto res = query.Exec();
+
+	if (res.RowCount() != 1)
+		throw std::exception("Unable to read user identity private keys");
+
+	const auto encryptedPrivateKey = res[0][0].GetByteArray();
+	const IV iv = VectorToArray<byte, 16>(res[0][1].GetByteArray());
+
+	ASSERT(!encryptedPrivateKey.empty());
+
+	return std::make_pair(encryptedPrivateKey, iv);
 }
 
 std::shared_ptr<User> User::GetObjectShared()

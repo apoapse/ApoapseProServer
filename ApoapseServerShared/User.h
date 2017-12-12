@@ -19,16 +19,20 @@ private:
 	Username m_username;
 	DbId m_databaseId = 0;
 	Uuid m_usergroupUuid;
+	PublicKeyBytes m_identityPublicKey;
 
 	static constexpr UInt32 passwordAlgorithmIterations = 5000;
 
 public:
-	User(DbId databaseId, const Username& username, const Uuid& usergroupUuid, ServerConnection* connection, ApoapseServer* apoapseServer);
+	User(DbId databaseId, const Username& username, const Uuid& usergroupUuid, const PublicKeyBytes& identityPublicKey, ServerConnection* connection, ApoapseServer* apoapseServer);
 	virtual ~User() override;
 
 	const Username& GetUsername() const override;
 	const Uuid& GetUsergroup() const override;
 	void SetUsergroup(const Uuid& usergroupUuid) override;
+
+	const PublicKeyBytes& GetPublicKey() const;
+	std::pair<EncryptedPrivateKeyBytes, IV> GetEncryptedPrivateKey() const;
 	
 	// INetworkSender
 	virtual void Send(BytesWrapper bytesPtr, TCPConnection* excludedConnection = nullptr) override;

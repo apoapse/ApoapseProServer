@@ -50,12 +50,13 @@ class CmdConnect final : public Command
 			if (UsersManager::LoginIsValid(username, GetFieldsData().GetValue<std::vector<byte>>("password")))
 			{
 				sender.Authenticate(username);
-				//SEND CMD
-				LOG << "LoginIsValid";
+
+				CmdServerInfo cmd;
+				cmd.SendWellcome(sender, *sender.GetRelatedUser());
 			}
 			else
 			{
-				LOG << "LoginIsNOTValid";
+				SecurityLog::LogAlert(ApoapseErrorCode::unable_to_authenticate_user, sender);
 			}
 		}
 	}
