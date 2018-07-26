@@ -14,13 +14,9 @@ void CmdServerInfo::SendSetupState(INetworkSender& destination)
 
 void CmdServerInfo::SendWellcome(INetworkSender& destination, const User& user)
 {
-	const auto[encryptedPrivateKey, iv] = user.GetEncryptedPrivateKey();
-
 	MessagePackSerializer ser;
 	ser.UnorderedAppend<std::string>("status", "authenticated");
-	ser.UnorderedAppend("public_key", user.GetPublicKey());
-	ser.UnorderedAppend("private_key_encrypted", encryptedPrivateKey);
-	ser.UnorderedAppend("private_key_iv", iv);
+
 
 	Send(ser, destination);
 }

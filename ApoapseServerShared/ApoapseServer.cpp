@@ -3,12 +3,10 @@
 #include "Common.h"
 #include "ServerConnection.h"
 #include "UsersManager.h"
-#include "UsergroupsManager.h"
 #include "SQLQuery.h"
 
 ApoapseServer::~ApoapseServer()
 {
-	delete usergroupsManager;
 	delete usersManager;
 }
 
@@ -50,8 +48,6 @@ void ApoapseServer::StartMainServer(UInt16 port)
 	}*/
 
 	usersManager = new UsersManager;
-	usergroupsManager = new UsergroupsManager(*usersManager);
-	usergroupsManager->Init();
 
 	std::thread threadMainServer([this]
 	{

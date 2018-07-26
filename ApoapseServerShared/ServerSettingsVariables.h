@@ -8,4 +8,5 @@ struct ServerSettingsVars
 	void RegisterSettingsVariables(class ServerSettings& serverSettings);
 
 	UInt16 server_port;
+	bool log_sql_queries;
 };

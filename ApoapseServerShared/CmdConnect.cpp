@@ -7,12 +7,12 @@
 #include "ProtocolVersion.hpp"
 #include "SecurityAlert.h"
 #include "UsersManager.h"
-#include "UsergroupsManager.h"
 #include "ApoapseServer.h"
 #include "CmdServerInfo.h"
 
 class CmdConnect final : public Command
 {
+public:
 	CommandInfo& CmdConnect::GetInfo() const override
 	{
 		static auto info = CommandInfo();
@@ -37,7 +37,7 @@ class CmdConnect final : public Command
 			return;
 		}
 
-		if (sender.server.usersManager->GetRegisteredUsersCount() == 0 && sender.server.usergroupsManager->GetUsegroupsCount() == 0)
+		if (sender.server.usersManager->GetRegisteredUsersCount() == 0)
 		{
 			LOG << "No users and usergroups registered: in first setup state";
 			CmdServerInfo cmd;

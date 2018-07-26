@@ -3,12 +3,10 @@
 #include <set>
 #include "CryptographyTypes.hpp"
 #include "Username.h"
-#include "Usergroup.h"
-#include "IUser.hpp"
 class ServerConnection;
 class ApoapseServer;
 
-class User : public std::enable_shared_from_this<User>, public INetworkSender, public IUser
+class User : public std::enable_shared_from_this<User>, public INetworkSender
 {
 private:
 	friend ServerConnection;
@@ -18,21 +16,14 @@ private:
 	ApoapseServer* server;
 	Username m_username;
 	DbId m_databaseId = 0;
-	Uuid m_usergroupUuid;
-	PublicKeyBytes m_identityPublicKey;
 
 	static constexpr UInt32 passwordAlgorithmIterations = 5000;
 
 public:
-	User(DbId databaseId, const Username& username, const Uuid& usergroupUuid, const PublicKeyBytes& identityPublicKey, ServerConnection* connection, ApoapseServer* apoapseServer);
+	User(DbId databaseId, const Username& username, ServerConnection* connection, ApoapseServer* apoapseServer);
 	virtual ~User() override;
 
-	const Username& GetUsername() const override;
-	const Uuid& GetUsergroup() const override;
-	void SetUsergroup(const Uuid& usergroupUuid) override;
-
-	const PublicKeyBytes& GetPublicKey() const;
-	std::pair<EncryptedPrivateKeyBytes, IV> GetEncryptedPrivateKey() const;
+	const Username& GetUsername() const;
 	
 	// INetworkSender
 	virtual void Send(BytesWrapper bytesPtr, TCPConnection* excludedConnection = nullptr) override;

@@ -27,9 +27,6 @@
     <ClCompile Include="CmdServerInfo.cpp">
       <Filter>Commands</Filter>
     </ClCompile>
-    <ClCompile Include="CmdCreateInitialAdmin.cpp">
-      <Filter>Commands</Filter>
-    </ClCompile>
     <ClCompile Include="UT_User.cpp">
       <Filter>UnitTests</Filter>
     </ClCompile>

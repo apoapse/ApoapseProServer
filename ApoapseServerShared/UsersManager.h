@@ -2,10 +2,10 @@
 #include <map>
 #include "CryptographyTypes.hpp"
 #include "User.h"
-#include "IUsersManager.h"
+#include "Uuid.h"
 class ServerConnection;
 
-class UsersManager: public IUsersManager
+class UsersManager
 {
 	friend class User;
 	friend class ServerConnection;
@@ -26,8 +26,7 @@ public:
 	std::shared_ptr<User> CreateUserObject(const Username& username, ServerConnection& connection);
 	static bool LoginIsValid(const Username& username, const std::vector<byte>& password);
 
-	bool DoesUserExist(const Username& username) const override;
-	PublicKeyBytes GetUserIdentityPublicKey(const Username& username) const override;
+	bool DoesUserExist(const Username& username) const;
 
 	void RegisterNewUser(const Username& username, const std::vector<byte>& encryptedTemporaryPassword);
 	void SetUserIdentity(const Username& username, const std::vector<byte>& encryptedPassword, const PublicKeyBytes& identityKey, const EncryptedPrivateKeyBytes& identityPrivateKey, const IV& identityIV);

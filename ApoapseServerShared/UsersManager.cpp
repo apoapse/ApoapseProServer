@@ -4,7 +4,6 @@
 #include "SQLQuery.h"
 #include "ServerConnection.h"
 #include "ApoapseServer.h"
-#include "UsergroupsManager.h"
 
 bool UsersManager::IsUserConnected(const Username& username) const
 {
@@ -49,9 +48,9 @@ std::shared_ptr<User> UsersManager::CreateUserObject(const Username& username, S
 
 	const auto user_id = res[0][0].GetInt64();
 	const PublicKeyBytes identityPublicKey = res[0][1].GetByteArray();
-	const Uuid usergroupUuid = connection.server.usergroupsManager->GetUsergroupOfUser(username).uuid;
+	//const Uuid usergroupUuid = connection.server.usergroupsManager->GetUsergroupOfUser(username).uuid;
 
-	auto userPtr = std::make_shared<User>(user_id, username, usergroupUuid, identityPublicKey, &connection, &connection.server);
+	auto userPtr = std::make_shared<User>(user_id, username, &connection, &connection.server);
 	AddConnectedUser(userPtr.get());
 
 	return userPtr;
@@ -82,18 +81,6 @@ bool UsersManager::DoesUserExist(const Username& username) const
 		return true;
 	else
 		return false;
-}
-
-PublicKeyBytes UsersManager::GetUserIdentityPublicKey(const Username& username) const
-{
-	SQLQuery query(*global->database);
-	query << SELECT << "identity_key_public" << FROM << "users" << WHERE << "username_hash" << EQUALS << username.GetRaw();
-	auto res = query.Exec();
-
-	if (!res || res.RowCount() != 1)
-		throw std::exception("");
-
-	return res[0][0].GetByteArray();
 }
 
 void UsersManager::RegisterNewUser(const Username& username, const std::vector<byte>& encryptedTemporaryPassword)

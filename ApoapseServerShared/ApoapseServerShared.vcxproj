@@ -148,7 +148,6 @@
   <ItemGroup>
     <ClCompile Include="ApoapseServer.cpp" />
     <ClCompile Include="CmdConnect.cpp" />
-    <ClCompile Include="CmdCreateInitialAdmin.cpp" />
     <ClCompile Include="CmdServerInfo.cpp" />
     <ClCompile Include="ServerConnection.cpp" />
     <ClCompile Include="ServerSettings.cpp" />
