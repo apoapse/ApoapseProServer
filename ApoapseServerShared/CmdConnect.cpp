@@ -4,7 +4,7 @@
 #include "CommandsManager.h"
 #include "ServerConnection.h"
 #include "CryptographyTypes.hpp"
-#include "ProtocolVersion.hpp"
+#include "GlobalVarDefines.hpp"
 #include "SecurityAlert.h"
 #include "UsersManager.h"
 #include "ApoapseServer.h"
@@ -46,7 +46,7 @@ public:
 		else
 		{
 			const auto username = Username(GetFieldsData().GetValue<std::vector<byte>>("username"));
-			LOG_DEBUG << "username: " << username;
+
 			if (UsersManager::LoginIsValid(username, GetFieldsData().GetValue<std::vector<byte>>("password")))
 			{
 				sender.Authenticate(username);

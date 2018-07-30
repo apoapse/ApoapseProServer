@@ -30,6 +30,9 @@
     <ClCompile Include="UT_User.cpp">
       <Filter>UnitTests</Filter>
     </ClCompile>
+    <ClCompile Include="CmdRegisterNewUser.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ServerEntryPoint.h" />

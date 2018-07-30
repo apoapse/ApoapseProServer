@@ -34,20 +34,20 @@ size_t UsersManager::GetRegisteredUsersCount() const
 	query << SELECT << "username_hash" << FROM << "users";
 	auto res = query.Exec();
 
-	return (res) ? res.RowCount() : 0;
+	return ((res) ? res.RowCount() : 0);
 }
 
 std::shared_ptr<User> UsersManager::CreateUserObject(const Username& username, ServerConnection& connection)
 {
 	SQLQuery query(*global->database);
-	query << SELECT << "user_id,identity_key_public" << FROM << "users" << WHERE << "username_hash" << EQUALS << username.GetRaw();
+	query << SELECT << "user_id" << FROM << "users" << WHERE << "username_hash" << EQUALS << username.GetRaw();
 	auto res = query.Exec();
 
 	if (!res || res.RowCount() != 1)
 		throw std::exception("Unable to find the user on the database");
 
 	const auto user_id = res[0][0].GetInt64();
-	const PublicKeyBytes identityPublicKey = res[0][1].GetByteArray();
+	//const PublicKeyBytes identityPublicKey = res[0][1].GetByteArray();
 	//const Uuid usergroupUuid = connection.server.usergroupsManager->GetUsergroupOfUser(username).uuid;
 
 	auto userPtr = std::make_shared<User>(user_id, username, &connection, &connection.server);

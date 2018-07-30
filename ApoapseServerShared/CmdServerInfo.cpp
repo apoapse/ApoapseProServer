@@ -17,7 +17,6 @@ void CmdServerInfo::SendWellcome(INetworkSender& destination, const User& user)
 	MessagePackSerializer ser;
 	ser.UnorderedAppend<std::string>("status", "authenticated");
 
-
 	Send(ser, destination);
 }
 

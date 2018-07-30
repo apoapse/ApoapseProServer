@@ -39,6 +39,7 @@ void ServerConnection::Authenticate(const Username& username)
 	{
 		// New user
 		m_relatedUser = server.usersManager->CreateUserObject(username, *this);
+		LOG << "User " << username << " connected";
 	}
 }
 
