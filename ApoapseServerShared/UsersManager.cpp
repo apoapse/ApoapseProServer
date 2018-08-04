@@ -108,6 +108,43 @@ void UsersManager::SetUserIdentity(const Username& username, const std::vector<b
 	query.Exec();
 }
 
+void UsersManager::Send(BytesWrapper bytesPtr, TCPConnection* excludedConnection /*= nullptr*/)
+{
+	for (const auto& user : m_connectedUsers)
+	{
+		user.second->Send(bytesPtr, excludedConnection);
+	}
+}
+
+void UsersManager::Send(StrWrapper strPtr, TCPConnection* excludedConnection /*= nullptr*/)
+{
+	for (const auto& user : m_connectedUsers)
+	{
+		user.second->Send(std::move(strPtr), excludedConnection);
+	}
+}
+
+void UsersManager::Send(std::unique_ptr<class NetworkPayload> data, TCPConnection* excludedConnection /*= nullptr*/)
+{
+	for (const auto& user : m_connectedUsers)
+	{
+		user.second->Send(std::move(data), excludedConnection);
+	}
+}
+
+std::string UsersManager::GetEndpointStr() const
+{
+	return "All connected users (" + std::to_string(m_connectedUsers.size()) + " connected)";
+}
+
+void UsersManager::Close()
+{
+	for (const auto& user : m_connectedUsers)
+	{
+		user.second->Close();
+	}
+}
+
 void UsersManager::RemoveConnectedUser(User& user)
 {
 	m_connectedUsers.erase(user.GetUsername());

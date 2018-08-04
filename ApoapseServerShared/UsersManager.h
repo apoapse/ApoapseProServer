@@ -3,9 +3,10 @@
 #include "CryptographyTypes.hpp"
 #include "User.h"
 #include "Uuid.h"
+#include "INetworkSender.h"
 class ServerConnection;
 
-class UsersManager
+class UsersManager : public INetworkSender
 {
 	friend class User;
 	friend class ServerConnection;
@@ -30,6 +31,15 @@ public:
 
 	void RegisterNewUser(const Username& username, const std::vector<byte>& encryptedTemporaryPassword);
 	void SetUserIdentity(const Username& username, const std::vector<byte>& encryptedPassword, const PublicKeyBytes& identityKey, const EncryptedPrivateKeyBytes& identityPrivateKey, const IV& identityIV);
+
+	// INetworkSender -> In the users manager, used to send to all connecter users
+	virtual void Send(BytesWrapper bytesPtr, TCPConnection* excludedConnection = nullptr) override;
+	virtual void Send(StrWrapper strPtr, TCPConnection* excludedConnection = nullptr) override;
+	virtual void Send(std::unique_ptr<class NetworkPayload> data, TCPConnection* excludedConnection = nullptr) override;
+
+	virtual std::string GetEndpointStr() const override;
+	virtual void Close() override;
+	//~ INetworkSender
 
 private:
 	void RemoveConnectedUser(User& user);

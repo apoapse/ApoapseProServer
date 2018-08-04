@@ -33,6 +33,9 @@
     <ClCompile Include="CmdRegisterNewUser.cpp">
       <Filter>Commands</Filter>
     </ClCompile>
+    <ClCompile Include="CmdCreateRoom.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ServerEntryPoint.h" />
