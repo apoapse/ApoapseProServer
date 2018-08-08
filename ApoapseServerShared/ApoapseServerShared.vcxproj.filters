@@ -60,6 +60,9 @@
     <ClInclude Include="CmdServerInfo.h">
       <Filter>Commands</Filter>
     </ClInclude>
+    <ClInclude Include="ServerDatabaseScheme.hpp">
+      <Filter>Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Settings">
@@ -76,6 +79,9 @@
     </Filter>
     <Filter Include="UnitTests">
       <UniqueIdentifier>{971bdf56-2bf0-4203-a8aa-97d576166450}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems">
+      <UniqueIdentifier>{6441fc4a-f250-4aa9-be3a-4e47229bb3b8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
