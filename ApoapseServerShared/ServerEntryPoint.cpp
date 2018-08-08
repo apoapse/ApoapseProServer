@@ -7,6 +7,8 @@
 #include "ApoapseServer.h"
 #include "Database.hpp"
 #include "LibraryLoader.hpp"
+#include "DatabaseIntegrityPatcher.h"
+#include "ServerDatabaseScheme.hpp"
 
 #ifdef UNIT_TESTS
 #include "UnitTestsManager.h"
@@ -32,6 +34,12 @@ int ServerMain(const std::vector<std::string>& launchArgs)
 	if (databaseSharedPtr->Open(dbParams, 1))
 	{
 		LOG << "Database accessed successfully. Params: " << *dbParams;
+
+		DatabaseIntegrityPatcher dbIntegrity(GetServerDbScheme());
+		if (!dbIntegrity.CheckAndResolve())
+		{
+			FatalError("The database integrity patcher has failed");
+		}
 	}
 	else
 	{
