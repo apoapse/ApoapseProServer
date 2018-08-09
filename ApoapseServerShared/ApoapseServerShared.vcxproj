@@ -149,6 +149,7 @@
     <ClCompile Include="ApoapseServer.cpp" />
     <ClCompile Include="CmdConnect.cpp" />
     <ClCompile Include="CmdCreateRoom.cpp" />
+    <ClCompile Include="CmdCreateThread.cpp" />
     <ClCompile Include="CmdRegisterNewUser.cpp" />
     <ClCompile Include="CmdServerInfo.cpp" />
     <ClCompile Include="ServerConnection.cpp" />

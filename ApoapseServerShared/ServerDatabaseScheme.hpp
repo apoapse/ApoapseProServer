@@ -78,6 +78,22 @@ static std::string GetServerDbScheme()
 					"unique": true
 				}
 			]
+		},
+		{
+			"name": "threads",
+			"fields":
+			[
+				{
+					"name": "id",
+					"type": "integer",
+					"primary": true
+				},		
+				{
+					"name": "uuid",
+					"type": "blob",
+					"unique": true
+				}
+			]
 		}
 	]
 }
