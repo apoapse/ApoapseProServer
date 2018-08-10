@@ -21,7 +21,8 @@ public:
 		info.requireAuthentication = true;
 		info.fields =
 		{
-			CommandField{ "uuid", FieldRequirement::any_mendatory, FIELD_VALUE_VALIDATOR(std::vector<byte>, Uuid::IsValid) },
+			CommandField{ "uuid", FieldRequirement::any_mendatory, FIELD_VALUE_VALIDATOR(ByteContainer, Uuid::IsValid) },
+			CommandField{ "room_uuid", FieldRequirement::any_mendatory, FIELD_VALUE_VALIDATOR(ByteContainer, Uuid::IsValid) },
 		};
 
 		return info;
@@ -30,20 +31,12 @@ public:
 	void Process(User& sender, ServerConnection& senderConnection) override
 	{
 		const auto uuid = Uuid(GetFieldsData().GetValue<ByteContainer>("uuid"));
+		const auto roomUuid = Uuid(GetFieldsData().GetValue<ByteContainer>("room_uuid"));
 		const DbId dbid = SQLUtils::CountRows("threads");
 
 		{
 			SQLQuery query(*global->database);
-			query << SELECT << "id" << FROM << "threads" << WHERE << "uuid" << EQUALS << uuid.GetInRawFormat();
-
-			auto res = query.Exec();
-			int count = res.RowCount();
-			int ts = 0;
-		}
-
-		{
-			SQLQuery query(*global->database);
-			query << INSERT_INTO << "threads" << " (id, uuid)" << VALUES << "(" << dbid << "," << uuid.GetInRawFormat() << ")";
+			query << INSERT_INTO << "threads" << " (id, uuid, room_uuid)" << VALUES << "(" << dbid << "," << uuid.GetInRawFormat() << "," << roomUuid.GetInRawFormat() << ")";
 
 			query.Exec();
 		}

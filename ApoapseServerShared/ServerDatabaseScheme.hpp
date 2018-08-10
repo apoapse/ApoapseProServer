@@ -87,7 +87,11 @@ static std::string GetServerDbScheme()
 					"name": "id",
 					"type": "integer",
 					"primary": true
-				},		
+				},
+				{
+					"name": "room_uuid",
+					"type": "blob"
+				},	
 				{
 					"name": "uuid",
 					"type": "blob",
