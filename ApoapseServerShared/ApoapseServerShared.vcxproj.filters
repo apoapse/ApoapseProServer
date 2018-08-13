@@ -39,6 +39,9 @@
     <ClCompile Include="CmdCreateThread.cpp">
       <Filter>Commands</Filter>
     </ClCompile>
+    <ClCompile Include="CmdApoapseMessage.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ServerEntryPoint.h" />

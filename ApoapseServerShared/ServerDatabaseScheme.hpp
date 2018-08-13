@@ -98,6 +98,38 @@ static std::string GetServerDbScheme()
 					"unique": true
 				}
 			]
+		},
+		{
+			"name": "messages",
+			"fields":
+			[
+				{
+					"name": "id",
+					"type": "integer",
+					"primary": true
+				},
+				{
+					"name": "uuid",
+					"type": "blob",
+					"unique": true
+				},		
+				{
+					"name": "thread_uuid",
+					"type": "blob"
+				},
+				{
+					"name": "author",
+					"type": "blob"
+				},
+				{
+					"name": "sent_time",
+					"type": "text"
+				},
+				{
+					"name": "content",
+					"type": "blob"
+				}
+			]
 		}
 	]
 }
