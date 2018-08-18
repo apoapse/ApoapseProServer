@@ -35,7 +35,7 @@ public:
 	// INetworkSender -> In the users manager, used to send to all connecter users
 	virtual void Send(BytesWrapper bytesPtr, TCPConnection* excludedConnection = nullptr) override;
 	virtual void Send(StrWrapper strPtr, TCPConnection* excludedConnection = nullptr) override;
-	virtual void Send(std::unique_ptr<class NetworkPayload> data, TCPConnection* excludedConnection = nullptr) override;
+	virtual void Send(std::shared_ptr<class NetworkPayload> data, TCPConnection* excludedConnection = nullptr) override;
 
 	virtual std::string GetEndpointStr() const override;
 	virtual void Close() override;

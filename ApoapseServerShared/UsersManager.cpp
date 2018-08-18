@@ -124,11 +124,11 @@ void UsersManager::Send(StrWrapper strPtr, TCPConnection* excludedConnection /*=
 	}
 }
 
-void UsersManager::Send(std::unique_ptr<class NetworkPayload> data, TCPConnection* excludedConnection /*= nullptr*/)
+void UsersManager::Send(std::shared_ptr<class NetworkPayload> data, TCPConnection* excludedConnection /*= nullptr*/)
 {
 	for (const auto& user : m_connectedUsers)
 	{
-		user.second->Send(std::move(data), excludedConnection);
+		user.second->Send(data, excludedConnection);
 	}
 }
 

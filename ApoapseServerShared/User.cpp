@@ -66,11 +66,11 @@ void User::Send(StrWrapper strPtr, TCPConnection* excludedConnection /*= nullptr
 	}
 }
 
-void User::Send(std::unique_ptr<class NetworkPayload> data, TCPConnection* excludedConnection /*= nullptr*/)
+void User::Send(std::shared_ptr<class NetworkPayload> data, TCPConnection* excludedConnection /*= nullptr*/)
 {
 	for (auto* connection : m_associatedConnections)
 	{
-		connection->Send(std::move(data), excludedConnection);
+		connection->Send(data, excludedConnection);
 	}
 }
 
