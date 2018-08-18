@@ -85,6 +85,17 @@ void User::Close()
 		connection->Close();
 }
 
+bool User::IsUsingTemporaryPassword() const	// #MVP
+{
+	SQLQuery query(*global->database);
+	query << SELECT << "is_temporary_passsword" << FROM << "users" << WHERE << "username_hash" << EQUALS << m_username.GetRaw();
+	auto res = query.Exec();
+
+	const int useTemporaryPassword = res[0][0].GetInt32();
+
+	return static_cast<bool>(useTemporaryPassword);
+}
+
 std::vector<byte> User::GenerateRandomSalt()
 {
 	return Cryptography::GenerateRandomBytes(sha512Length);

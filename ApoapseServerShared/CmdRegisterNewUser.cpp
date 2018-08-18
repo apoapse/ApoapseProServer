@@ -8,6 +8,7 @@
 #include "Username.h"
 #include "UsersManager.h"
 #include "SecurityAlert.h"
+#include "User.h"
 
 class CmdRegisterNewUser final : public Command
 {
@@ -17,7 +18,7 @@ public:
 		static auto info = CommandInfo();
 		info.command = CommandId::register_new_user;
 		info.serverOnly = true;
-		//info.requireAuthentication = true; // #MVP
+		info.requireAuthentication = true;
 		info.fields =
 		{
 			CommandField{ "username", FieldRequirement::any_mendatory, FIELD_VALUE_VALIDATOR(std::vector<byte>, Username::IsValid) },
@@ -27,17 +28,14 @@ public:
 		return info;
 	}
 
-	//void Process(User& sender, ServerConnection& senderConnection) override #MVP
-
-	void Process(ServerConnection& sender) override
+	void Process(User& sender, ServerConnection& senderConnection) override
 	{
-		
 		const auto username = Username(GetFieldsData().GetValue<std::vector<byte>>("username"));
 		const auto password = GetFieldsData().GetValue<std::vector<byte>>("temporary_password");
 
-		if (!sender.server.usersManager->DoesUserExist(username))
+		if (!senderConnection.server.usersManager->DoesUserExist(username))
 		{
-			sender.server.usersManager->RegisterNewUser(username, password);
+			senderConnection.server.usersManager->RegisterNewUser(username, password);
 		}
 		else
 		{

@@ -32,6 +32,9 @@ public:
 
 	virtual std::string GetEndpointStr() const override;
 	virtual void Close() override;
+	// ~INetworkSender
+
+	bool IsUsingTemporaryPassword() const;
 
 	static std::vector<byte> GenerateRandomSalt();
 	static std::vector<byte> HashPassword(const std::vector<byte>& encryptedPassword, const std::vector<byte>& salt);

@@ -42,6 +42,12 @@
     <ClCompile Include="CmdApoapseMessage.cpp">
       <Filter>Commands</Filter>
     </ClCompile>
+    <ClCompile Include="CmdApoapseInstall.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdFirstUserConnection.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ServerEntryPoint.h" />

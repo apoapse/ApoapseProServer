@@ -53,7 +53,7 @@ bool ServerConnection::OnConnectedToServer()
 	return true;
 }
 
-void ServerConnection::OnReceivedValidCommand(std::unique_ptr<Command> cmd)
+void ServerConnection::OnReceivedValidCommand(std::unique_ptr<Command> cmd) // #REFACTORING #TODO move to the Command class
 {
 	const bool authenticated = IsAuthenticated();
 
@@ -71,6 +71,11 @@ void ServerConnection::OnReceivedValidCommand(std::unique_ptr<Command> cmd)
 		{
 			cmd->Process(*m_relatedUser.value(), *this);
 		}
+		else if (authenticated && cmd->GetInfo().allowForUsersRequiredToChangePassword && m_relatedUser.value()->IsUsingTemporaryPassword())
+		{
+			cmd->Process(*m_relatedUser.value(), *this);
+		}
+
 		else if (cmd->GetInfo().onlyNonAuthenticated && !authenticated)
 		{
 			cmd->Process(*this);

@@ -17,6 +17,11 @@ void CmdServerInfo::SendWellcome(INetworkSender& destination, const User& user)
 	MessagePackSerializer ser;
 	ser.UnorderedAppend<std::string>("status", "authenticated");
 
+	if (user.IsUsingTemporaryPassword())
+	{
+		ser.UnorderedAppend<bool>("requirePasswordChange", true);
+	}
+
 	Send(ser, destination);
 }
 

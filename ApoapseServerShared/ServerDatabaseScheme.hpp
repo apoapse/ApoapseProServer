@@ -60,6 +60,10 @@ static std::string GetServerDbScheme()
 				{
 					"name": "password_salt",
 					"type": "blob"
+				},
+				{
+					"name": "is_temporary_passsword",
+					"type": "int"
 				}
 			]
 		},
