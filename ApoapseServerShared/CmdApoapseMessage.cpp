@@ -10,8 +10,9 @@
 #include "UsersManager.h"
 #include "DateTimeUtils.h"
 #include "SQLUtils.hpp"
+#include "OperationObjects.h"
 
-class CmdApoapseMessage final : public Command
+class CmdApoapseMessage final : public Command, public IOperationObject
 {
 public:
 	CommandInfo& CmdApoapseMessage::GetInfo() const override
@@ -34,6 +35,7 @@ public:
 	{
 		const auto sentTime = DateTimeUtils::UTCDateTime(GetFieldsData().GetValue<std::string>("sentTime"));
 		const auto uuid = Uuid(GetFieldsData().GetValue<ByteContainer>("uuid"));
+		const DbId dbId = SQLUtils::CountRows("messages");
 
 		if (sentTime > DateTimeUtils::UTCDateTime::CurrentTime())
 		{
@@ -44,7 +46,7 @@ public:
 		{
 			SQLQuery query(*global->database);
 			query	<< INSERT_INTO << "messages" << " (id, uuid, thread_uuid, author, sent_time, content)" << VALUES << "(" 
-					<< SQLUtils::CountRows("messages") << "," << uuid.GetAsByteVector() << "," << GetFieldsData().GetValue<ByteContainer>("threadUuid") << ","
+					<< dbId << "," << uuid.GetAsByteVector() << "," << GetFieldsData().GetValue<ByteContainer>("threadUuid") << ","
 					<< sender.GetUsername().GetRaw() << "," << sentTime.str() << "," << GetFieldsData().GetValue<ByteContainer>("content")
 			<< ")";
 
@@ -53,7 +55,7 @@ public:
 
 		LOG << "Received message " << uuid.GetAsByteVector() << " from " << sender.GetUsername().ToStr();
 
-		Operation(OperationType::new_message, OperationDirection::sent, sender.GetUsername(), uuid).Save();
+		Operation(OperationType::new_message, sender.GetUsername(), dbId).Save();
 
 		{
 			MessagePackSerializer ser;
@@ -66,6 +68,24 @@ public:
 			Propagate(ser, *senderConnection.server.usersManager);
 		}
 	}
+
+	void SendFromDatabase(DbId id, ServerConnection& connection) override
+	{
+		SQLQuery query(*global->database);
+		query << SELECT << "uuid,thread_uuid,author,sent_time,content" << FROM << "messages" << WHERE << "id" << EQUALS << id;
+		auto res = query.Exec();
+
+		MessagePackSerializer ser;
+		ser.UnorderedAppend("uuid", res[0][0].GetByteArray());
+		ser.UnorderedAppend("threadUuid", res[0][1].GetByteArray());
+		ser.UnorderedAppend("author", res[0][2].GetByteArray());
+		ser.UnorderedAppend("sentTime", res[0][3].GetText());
+		ser.UnorderedAppend("content", res[0][4].GetByteArray());
+
+		CmdApoapseMessage cmd;
+		cmd.Send(ser, connection);
+	}
 };
 
 APOAPSE_COMMAND_REGISTER(CmdApoapseMessage, CommandId::apoapse_message);
+REGISTER_OPERATION_OBJECT(CmdApoapseMessage, OperationType::new_message);

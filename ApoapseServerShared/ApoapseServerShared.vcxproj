@@ -155,6 +155,8 @@
     <ClCompile Include="CmdFirstUserConnection.cpp" />
     <ClCompile Include="CmdRegisterNewUser.cpp" />
     <ClCompile Include="CmdServerInfo.cpp" />
+    <ClCompile Include="CmdSyncRequest.cpp" />
+    <ClCompile Include="OperationObjects.cpp" />
     <ClCompile Include="ServerConnection.cpp" />
     <ClCompile Include="ServerSettings.cpp" />
     <ClCompile Include="ServerSettingsVariables.cpp" />
@@ -169,6 +171,7 @@
   <ItemGroup>
     <ClInclude Include="ApoapseServer.h" />
     <ClInclude Include="CmdServerInfo.h" />
+    <ClInclude Include="OperationObjects.h" />
     <ClInclude Include="ServerConnection.h" />
     <ClInclude Include="ServerDatabaseScheme.hpp" />
     <ClInclude Include="ServerEntryPoint.h" />

@@ -21,21 +21,12 @@ static std::string GetServerDbScheme()
 					"type": "blob"
 				},
 				{
-					"name": "direction",
-					"type": "blob"
-				},
-				{
 					"name": "time",
 					"type": "integer"
 				},
 				{
-					"name": "user",
-					"type": "blob"
-				},
-				{
-					"name": "item_uuid",
-					"type": "blob",
-					"canBeNull": true
+					"name": "item_dbid",
+					"type": "integer"
 				}
 			]
 		},

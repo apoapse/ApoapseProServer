@@ -9,8 +9,9 @@
 #include "SQLQuery.h"
 #include "UsersManager.h"
 #include "SQLUtils.hpp"
+#include "OperationObjects.h"
 
-class CmdCreateThread final : public Command
+class CmdCreateThread final : public Command, public IOperationObject
 {
 public:
 	CommandInfo& CmdCreateThread::GetInfo() const override
@@ -41,10 +42,25 @@ public:
 			query.Exec();
 		}
 
-		Operation(OperationType::new_thread, OperationDirection::sent, sender.GetUsername(), uuid).Save();
+		Operation(OperationType::new_thread, sender.GetUsername(), dbid).Save();
 
 		Propagate(*senderConnection.server.usersManager);
+	}
+
+	void SendFromDatabase(DbId id, ServerConnection& connection) override
+	{
+		SQLQuery query(*global->database);
+		query << SELECT << "room_uuid,uuid" << FROM << "threads" << WHERE << "id" << EQUALS << id;
+		auto res = query.Exec();
+
+		MessagePackSerializer ser;
+		ser.UnorderedAppend("uuid", res[0][1].GetByteArray());
+		ser.UnorderedAppend("room_uuid", res[0][0].GetByteArray());
+
+		CmdCreateThread cmd;
+		cmd.Send(ser, connection);
 	}
 };
 
 APOAPSE_COMMAND_REGISTER(CmdCreateThread, CommandId::create_thread);
+REGISTER_OPERATION_OBJECT(CmdCreateThread, OperationType::new_thread);

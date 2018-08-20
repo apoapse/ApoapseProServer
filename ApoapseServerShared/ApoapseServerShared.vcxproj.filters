@@ -48,6 +48,12 @@
     <ClCompile Include="CmdFirstUserConnection.cpp">
       <Filter>Commands</Filter>
     </ClCompile>
+    <ClCompile Include="CmdSyncRequest.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="OperationObjects.cpp">
+      <Filter>OperationSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ServerEntryPoint.h" />
@@ -75,6 +81,9 @@
     <ClInclude Include="ServerDatabaseScheme.hpp">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="OperationObjects.h">
+      <Filter>OperationSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Settings">
@@ -94,6 +103,9 @@
     </Filter>
     <Filter Include="Systems">
       <UniqueIdentifier>{6441fc4a-f250-4aa9-be3a-4e47229bb3b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OperationSystem">
+      <UniqueIdentifier>{554360b0-7c15-4348-b713-719d5a7f2b89}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
