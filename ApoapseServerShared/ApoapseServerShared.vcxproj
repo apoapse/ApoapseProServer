@@ -153,6 +153,7 @@
     <ClCompile Include="CmdCreateRoom.cpp" />
     <ClCompile Include="CmdCreateThread.cpp" />
     <ClCompile Include="CmdFirstUserConnection.cpp" />
+    <ClCompile Include="CmdNotifyNewUser.cpp" />
     <ClCompile Include="CmdRegisterNewUser.cpp" />
     <ClCompile Include="CmdServerInfo.cpp" />
     <ClCompile Include="CmdSyncRequest.cpp" />
@@ -170,6 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ApoapseServer.h" />
+    <ClInclude Include="CmdNotifyNewUser.h" />
     <ClInclude Include="CmdServerInfo.h" />
     <ClInclude Include="OperationObjects.h" />
     <ClInclude Include="ServerConnection.h" />

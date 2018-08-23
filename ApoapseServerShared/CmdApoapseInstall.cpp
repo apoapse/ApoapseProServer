@@ -21,6 +21,8 @@ public:
 			Field{ "admin_password", FieldRequirement::any_mendatory, FIELD_VALUE_VALIDATOR(std::vector<byte>, [&](const auto& hash) { return (hash.size() == sha256Length); }) },
 		};
 
+		info.metadataTypes = MetadataAcess::all;
+
 		return info;
 	}
 
@@ -32,7 +34,7 @@ public:
 		if (sender.server.usersManager->GetRegisteredUsersCount() == 0)
 		{
 			sender.server.usersManager->RegisterNewUser(username, password);
-			sender.server.usersManager->SetUserIdentity(username, password);
+			sender.server.usersManager->SetUserIdentity(username, password, GetMetadataField(MetadataAcess::all));
 
 			LOG << "Apoapse setup complete. Disconnecting administrator for first connection.";	// #TODO authenticate directly the user
 			sender.Close();

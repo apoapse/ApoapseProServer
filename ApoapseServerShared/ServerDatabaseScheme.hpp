@@ -55,6 +55,11 @@ static std::string GetServerDbScheme()
 				{
 					"name": "is_temporary_passsword",
 					"type": "int"
+				},
+				{
+					"name": "metadata_all",
+					"type": "blob",
+					"canBeNull": true
 				}
 			]
 		},

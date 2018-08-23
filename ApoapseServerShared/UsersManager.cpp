@@ -4,6 +4,8 @@
 #include "SQLQuery.h"
 #include "ServerConnection.h"
 #include "ApoapseServer.h"
+#include "ApoapseMetadata.h"
+#include "Operation.h"
 
 bool UsersManager::IsUserConnected(const Username& username) const
 {
@@ -97,16 +99,26 @@ void UsersManager::RegisterNewUser(const Username& username, const std::vector<b
 	LOG << "User " << username.ToStr() << " registered";
 }
 
-void UsersManager::SetUserIdentity(const Username& username, const std::vector<byte>& encryptedPassword/*, const PublicKeyBytes& identityKey, const EncryptedPrivateKeyBytes& identityPrivateKey, const IV& identityIV*/)
+void UsersManager::SetUserIdentity(const Username& username, const std::vector<byte>& encryptedPassword, const ApoapseMetadata& metadataAll/*, const PublicKeyBytes& identityKey, const EncryptedPrivateKeyBytes& identityPrivateKey, const IV& identityIV*/)
 {
 	SECURITY_ASSERT(DoesUserExist(username));
 
 	const auto salt = User::GenerateRandomSalt();
 	const auto passwordForStorage = User::HashPassword(encryptedPassword, salt);
 
-	SQLQuery query(*global->database);
-	query << UPDATE << "users" << SET << "password=" << passwordForStorage << ",password_salt=" << salt << ",is_temporary_passsword=" << 0 << WHERE "username_hash" << EQUALS << username.GetRaw();
-	query.Exec();
+	{
+		SQLQuery query(*global->database);
+		query << UPDATE << "users" << SET << "password=" << passwordForStorage << ",password_salt=" << salt << ",is_temporary_passsword=" << 0 << ",metadata_all=" << metadataAll.GetRawDataForDb() << WHERE "username_hash" << EQUALS << username.GetRaw();
+		query.Exec();
+	}
+
+	{
+		SQLQuery query(*global->database);
+		query << SELECT << "user_id" << FROM "users" << WHERE "username_hash" << EQUALS << username.GetRaw();
+		auto res = query.Exec();
+
+		Operation(OperationType::new_user, username, res[0][0].GetInt64()).Save();
+	}
 }
 
 void UsersManager::Send(BytesWrapper bytesPtr, TCPConnection* excludedConnection /*= nullptr*/)

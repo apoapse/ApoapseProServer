@@ -54,6 +54,9 @@
     <ClCompile Include="OperationObjects.cpp">
       <Filter>OperationSystem</Filter>
     </ClCompile>
+    <ClCompile Include="CmdNotifyNewUser.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ServerEntryPoint.h" />
@@ -83,6 +86,9 @@
     </ClInclude>
     <ClInclude Include="OperationObjects.h">
       <Filter>OperationSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="CmdNotifyNewUser.h">
+      <Filter>Commands</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

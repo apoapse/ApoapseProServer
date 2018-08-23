@@ -20,6 +20,8 @@ public:
 			Field{ "password", FieldRequirement::any_mendatory, FIELD_VALUE_VALIDATOR(std::vector<byte>, [&](const auto& hash) { return (hash.size() == sha256Length); }) },
 		};
 
+		info.metadataTypes = MetadataAcess::all;
+
 		return info;
 	}
 
@@ -28,7 +30,12 @@ public:
 		if (sender.IsUsingTemporaryPassword())
 		{
 			const auto password = GetFieldsData().GetValue<std::vector<byte>>("password");
-			senderConnection.server.usersManager->SetUserIdentity(sender.GetUsername(), password);
+			senderConnection.server.usersManager->SetUserIdentity(sender.GetUsername(), password, GetMetadataField(MetadataAcess::all));
+
+			// propagate
+			{
+				//OperationObjects::CreateObject(OperationType::new_user)->SendFromDatabase()
+			}
 
 			LOG << "First connection setup complete. Disconnecting the user for first connection with the actual password.";	// #TODO authenticate directly the user
 			senderConnection.Close();
