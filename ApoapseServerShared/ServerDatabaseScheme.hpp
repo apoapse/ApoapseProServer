@@ -71,6 +71,10 @@ static std::string GetServerDbScheme()
 					"name": "uuid",
 					"type": "blob",
 					"unique": true
+				},
+				{
+					"name": "metadata_self",
+					"type": "blob"
 				}
 			]
 		},
@@ -91,6 +95,10 @@ static std::string GetServerDbScheme()
 					"name": "uuid",
 					"type": "blob",
 					"unique": true
+				},
+				{
+					"name": "metadata_usergroup",
+					"type": "blob"
 				}
 			]
 		},

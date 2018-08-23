@@ -20,10 +20,11 @@ public:
 		info.command = CommandId::create_thread;
 		info.serverOnly = true;
 		info.requireAuthentication = true;
+		info.metadataTypes = MetadataAcess::usergroup;
 		info.fields =
 		{
-			CommandField{ "uuid", FieldRequirement::any_mendatory, FIELD_VALUE_VALIDATOR(ByteContainer, Uuid::IsValid) },
-			CommandField{ "room_uuid", FieldRequirement::any_mendatory, FIELD_VALUE_VALIDATOR(ByteContainer, Uuid::IsValid) },
+			Field{ "uuid", FieldRequirement::any_mendatory, FIELD_VALUE_VALIDATOR(ByteContainer, Uuid::IsValid) },
+			Field{ "room_uuid", FieldRequirement::any_mendatory, FIELD_VALUE_VALIDATOR(ByteContainer, Uuid::IsValid) },
 		};
 
 		return info;
@@ -37,7 +38,7 @@ public:
 
 		{
 			SQLQuery query(*global->database);
-			query << INSERT_INTO << "threads" << " (id, uuid, room_uuid)" << VALUES << "(" << dbid << "," << uuid.GetInRawFormat() << "," << roomUuid.GetInRawFormat() << ")";
+			query << INSERT_INTO << "threads" << " (id, uuid, room_uuid, metadata_usergroup)" << VALUES << "(" << dbid << "," << uuid.GetInRawFormat() << "," << roomUuid.GetInRawFormat() << "," << GetMetadataField(MetadataAcess::usergroup).GetRawDataForDb() << ")";
 
 			query.Exec();
 		}
@@ -50,12 +51,13 @@ public:
 	void SendFromDatabase(DbId id, ServerConnection& connection) override
 	{
 		SQLQuery query(*global->database);
-		query << SELECT << "room_uuid,uuid" << FROM << "threads" << WHERE << "id" << EQUALS << id;
+		query << SELECT << "room_uuid,uuid,metadata_usergroup" << FROM << "threads" << WHERE << "id" << EQUALS << id;
 		auto res = query.Exec();
 
 		MessagePackSerializer ser;
 		ser.UnorderedAppend("uuid", res[0][1].GetByteArray());
 		ser.UnorderedAppend("room_uuid", res[0][0].GetByteArray());
+		ser.UnorderedAppend("metadata_usergroup", ApoapseMetadata(res[0][2], MetadataAcess::usergroup).GetRawData());
 
 		CmdCreateThread cmd;
 		cmd.Send(ser, connection);

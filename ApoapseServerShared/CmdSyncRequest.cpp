@@ -18,7 +18,7 @@ public:
 		info.requireAuthentication = true;
 		info.fields =
 		{
-			CommandField{ "sinceTimestamp", FieldRequirement::any_mendatory, FIELD_VALUE(Int64) },
+			Field{ "sinceTimestamp", FieldRequirement::any_mendatory, FIELD_VALUE(Int64) },
 		};
 
 		return info;

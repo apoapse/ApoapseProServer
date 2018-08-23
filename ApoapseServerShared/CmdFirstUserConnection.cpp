@@ -17,7 +17,7 @@ public:
 		info.allowForUsersRequiredToChangePassword = true;
 		info.fields =
 		{
-			CommandField{ "password", FieldRequirement::any_mendatory, FIELD_VALUE_VALIDATOR(std::vector<byte>, [&](const auto& hash) { return (hash.size() == sha256Length); }) },
+			Field{ "password", FieldRequirement::any_mendatory, FIELD_VALUE_VALIDATOR(std::vector<byte>, [&](const auto& hash) { return (hash.size() == sha256Length); }) },
 		};
 
 		return info;

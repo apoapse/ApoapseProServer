@@ -10,6 +10,7 @@
 #include "UsersManager.h"
 #include "OperationObjects.h"
 #include "SQLUtils.hpp"
+#include "ApoapseMetadata.h"
 
 class CmdCreateRoom final : public Command, public IOperationObject
 {
@@ -20,9 +21,10 @@ public:
 		info.command = CommandId::create_room;
 		info.serverOnly = true;
 		info.requireAuthentication = true;
+		info.metadataTypes = MetadataAcess::self;
 		info.fields =
 		{
-			CommandField{ "uuid", FieldRequirement::any_mendatory, FIELD_VALUE_VALIDATOR(std::vector<byte>, Uuid::IsValid) },
+			Field{ "uuid", FieldRequirement::any_mendatory, FIELD_VALUE_VALIDATOR(std::vector<byte>, Uuid::IsValid) }
 		};
 
 		return info;
@@ -35,7 +37,7 @@ public:
 
 		{
 			SQLQuery query(*global->database);
-			query << INSERT_INTO << "rooms" << " (id, uuid)" << VALUES << "(" << dbId << "," << uuid.GetInRawFormat() << ")";
+			query << INSERT_INTO << "rooms" << " (id, uuid, metadata_self)" << VALUES << "(" << dbId << "," << uuid.GetInRawFormat() << "," << GetMetadataField(MetadataAcess::self).GetRawDataForDb() << ")";
 
 			query.Exec();
 		}
@@ -53,6 +55,7 @@ public:
 
 		MessagePackSerializer ser;
 		ser.UnorderedAppend("uuid", res[0][1].GetByteArray());
+		ser.UnorderedAppend("metadata_self", ApoapseMetadata(res[0][2], MetadataAcess::self).GetRawData());
 
 		CmdCreateRoom cmd;
 		cmd.Send(ser, connection);
