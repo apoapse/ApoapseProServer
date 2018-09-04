@@ -18,11 +18,16 @@ bool OperationObjects::DoesObjectExist(OperationType operation) const
 
 void OperationObjects::SynchronizeSince(Int64 sinceTimestamp, ServerConnection& connection)
 {
-	LOG << "User " << connection.GetRelatedUser()->GetUsername().ToStr() << " requesting operations sync since " << sinceTimestamp;
+	const Username relatedUser = connection.GetRelatedUser()->GetUsername();
+
+	LOG << "User " << relatedUser.ToStr() << " requesting operations sync since " << sinceTimestamp;
 	const Int64 sinceTimestampReal = (sinceTimestamp - 1);	// We subtract one second to make sure there is no operations that can be lost if there is delay between user disconnection for instance
 
-	SQLQuery query(*global->database);
-	query << SELECT << "type,item_dbid" << FROM << "operations" << WHERE "time" << GREATER_THAN << sinceTimestampReal << ORDER_BY << "time" << ASC;	// #MVP make sure the user is allowed to receive the command in question
+	SQLQuery query(*global->database);	// #TODO #USERGROUP
+	query << SELECT << "type,item_dbid" << FROM << "operations" << WHERE "time" << GREATER_THAN << sinceTimestampReal << AND 
+		<< "(" << "ownership" << EQUALS << static_cast<Int32>(OperationOwnership::all) << OR << "related_user" << EQUALS << relatedUser.GetRaw() << ")"
+		<< ORDER_BY << "time" << ASC;	// #MVP make sure the user is allowed to receive the command in question
+	
 	auto res = query.Exec();
 
 	UInt64 i = 0;

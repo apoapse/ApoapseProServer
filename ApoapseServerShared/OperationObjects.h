@@ -2,12 +2,13 @@
 #include "ObjectsFactory.hpp"
 #include "Operation.h"
 #include "SQLQuery.h"
+#include "INetworkSender.h"
 
 #define REGISTER_OPERATION_OBJECT(_class, _key)	OBJECTS_FACTORY_REGISTER_2(OperationObjects::GetInstance().operationObjects, IOperationObject, _class, OperationType, _key)
 
 struct IOperationObject
 {
-	virtual void SendFromDatabase(DbId id, class ServerConnection& connection) = 0;
+	virtual void SendFromDatabase(DbId id, INetworkSender& destination) = 0;
 
 	virtual ~IOperationObject() = default;
 };
@@ -29,8 +30,8 @@ public:
 	void operator=(OperationObjects const&) = delete;
 
 	static void SynchronizeSince(Int64 sinceTimestamp, class ServerConnection& connection);
+	std::unique_ptr<IOperationObject> CreateObject(OperationType operation);
 
 private:
-	std::unique_ptr<IOperationObject> CreateObject(OperationType operation);
 	bool DoesObjectExist(OperationType operation) const;
 };

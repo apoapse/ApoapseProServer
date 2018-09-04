@@ -57,6 +57,12 @@
     <ClCompile Include="CmdNotifyNewUser.cpp">
       <Filter>Commands</Filter>
     </ClCompile>
+    <ClCompile Include="CmdMarkAsRead.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="ApoapseMessage.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ServerEntryPoint.h" />
@@ -89,6 +95,9 @@
     </ClInclude>
     <ClInclude Include="CmdNotifyNewUser.h">
       <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="ApoapseMessage.h">
+      <Filter>Systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -47,7 +47,7 @@ public:
 		Propagate(*senderConnection.server.usersManager);
 	}
 
-	void SendFromDatabase(DbId id, ServerConnection& connection) override
+	void SendFromDatabase(DbId id, INetworkSender& connection) override
 	{
 		SQLQuery query(*global->database);
 		query << SELECT << ALL << FROM << "rooms" << WHERE << "id" << EQUALS << id;

@@ -99,7 +99,7 @@ void UsersManager::RegisterNewUser(const Username& username, const std::vector<b
 	LOG << "User " << username.ToStr() << " registered";
 }
 
-void UsersManager::SetUserIdentity(const Username& username, const std::vector<byte>& encryptedPassword, const ApoapseMetadata& metadataAll/*, const PublicKeyBytes& identityKey, const EncryptedPrivateKeyBytes& identityPrivateKey, const IV& identityIV*/)
+DbId UsersManager::SetUserIdentity(const Username& username, const std::vector<byte>& encryptedPassword, const ApoapseMetadata& metadataAll/*, const PublicKeyBytes& identityKey, const EncryptedPrivateKeyBytes& identityPrivateKey, const IV& identityIV*/)
 {
 	SECURITY_ASSERT(DoesUserExist(username));
 
@@ -112,13 +112,15 @@ void UsersManager::SetUserIdentity(const Username& username, const std::vector<b
 		query.Exec();
 	}
 
-	{
-		SQLQuery query(*global->database);
-		query << SELECT << "user_id" << FROM "users" << WHERE "username_hash" << EQUALS << username.GetRaw();
-		auto res = query.Exec();
+	SQLQuery query(*global->database);
+	query << SELECT << "user_id" << FROM "users" << WHERE "username_hash" << EQUALS << username.GetRaw();
+	auto res = query.Exec();
 
-		Operation(OperationType::new_user, username, res[0][0].GetInt64()).Save();
-	}
+	DbId dbId = res[0][0].GetInt64();
+
+	Operation(OperationType::new_user, username, dbId).Save();
+
+	return dbId;
 }
 
 void UsersManager::Send(BytesWrapper bytesPtr, TCPConnection* excludedConnection /*= nullptr*/)

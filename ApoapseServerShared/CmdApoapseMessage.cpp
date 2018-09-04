@@ -69,7 +69,7 @@ public:
 		}
 	}
 
-	void SendFromDatabase(DbId id, ServerConnection& connection) override
+	void SendFromDatabase(DbId id, INetworkSender& connection) override
 	{
 		SQLQuery query(*global->database);
 		query << SELECT << "uuid,thread_uuid,author,sent_time,content" << FROM << "messages" << WHERE << "id" << EQUALS << id;

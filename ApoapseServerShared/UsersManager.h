@@ -31,7 +31,7 @@ public:
 	bool DoesUserExist(const Username& username) const;
 
 	void RegisterNewUser(const Username& username, const std::vector<byte>& encryptedTemporaryPassword);
-	void SetUserIdentity(const Username& username, const std::vector<byte>& encryptedPassword, const ApoapseMetadata& metadataAll/*, const PublicKeyBytes& identityKey, const EncryptedPrivateKeyBytes& identityPrivateKey, const IV& identityIV*/);
+	DbId SetUserIdentity(const Username& username, const std::vector<byte>& encryptedPassword, const ApoapseMetadata& metadataAll/*, const PublicKeyBytes& identityKey, const EncryptedPrivateKeyBytes& identityPrivateKey, const IV& identityIV*/);
 
 	// INetworkSender -> In the users manager, used to send to all connecter users
 	virtual void Send(BytesWrapper bytesPtr, TCPConnection* excludedConnection = nullptr) override;

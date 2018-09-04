@@ -27,7 +27,7 @@ void CmdNotifyNewUser::SendNotifyNewUser(INetworkSender& destination, const User
 	cmd.Send(ser, destination);
 }
 
-void CmdNotifyNewUser::SendFromDatabase(DbId id, ServerConnection& connection)
+void CmdNotifyNewUser::SendFromDatabase(DbId id, INetworkSender& connection)
 {
 	SQLQuery query(*global->database);
 	query << SELECT << "username_hash, metadata_all" << FROM << "users" << WHERE << "user_id" << EQUALS << id;

@@ -10,5 +10,5 @@ public:
 
 	void SendNotifyNewUser(INetworkSender& destination, const Username& username, const ApoapseMetadata& metadataAll);
 
-	void SendFromDatabase(DbId id, ServerConnection& connection) override;
+	void SendFromDatabase(DbId id, INetworkSender& connection) override;
 };

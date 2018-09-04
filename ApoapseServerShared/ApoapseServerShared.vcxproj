@@ -146,6 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ApoapseMessage.cpp" />
     <ClCompile Include="ApoapseServer.cpp" />
     <ClCompile Include="CmdApoapseInstall.cpp" />
     <ClCompile Include="CmdApoapseMessage.cpp" />
@@ -153,6 +154,7 @@
     <ClCompile Include="CmdCreateRoom.cpp" />
     <ClCompile Include="CmdCreateThread.cpp" />
     <ClCompile Include="CmdFirstUserConnection.cpp" />
+    <ClCompile Include="CmdMarkAsRead.cpp" />
     <ClCompile Include="CmdNotifyNewUser.cpp" />
     <ClCompile Include="CmdRegisterNewUser.cpp" />
     <ClCompile Include="CmdServerInfo.cpp" />
@@ -170,6 +172,7 @@
     <ClCompile Include="UT_User.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ApoapseMessage.h" />
     <ClInclude Include="ApoapseServer.h" />
     <ClInclude Include="CmdNotifyNewUser.h" />
     <ClInclude Include="CmdServerInfo.h" />
