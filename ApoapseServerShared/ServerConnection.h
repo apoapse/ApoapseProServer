@@ -11,7 +11,7 @@ class ServerConnection : public GenericConnection
 public:
 	ApoapseServer& server;
 
-	ServerConnection(boost::asio::io_service& ioService, ApoapseServer* server);
+	ServerConnection(boost::asio::io_service& ioService, ApoapseServer* server, ssl::context& context);
 	virtual ~ServerConnection() override;
 
 	bool IsAuthenticated() const;
