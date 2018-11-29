@@ -16,11 +16,14 @@ void CmdServerInfo::SendWellcome(INetworkSender& destination, const User& user)
 {
 	MessagePackSerializer ser;
 	ser.UnorderedAppend<std::string>("status", "authenticated");
+	ser.UnorderedAppend("username", user.GetUsername().GetRaw());
 
 	if (user.IsUsingTemporaryPassword())
 	{
 		ser.UnorderedAppend<bool>("requirePasswordChange", true);
 	}
+
+	ser.UnorderedAppend("metadata_all", user.GetMetadata(MetadataAcess::all).GetRawData());
 
 	Send(ser, destination);
 }
@@ -31,6 +34,7 @@ CommandInfo& CmdServerInfo::GetInfo() const
 	info.command = CommandId::server_info;
 	info.clientOnly = true;
 	info.onlyNonAuthenticated = true;
+	info.metadataTypes = MetadataAcess::all;
 
 	return info;
 }

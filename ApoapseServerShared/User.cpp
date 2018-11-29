@@ -85,6 +85,15 @@ void User::Close()
 		connection->Close();
 }
 
+ApoapseMetadata User::GetMetadata(MetadataAcess type) const
+{
+	SQLQuery query(*global->database);
+	query << SELECT << ApoapseMetadata::TypeToDbFieldName(type).c_str() << FROM << "users" WHERE << "username_hash" << EQUALS << m_username.GetRaw();
+	auto res = query.Exec();
+
+	return ApoapseMetadata(res[0][0].GetByteArray(), type);
+}
+
 bool User::IsUsingTemporaryPassword() const	// #MVP
 {
 	SQLQuery query(*global->database);

@@ -3,6 +3,7 @@
 #include <set>
 #include "CryptographyTypes.hpp"
 #include "Username.h"
+#include "ApoapseMetadata.h"
 class ServerConnection;
 class ApoapseServer;
 
@@ -33,6 +34,8 @@ public:
 	virtual std::string GetEndpointStr() const override;
 	virtual void Close() override;
 	// ~INetworkSender
+
+	ApoapseMetadata GetMetadata(MetadataAcess type) const;
 
 	bool IsUsingTemporaryPassword() const;
 
