@@ -22,8 +22,10 @@ void CmdServerInfo::SendWellcome(INetworkSender& destination, const User& user)
 	{
 		ser.UnorderedAppend<bool>("requirePasswordChange", true);
 	}
-
-	ser.UnorderedAppend("metadata_all", user.GetMetadata(MetadataAcess::all).GetRawData());
+	else
+	{
+		ser.UnorderedAppend("metadata_all", user.GetMetadata(MetadataAcess::all).GetRawData());
+	}
 
 	Send(ser, destination);
 }
