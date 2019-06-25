@@ -9,6 +9,7 @@
 #include "LibraryLoader.hpp"
 #include "DatabaseIntegrityPatcher.h"
 #include "ServerDatabaseScheme.hpp"
+#include "DataStructures.hpp"
 
 #ifdef UNIT_TESTS
 #include "UnitTestsManager.h"
@@ -19,12 +20,15 @@ int ServerMain(const std::vector<std::string>& launchArgs)
 	// Starting global
 	ASSERT(global == nullptr);
 	global = Global::CreateGlobal();
+	global->isServer = true;
 
 	global->logger = std::make_unique<Logger>("log.txt");
 	global->threadPool = std::make_unique<ThreadPool>("Global thread pool", 8);
 
 	global->settings = new ServerSettings();
 	global->settings->Load("ServerConfig.ini");
+
+	global->apoapseData = std::make_unique<ApoapseData>(GetDataStructures());
 
 	// Database
 	boost::shared_ptr<IDatabase> databaseSharedPtr = LibraryLoader::LoadLibrary<IDatabase>("DatabaseImpl.sqlite");
@@ -35,7 +39,7 @@ int ServerMain(const std::vector<std::string>& launchArgs)
 	{
 		LOG << "Database accessed successfully. Params: " << *dbParams;
 
-		DatabaseIntegrityPatcher dbIntegrity(GetServerDbScheme());
+		DatabaseIntegrityPatcher dbIntegrity;
 		if (!dbIntegrity.CheckAndResolve())
 		{
 			FatalError("The database integrity patcher has failed");
