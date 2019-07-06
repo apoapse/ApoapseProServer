@@ -87,9 +87,6 @@
     <ClInclude Include="CmdServerInfo.h">
       <Filter>Commands</Filter>
     </ClInclude>
-    <ClInclude Include="ServerDatabaseScheme.hpp">
-      <Filter>Systems</Filter>
-    </ClInclude>
     <ClInclude Include="OperationObjects.h">
       <Filter>OperationSystem</Filter>
     </ClInclude>
