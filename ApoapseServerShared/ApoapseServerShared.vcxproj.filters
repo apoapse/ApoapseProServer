@@ -63,6 +63,9 @@
     <ClCompile Include="ApoapseMessage.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
+    <ClCompile Include="ServerCmdManager.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ServerEntryPoint.h" />
@@ -95,6 +98,9 @@
     </ClInclude>
     <ClInclude Include="ApoapseMessage.h">
       <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerCmdManager.h">
+      <Filter>Commands</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

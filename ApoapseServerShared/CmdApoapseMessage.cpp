@@ -46,14 +46,14 @@ public:
 		{
 			SQLQuery query(*global->database);
 			query	<< INSERT_INTO << "messages" << " (id, uuid, thread_uuid, author, sent_time, content)" << VALUES << "(" 
-					<< dbId << "," << uuid.GetAsByteVector() << "," << GetFieldsData().GetValue<ByteContainer>("threadUuid") << ","
-					<< sender.GetUsername().GetRaw() << "," << sentTime.str() << "," << GetFieldsData().GetValue<ByteContainer>("content")
+					<< dbId << "," << uuid.GetBytes() << "," << GetFieldsData().GetValue<ByteContainer>("threadUuid") << ","
+					<< sender.GetUsername().GetRaw() << "," << sentTime.GetStr() << "," << GetFieldsData().GetValue<ByteContainer>("content")
 			<< ")";
 
 			query.Exec();
 		}
 
-		LOG << "Received message " << uuid.GetAsByteVector() << " from " << sender.GetUsername().ToStr();
+		LOG << "Received message " << uuid.GetBytes() << " from " << sender.GetUsername().ToStr();
 
 		Operation(OperationType::new_message, sender.GetUsername(), dbId).Save();
 
@@ -61,7 +61,7 @@ public:
 			MessagePackSerializer ser;
 			ser.UnorderedAppend("uuid", uuid.GetInRawFormat());
 			ser.UnorderedAppend("threadUuid", GetFieldsData().GetValue<ByteContainer>("threadUuid"));
-			ser.UnorderedAppend("sentTime", sentTime.str());
+			ser.UnorderedAppend("sentTime", sentTime.GetStr());
 			ser.UnorderedAppend("author", sender.GetUsername().GetRaw());
 			ser.UnorderedAppend("content", GetFieldsData().GetValue<ByteContainer>("content"));
 

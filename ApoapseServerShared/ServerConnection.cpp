@@ -53,10 +53,13 @@ bool ServerConnection::OnConnectedToServer()
 	return true;
 }
 
-void ServerConnection::OnReceivedValidCommand(std::unique_ptr<Command> cmd) // #REFACTORING #TODO move to the Command class
+void ServerConnection::OnReceivedValidCommand(CommandV2& cmd)
 {
 	const bool authenticated = IsAuthenticated();
 
+	global->cmdManager->OnReceivedCmdInternal(cmd, *this, GetRelatedUser());
+
+	/*
 	if (cmd->GetInfo().clientOnly)
 	{
 		SecurityLog::LogAlert(ApoapseErrorCode::cannot_processs_cmd_from_this_connection_type, *this);
@@ -97,4 +100,5 @@ void ServerConnection::OnReceivedValidCommand(std::unique_ptr<Command> cmd) // #
 		Close();
 	}
 #endif
+*/
 }

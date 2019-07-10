@@ -9,13 +9,12 @@
 #include "LibraryLoader.hpp"
 #include "DatabaseIntegrityPatcher.h"
 #include "DataStructures.hpp"
-#include "CommandsManagerV2.h"
+#include "ServerCmdManager.h"
 
 #ifdef UNIT_TESTS
 #include "UnitTestsManager.h"
 #endif // UNIT_TESTS
 #include <Uuid.h>
-#include <CommandsDef.hpp>
 
 int ServerMain(const std::vector<std::string>& launchArgs)
 {
@@ -31,7 +30,7 @@ int ServerMain(const std::vector<std::string>& launchArgs)
 	global->settings->Load("ServerConfig.ini");
 
 	global->apoapseData = std::make_unique<ApoapseData>(GetDataStructures());
-	global->cmdManager = std::make_unique<CommandsManagerV2>(GetCommandDef());
+	global->cmdManager = std::make_unique<ServerCmdManager>();
 
 	// Database
 	boost::shared_ptr<IDatabase> databaseSharedPtr = LibraryLoader::LoadLibrary<IDatabase>("DatabaseImpl.sqlite");
