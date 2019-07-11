@@ -55,50 +55,5 @@ bool ServerConnection::OnConnectedToServer()
 
 void ServerConnection::OnReceivedValidCommand(CommandV2& cmd)
 {
-	const bool authenticated = IsAuthenticated();
-
 	global->cmdManager->OnReceivedCmdInternal(cmd, *this, GetRelatedUser());
-
-	/*
-	if (cmd->GetInfo().clientOnly)
-	{
-		SecurityLog::LogAlert(ApoapseErrorCode::cannot_processs_cmd_from_this_connection_type, *this);
-		return;
-	}
-
-#if !DEBUG	// We disable exception handling on the debug build so that we can catch the exceptions with the debugger
- 	try
- 	{
-#endif
-		if (cmd->GetInfo().requireAuthentication && authenticated)
-		{
-			cmd->Process(*m_relatedUser.value(), *this);
-		}
-		else if (authenticated && cmd->GetInfo().allowForUsersRequiredToChangePassword && m_relatedUser.value()->IsUsingTemporaryPassword())
-		{
-			cmd->Process(*m_relatedUser.value(), *this);
-		}
-
-		else if (cmd->GetInfo().onlyNonAuthenticated && !authenticated)
-		{
-			cmd->Process(*this);
-		}
-		else if (!cmd->GetInfo().requireAuthentication && !authenticated)
-		{
-			cmd->Process(*this);
-		}
-		else
-		{
-			SecurityLog::LogAlert(ApoapseErrorCode::cannot_processs_cmd_from_this_connection_type, *this);
-		}
-
-#if !DEBUG
-	}
-	catch (const std::exception& e)
-	{
-		LOG << LogSeverity::error << "Exception trigged while processing a command of type " << static_cast<UInt16>(cmd->GetInfo().command) << ": " << e;
-		Close();
-	}
-#endif
-*/
 }
