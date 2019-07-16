@@ -21,12 +21,6 @@
     <ClCompile Include="User.cpp">
       <Filter>UserSystem</Filter>
     </ClCompile>
-    <ClCompile Include="CmdConnect.cpp">
-      <Filter>Commands</Filter>
-    </ClCompile>
-    <ClCompile Include="CmdServerInfo.cpp">
-      <Filter>Commands</Filter>
-    </ClCompile>
     <ClCompile Include="UT_User.cpp">
       <Filter>UnitTests</Filter>
     </ClCompile>
@@ -86,9 +80,6 @@
     </ClInclude>
     <ClInclude Include="User.h">
       <Filter>UserSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="CmdServerInfo.h">
-      <Filter>Commands</Filter>
     </ClInclude>
     <ClInclude Include="OperationObjects.h">
       <Filter>OperationSystem</Filter>
