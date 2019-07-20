@@ -55,6 +55,7 @@ void ServerCmdManager::OnReceivedCommand(CommandV2& cmd, GenericConnection& netC
 				
 				dataStruct.GetField("status").SetValue("authenticated");
 				dataStruct.GetField("requirePasswordChange").SetValue(connection.GetRelatedUser()->IsUsingTemporaryPassword());
+				dataStruct.GetField("nickname").SetValue(connection.GetRelatedUser()->GetNickname());
 			}
 			else
 			{
@@ -66,5 +67,23 @@ void ServerCmdManager::OnReceivedCommand(CommandV2& cmd, GenericConnection& netC
 		global->cmdManager->CreateCommand("server_info", dataStruct).Send(connection);
 	}
 
-	LOG_DEBUG << "RECEIVED!";
+	else if (cmd.name == "install")
+	{
+		const auto username = cmd.GetData().GetField("admin_username").GetValue<Username>();
+		const auto password = cmd.GetData().GetField("admin_password").GetValue<ByteContainer>();
+
+		if (connection.server.usersManager->GetRegisteredUsersCount() == 0)
+		{
+			connection.server.usersManager->RegisterNewUser(username, password);
+			connection.server.usersManager->SetUserIdentity(username, password, cmd.GetData().GetField("admin_nickname").GetValue<std::string>());
+
+			LOG << "Apoapse setup complete. Disconnecting administrator for first connection.";
+			connection.Close();
+		}
+		else
+		{
+			LOG << LogSeverity::error << "Trying to use the apoapse_install cmd while the server is not in setup phase.";
+			connection.Close();
+		}
+	}
 }

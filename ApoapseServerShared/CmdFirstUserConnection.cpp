@@ -31,12 +31,12 @@ public:
 		if (sender.IsUsingTemporaryPassword())
 		{
 			const auto password = GetFieldsData().GetValue<std::vector<byte>>("password");
-			DbId dbid = senderConnection.server.usersManager->SetUserIdentity(sender.GetUsername(), password, GetMetadataField(MetadataAcess::all));
+//			DbId dbid = senderConnection.server.usersManager->SetUserIdentity(sender.GetUsername(), password, GetMetadataField(MetadataAcess::all));
 
 			// propagate
-			{
-				OperationObjects::GetInstance().CreateObject(OperationType::new_user)->SendFromDatabase(dbid, *senderConnection.server.usersManager);
-			}
+			//{
+			//	OperationObjects::GetInstance().CreateObject(OperationType::new_user)->SendFromDatabase(dbid, *senderConnection.server.usersManager);
+			//}
 
 			LOG << "First connection setup complete. Disconnecting the user for first connection with the actual password.";	// #TODO authenticate directly the user
 			senderConnection.Close();

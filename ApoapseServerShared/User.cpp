@@ -85,19 +85,10 @@ void User::Close()
 		connection->Close();
 }
 
-ApoapseMetadata User::GetMetadata(MetadataAcess type) const
-{
-	SQLQuery query(*global->database);
-	query << SELECT << ApoapseMetadata::TypeToDbFieldName(type).c_str() << FROM << "users" WHERE << "username_hash" << EQUALS << m_username.GetRaw();
-	auto res = query.Exec();
-
-	return ApoapseMetadata(res[0][0].GetByteArray(), type);
-}
-
 bool User::IsUsingTemporaryPassword() const	// #MVP
 {
 	SQLQuery query(*global->database);
-	query << SELECT << "is_temporary_passsword" << FROM << "users" << WHERE << "username_hash" << EQUALS << m_username.GetRaw();
+	query << SELECT << "is_temporary_password" << FROM << "users" << WHERE << "username" << EQUALS << m_username.GetRaw();
 	auto res = query.Exec();
 
 	const int useTemporaryPassword = res[0][0].GetInt32();
@@ -127,4 +118,13 @@ bool User::ComparePasswords(const std::vector<byte>& password, const std::vector
 bool User::IsEncryptedPasswordValid(const std::vector<byte>& encryptedPassword)
 {
 	return (encryptedPassword.size() == sha256Length);
+}
+
+std::string User::GetNickname() const
+{
+	SQLQuery query(*global->database);
+	query << SELECT << "nickname" << FROM << "users" << WHERE << "username" << EQUALS << m_username.GetRaw();
+	auto res = query.Exec();
+
+	return res[0][0].GetText();
 }

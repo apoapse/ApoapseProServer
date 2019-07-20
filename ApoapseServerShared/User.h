@@ -35,14 +35,13 @@ public:
 	virtual void Close() override;
 	// ~INetworkSender
 
-	ApoapseMetadata GetMetadata(MetadataAcess type) const;
-
 	bool IsUsingTemporaryPassword() const;
 
 	static std::vector<byte> GenerateRandomSalt();
 	static std::vector<byte> HashPassword(const std::vector<byte>& encryptedPassword, const std::vector<byte>& salt);
 	static bool ComparePasswords(const std::vector<byte>& password, const std::vector<byte>& storedPassword, const std::vector<byte>& salt);
 	static bool IsEncryptedPasswordValid(const std::vector<byte>& encryptedPassword);
+	std::string GetNickname() const;
 
 private:
  	void RemoveConnection(ServerConnection* connection);

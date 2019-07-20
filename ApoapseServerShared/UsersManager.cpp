@@ -41,7 +41,9 @@ size_t UsersManager::GetRegisteredUsersCount() const
 
 std::shared_ptr<User> UsersManager::CreateUserObject(const Username& username, ServerConnection& connection)
 {
-	SQLQuery query(*global->database);
+	DataStructure dat = global->apoapseData->ReadItemFromDatabase("user", "username", username.GetBytes());
+
+	/*SQLQuery query(*global->database);
 	query << SELECT << "user_id" << FROM << "users" << WHERE << "username" << EQUALS << username.GetRaw();
 	auto res = query.Exec();
 
@@ -51,8 +53,8 @@ std::shared_ptr<User> UsersManager::CreateUserObject(const Username& username, S
 	const auto user_id = res[0][0].GetInt64();
 	//const PublicKeyBytes identityPublicKey = res[0][1].GetByteArray();
 	//const Uuid usergroupUuid = connection.server.usergroupsManager->GetUsergroupOfUser(username).uuid;
-
-	auto userPtr = std::make_shared<User>(user_id, username, &connection, &connection.server);
+	*/
+	auto userPtr = std::make_shared<User>(0, username, &connection, &connection.server);
 	AddConnectedUser(userPtr.get());
 
 	return userPtr;
@@ -89,24 +91,34 @@ void UsersManager::RegisterNewUser(const Username& username, const std::vector<b
 {
 	SECURITY_ASSERT(!DoesUserExist(username));
 
-	const auto salt = User::GenerateRandomSalt();
+	const ByteContainer salt = User::GenerateRandomSalt();
 
-	SQLQuery query(*global->database);
-	query << INSERT_INTO << "users" << " (username, password, password_salt, is_temporary_passsword)" << VALUES << "(" << username.GetRaw() << "," << User::HashPassword(encryptedTemporaryPassword, salt) << "," << salt << "," << 1 << ")";
+	auto dat = global->apoapseData->GetStructure("user");
+	dat.GetField("username").SetValue(username);
+	dat.GetField("password").SetValue(User::HashPassword(encryptedTemporaryPassword, salt));
+	dat.GetField("password_salt").SetValue(salt);
+	dat.GetField("is_temporary_password").SetValue(true);
+	dat.SaveToDatabase();
 
-	query.Exec();
-
-	LOG << "User " << username.ToStr() << " registered";
+	LOG << "New user " << username.ToStr() << " registered";
 }
 
-DbId UsersManager::SetUserIdentity(const Username& username, const std::vector<byte>& encryptedPassword, const ApoapseMetadata& metadataAll/*, const PublicKeyBytes& identityKey, const EncryptedPrivateKeyBytes& identityPrivateKey, const IV& identityIV*/)
+DbId UsersManager::SetUserIdentity(const Username& username, const std::vector<byte>& encryptedPassword, const std::string& nickname/*, const PublicKeyBytes& identityKey, const EncryptedPrivateKeyBytes& identityPrivateKey, const IV& identityIV*/)
 {
 	SECURITY_ASSERT(DoesUserExist(username));
 
 	const auto salt = User::GenerateRandomSalt();
 	const auto passwordForStorage = User::HashPassword(encryptedPassword, salt);
 
-	{
+	auto dat = global->apoapseData->GetStructure("user");
+	dat.GetField("username").SetValue(username);
+	dat.GetField("password").SetValue(passwordForStorage);
+	dat.GetField("password_salt").SetValue(salt);
+	dat.GetField("is_temporary_password").SetValue(false);
+	dat.GetField("nickname").SetValue(nickname);
+	dat.SaveToDatabase();
+
+/*	{
 		SQLQuery query(*global->database);
 		query << UPDATE << "users" << SET << "password=" << passwordForStorage << ",password_salt=" << salt << ",is_temporary_passsword=" << 0 << ",metadata_all=" << metadataAll.GetRawDataForDb() << WHERE "username" << EQUALS << username.GetRaw();
 		query.Exec();
@@ -118,9 +130,10 @@ DbId UsersManager::SetUserIdentity(const Username& username, const std::vector<b
 
 	DbId dbId = res[0][0].GetInt64();
 
-	Operation(OperationType::new_user, username, dbId).Save();
+	Operation(OperationType::new_user, username, dbId).Save();*/
 
-	return dbId;
+	//return dbId;
+	return -1;
 }
 
 void UsersManager::Send(BytesWrapper bytesPtr, TCPConnection* excludedConnection /*= nullptr*/)
