@@ -148,7 +148,6 @@
   <ItemGroup>
     <ClCompile Include="ApoapseMessage.cpp" />
     <ClCompile Include="ApoapseServer.cpp" />
-    <ClCompile Include="CmdApoapseInstall.cpp" />
     <ClCompile Include="CmdApoapseMessage.cpp" />
     <ClCompile Include="CmdCreateRoom.cpp" />
     <ClCompile Include="CmdCreateThread.cpp" />
