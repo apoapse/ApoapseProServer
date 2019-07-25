@@ -86,15 +86,11 @@ void ServerCmdManager::OnReceivedCommand(CommandV2& cmd, GenericConnection& netC
 			connection.Close();
 		}
 	}
-
-	else if (cmd.name == "create_room")
-	{
-		LOG << "User " << connection.GetRelatedUser()->GetUsername() << " added a new room";
-	}
 }
 
 void ServerCmdManager::Propagate(CommandV2& cmd, GenericConnection& netConnection)
 {
+	//TODO2 Complete server cmd propagation with the read_permission field taken into consideration from the data structure json
 	auto& connection = static_cast<ServerConnection&>(netConnection);
 
 	GenericConnection* propagateToSelf = (cmd.excludeSelfPropagation) ? &connection : nullptr;
