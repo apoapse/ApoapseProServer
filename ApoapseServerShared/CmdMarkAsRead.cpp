@@ -6,7 +6,6 @@
 #include "ApoapseServer.h"
 #include "ServerConnection.h"
 #include "OperationObjects.h"
-#include "ApoapseMessage.h"
 #include "SecurityAlert.h"
 
 class CmdMarkMessageAsRead final : public Command, public IOperationObject
@@ -29,7 +28,7 @@ public:
 	{
 		const auto msgUuid = Uuid(GetFieldsData().GetValue<ByteContainer>("messageUuid"));
 
-		if (ApoapseMessage::DoesMessageExist(msgUuid))
+		/*if (ApoapseMessage::DoesMessageExist(msgUuid))
 		{
 			Operation(OperationType::mark_message_as_read, sender.GetUsername(), ApoapseMessage::GetMessageDbIdByUuid(msgUuid), OperationOwnership::sender_user).Save();
 
@@ -38,18 +37,18 @@ public:
 		else
 		{
 			SecurityLog::LogAlert(ApoapseErrorCode::related_item_does_not_exist, sender);
-		}
+		}*/
 	}
 
 	void SendFromDatabase(DbId id, INetworkSender& connection) override
 	{
-		const auto uuid = ApoapseMessage::GetMessageUuidByDbId(id);
+		/*const auto uuid = ApoapseMessage::GetMessageUuidByDbId(id);
 
 		MessagePackSerializer ser;
 		ser.UnorderedAppend("messageUuid", uuid.GetInRawFormat());
 
 		CmdMarkMessageAsRead cmd;
-		cmd.Send(ser, connection);
+		cmd.Send(ser, connection);*/
 	}
 };
 
