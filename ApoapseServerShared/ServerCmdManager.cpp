@@ -7,6 +7,7 @@
 #include "GlobalVarDefines.hpp"
 #include "ApoapseServer.h"
 #include "UsersManager.h"
+#include "ApoapseOperation.h"
 
 ServerCmdManager::ServerCmdManager() : CommandsManagerV2(GetCommandDef())
 {
@@ -85,6 +86,11 @@ void ServerCmdManager::OnReceivedCommand(CommandV2& cmd, GenericConnection& netC
 			LOG << LogSeverity::error << "Trying to use the apoapse_install cmd while the server is not in setup phase.";
 			connection.Close();
 		}
+	}
+
+	else if (cmd.name == "request_sync")
+	{
+		ApoapseOperation::ExectureSyncRequest(data.GetField("last_op_time").GetValue<Int64>(), netConnection);
 	}
 }
 
