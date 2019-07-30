@@ -48,6 +48,14 @@ User* ServerConnection::GetRelatedUser() const
 	return (m_relatedUser.has_value()) ? m_relatedUser.value().get() : nullptr;
 }
 
+std::optional<Username> ServerConnection::GetConnectedUser() const
+{
+	if (IsAuthenticated())
+		return m_relatedUser.value()->GetUsername();
+	else
+		return std::optional<Username>();
+}
+
 bool ServerConnection::OnConnectedToServer()
 {
 	return true;

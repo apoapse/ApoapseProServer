@@ -26,7 +26,7 @@ void CmdNotifyNewUser::SendNotifyNewUser(INetworkSender& destination, const User
 	CmdNotifyNewUser cmd;
 	cmd.Send(ser, destination);
 }
-
+/*
 void CmdNotifyNewUser::SendFromDatabase(DbId id, INetworkSender& connection)
 {
 	SQLQuery query(*global->database);
@@ -37,6 +37,6 @@ void CmdNotifyNewUser::SendFromDatabase(DbId id, INetworkSender& connection)
 	const auto metadataAll = ApoapseMetadata(res[0][1].GetByteArray(), MetadataAcess::all);
 
 	SendNotifyNewUser(connection, username, metadataAll);
-}
+}*/
 
-REGISTER_OPERATION_OBJECT(CmdNotifyNewUser, OperationType::new_user);
+//REGISTER_OPERATION_OBJECT(CmdNotifyNewUser, OperationType::new_user);

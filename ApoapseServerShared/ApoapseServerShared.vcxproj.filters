@@ -36,9 +36,6 @@
     <ClCompile Include="CmdSyncRequest.cpp">
       <Filter>Commands</Filter>
     </ClCompile>
-    <ClCompile Include="OperationObjects.cpp">
-      <Filter>OperationSystem</Filter>
-    </ClCompile>
     <ClCompile Include="CmdNotifyNewUser.cpp">
       <Filter>Commands</Filter>
     </ClCompile>
@@ -69,9 +66,6 @@
     <ClInclude Include="User.h">
       <Filter>UserSystem</Filter>
     </ClInclude>
-    <ClInclude Include="OperationObjects.h">
-      <Filter>OperationSystem</Filter>
-    </ClInclude>
     <ClInclude Include="CmdNotifyNewUser.h">
       <Filter>Commands</Filter>
     </ClInclude>
@@ -94,9 +88,6 @@
     </Filter>
     <Filter Include="UnitTests">
       <UniqueIdentifier>{971bdf56-2bf0-4203-a8aa-97d576166450}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="OperationSystem">
-      <UniqueIdentifier>{554360b0-7c15-4348-b713-719d5a7f2b89}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

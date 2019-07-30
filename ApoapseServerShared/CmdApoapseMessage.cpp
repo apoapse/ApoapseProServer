@@ -5,14 +5,12 @@
 #include "ServerConnection.h"
 #include "ApoapseServer.h"
 #include "SecurityAlert.h"
-#include "Operation.h"
 #include "SQLQuery.h"
 #include "UsersManager.h"
 #include "DateTimeUtils.h"
 #include "SQLUtils.hpp"
-#include "OperationObjects.h"
 
-class CmdApoapseMessage final : public Command, public IOperationObject
+class CmdApoapseMessage final : public Command
 {
 public:
 	CommandInfo& CmdApoapseMessage::GetInfo() const override
@@ -55,7 +53,7 @@ public:
 
 		LOG << "Received message " << uuid.GetBytes() << " from " << sender.GetUsername().ToStr();
 
-		Operation(OperationType::new_message, sender.GetUsername(), dbId).Save();
+		//Operation(OperationType::new_message, sender.GetUsername(), dbId).Save();
 
 		{
 			MessagePackSerializer ser;
@@ -68,24 +66,6 @@ public:
 			Propagate(ser, *senderConnection.server.usersManager);
 		}
 	}
-
-	void SendFromDatabase(DbId id, INetworkSender& connection) override
-	{
-		SQLQuery query(*global->database);
-		query << SELECT << "uuid,thread_uuid,author,sent_time,content" << FROM << "messages" << WHERE << "id" << EQUALS << id;
-		auto res = query.Exec();
-
-		MessagePackSerializer ser;
-		ser.UnorderedAppend("uuid", res[0][0].GetByteArray());
-		ser.UnorderedAppend("threadUuid", res[0][1].GetByteArray());
-		ser.UnorderedAppend("author", res[0][2].GetByteArray());
-		ser.UnorderedAppend("sentTime", res[0][3].GetText());
-		ser.UnorderedAppend("content", res[0][4].GetByteArray());
-
-		CmdApoapseMessage cmd;
-		cmd.Send(ser, connection);
-	}
 };
 
 APOAPSE_COMMAND_REGISTER(CmdApoapseMessage, CommandId::apoapse_message);
-REGISTER_OPERATION_OBJECT(CmdApoapseMessage, OperationType::new_message);

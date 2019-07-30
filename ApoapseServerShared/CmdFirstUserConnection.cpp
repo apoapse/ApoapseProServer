@@ -5,7 +5,6 @@
 #include "UsersManager.h"
 #include "ApoapseServer.h"
 #include "ServerConnection.h"
-#include "OperationObjects.h"
 
 class CmdFirstUserConnection final : public Command
 {

@@ -5,7 +5,6 @@
 #include "UsersManager.h"
 #include "ApoapseServer.h"
 #include "ServerConnection.h"
-#include "OperationObjects.h"
 
 class CmdSyncRequest final : public Command
 {
@@ -28,7 +27,7 @@ public:
 	{
 		Int64 sinceTimestamp = GetFieldsData().GetValue<Int64>("sinceTimestamp");
 
-		OperationObjects::SynchronizeSince(sinceTimestamp, senderConnection);
+		//OperationObjects::SynchronizeSince(sinceTimestamp, senderConnection);
 	}
 };
 

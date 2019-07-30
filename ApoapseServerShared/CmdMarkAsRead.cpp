@@ -5,10 +5,9 @@
 #include "UsersManager.h"
 #include "ApoapseServer.h"
 #include "ServerConnection.h"
-#include "OperationObjects.h"
 #include "SecurityAlert.h"
 
-class CmdMarkMessageAsRead final : public Command, public IOperationObject
+class CmdMarkMessageAsRead final : public Command
 {
 public:
 	CommandInfo& GetInfo() const override
@@ -40,17 +39,6 @@ public:
 		}*/
 	}
 
-	void SendFromDatabase(DbId id, INetworkSender& connection) override
-	{
-		/*const auto uuid = ApoapseMessage::GetMessageUuidByDbId(id);
-
-		MessagePackSerializer ser;
-		ser.UnorderedAppend("messageUuid", uuid.GetInRawFormat());
-
-		CmdMarkMessageAsRead cmd;
-		cmd.Send(ser, connection);*/
-	}
 };
 
 APOAPSE_COMMAND_REGISTER(CmdMarkMessageAsRead, CommandId::mark_message_as_read);
-REGISTER_OPERATION_OBJECT(CmdMarkMessageAsRead, OperationType::mark_message_as_read);

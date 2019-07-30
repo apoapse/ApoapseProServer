@@ -5,7 +5,6 @@
 #include "ServerConnection.h"
 #include "ApoapseServer.h"
 #include "ApoapseMetadata.h"
-#include "Operation.h"
 
 bool UsersManager::IsUserConnected(const Username& username) const
 {
