@@ -90,7 +90,7 @@ void ServerCmdManager::OnReceivedCommand(CommandV2& cmd, GenericConnection& netC
 
 	else if (cmd.name == "request_sync")
 	{
-		ApoapseOperation::ExectureSyncRequest(data.GetField("last_op_time").GetValue<Int64>(), netConnection);
+		ApoapseOperation::ExecuteSyncRequest(data.GetField("last_op_time").GetValue<Int64>(), netConnection);
 	}
 }
 
