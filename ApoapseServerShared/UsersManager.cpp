@@ -5,6 +5,8 @@
 #include "ServerConnection.h"
 #include "ApoapseServer.h"
 #include "ApoapseMetadata.h"
+#include "CommandsManagerV2.h"
+#include "ApoapseOperation.h"
 
 bool UsersManager::IsUserConnected(const Username& username) const
 {
@@ -117,21 +119,10 @@ DbId UsersManager::SetUserIdentity(const Username& username, const std::vector<b
 	dat.GetField("nickname").SetValue(nickname);
 	dat.SaveToDatabase();
 
-/*	{
-		SQLQuery query(*global->database);
-		query << UPDATE << "users" << SET << "password=" << passwordForStorage << ",password_salt=" << salt << ",is_temporary_passsword=" << 0 << ",metadata_all=" << metadataAll.GetRawDataForDb() << WHERE "username" << EQUALS << username.GetRaw();
-		query.Exec();
-	}
+	auto cmd = global->cmdManager->CreateCommand("user", dat);
+	ApoapseOperation::RegisterOperation(cmd, username);
+	cmd.Send(*this);
 
-	SQLQuery query(*global->database);
-	query << SELECT << "user_id" << FROM "users" << WHERE "username" << EQUALS << username.GetRaw();
-	auto res = query.Exec();
-
-	DbId dbId = res[0][0].GetInt64();
-
-	Operation(OperationType::new_user, username, dbId).Save();*/
-
-	//return dbId;
 	return -1;
 }
 
