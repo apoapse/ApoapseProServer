@@ -27,16 +27,7 @@
     <ClCompile Include="CmdRegisterNewUser.cpp">
       <Filter>Commands</Filter>
     </ClCompile>
-    <ClCompile Include="CmdApoapseMessage.cpp">
-      <Filter>Commands</Filter>
-    </ClCompile>
     <ClCompile Include="CmdFirstUserConnection.cpp">
-      <Filter>Commands</Filter>
-    </ClCompile>
-    <ClCompile Include="CmdSyncRequest.cpp">
-      <Filter>Commands</Filter>
-    </ClCompile>
-    <ClCompile Include="CmdNotifyNewUser.cpp">
       <Filter>Commands</Filter>
     </ClCompile>
     <ClCompile Include="CmdMarkAsRead.cpp">
@@ -65,9 +56,6 @@
     </ClInclude>
     <ClInclude Include="User.h">
       <Filter>UserSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="CmdNotifyNewUser.h">
-      <Filter>Commands</Filter>
     </ClInclude>
     <ClInclude Include="ServerCmdManager.h">
       <Filter>Commands</Filter>

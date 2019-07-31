@@ -147,12 +147,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ApoapseServer.cpp" />
-    <ClCompile Include="CmdApoapseMessage.cpp" />
     <ClCompile Include="CmdFirstUserConnection.cpp" />
     <ClCompile Include="CmdMarkAsRead.cpp" />
-    <ClCompile Include="CmdNotifyNewUser.cpp" />
     <ClCompile Include="CmdRegisterNewUser.cpp" />
-    <ClCompile Include="CmdSyncRequest.cpp" />
     <ClCompile Include="ServerCmdManager.cpp" />
     <ClCompile Include="ServerConnection.cpp" />
     <ClCompile Include="ServerSettings.cpp" />
@@ -167,7 +164,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ApoapseServer.h" />
-    <ClInclude Include="CmdNotifyNewUser.h" />
     <ClInclude Include="ServerCmdManager.h" />
     <ClInclude Include="ServerConnection.h" />
     <ClInclude Include="ServerEntryPoint.h" />
