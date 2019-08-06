@@ -4,50 +4,20 @@
 #include "ServerConnection.h"
 #include "UsersManager.h"
 #include "SQLQuery.h"
+#include "UsergroupManager.h"
 
 ApoapseServer::~ApoapseServer()
 {
 	delete usersManager;
+	delete usergroupManager;
 }
 
 void ApoapseServer::StartMainServer(UInt16 port)
 {
 	m_mainServer = std::make_unique<TCPServer>(m_mainServerIOService, port, TCPServer::Protocol::ip_v6);
 
-	// TEMP
-	/*{
-		SQLQuery query(*global->database);
-		query << DELETE_FROM << "usergroups";
-		query.Exec();
-	}
-
-	{
-		SQLQuery query(*global->database);
-		query << DELETE_FROM << "usergroups_blockchain";
-		query.Exec();
-	}
-
-	{
-		SQLQuery query(*global->database);
-		query << DELETE_FROM << "users";
-		query.Exec();
-	}*/
-	// END TEMP
-
-	/*
-	// List registered users
-	{
-		SQLQuery query(*global->database);
-		query << SELECT << "username_hash" << FROM << "users";
-		auto res = query.Exec();
-
-		for (const auto& item : res)
-		{
-			LOG_DEBUG << "username_hash: " << item[0].GetByteArray();
-		}
-	}*/
-
 	usersManager = new UsersManager;
+	usergroupManager = new UsergroupManager;
 
 	std::thread threadMainServer([this]
 	{

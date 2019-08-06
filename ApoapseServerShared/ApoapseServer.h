@@ -1,6 +1,7 @@
 #pragma once
 #include "TCPServer.h"
 class UsersManager;
+class UsergroupManager;
 
 class ApoapseServer
 {
@@ -9,6 +10,7 @@ class ApoapseServer
 
 public:
 	UsersManager* usersManager;
+	UsergroupManager* usergroupManager;
 
 	//ApoapseServer();
  	virtual ~ApoapseServer();

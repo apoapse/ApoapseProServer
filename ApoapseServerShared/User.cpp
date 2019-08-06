@@ -9,14 +9,17 @@
 #include "Hash.hpp"
 #include "MemoryUtils.hpp"
 #include "SQLQuery.h"
+#include "UsergroupManager.h"
+#include "DataStructure.h"
 
-User::User(DbId databaseId, const Username& username, ServerConnection* connection, ApoapseServer* apoapseServer)
-	: m_username(username)
-	, server(apoapseServer)
-	, m_databaseId(databaseId)
+User::User(DataStructure& data, ServerConnection* connection, ApoapseServer* apoapseServer) : server(apoapseServer)
 {
-	ASSERT_MSG(!server->usersManager->IsUserConnected(username), "Trying to create a new user object ");
-		
+	m_username = data.GetField("username").GetValue<Username>();
+	ASSERT_MSG(!server->usersManager->IsUserConnected(m_username), "Trying to create a new user object but the user already exist");
+
+	m_databaseId = data.GetDbId();
+	m_usergroup = &server->usergroupManager->GetUsergroup(data.GetField("usergroup").GetValue<Uuid>());
+
 	AddConnection(connection);
 
 	LOG << "User " << GetUsername() << " authenticated";
@@ -31,6 +34,11 @@ User::~User()
 const Username& User::GetUsername() const
 {
 	return m_username;
+}
+
+const Usergroup& User::GetUsergroup() const
+{
+	return *m_usergroup;
 }
 
 std::shared_ptr<User> User::GetObjectShared()

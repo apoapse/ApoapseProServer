@@ -30,7 +30,7 @@ public:
 
 	bool DoesUserExist(const Username& username) const;
 
-	void RegisterNewUser(const Username& username, const std::vector<byte>& encryptedTemporaryPassword);
+	void RegisterNewUser(const Username& username, const std::vector<byte>& encryptedTemporaryPassword, const Uuid& usergroup);
 	DbId SetUserIdentity(const Username& username, const std::vector<byte>& encryptedPassword, const std::string& nickname/*, const PublicKeyBytes& identityKey, const EncryptedPrivateKeyBytes& identityPrivateKey, const IV& identityIV*/);
 
 	// INetworkSender -> In the users manager, used to send to all connecter users

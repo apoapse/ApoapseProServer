@@ -44,18 +44,7 @@ std::shared_ptr<User> UsersManager::CreateUserObject(const Username& username, S
 {
 	DataStructure dat = global->apoapseData->ReadItemFromDatabase("user", "username", username.GetBytes());
 
-	/*SQLQuery query(*global->database);
-	query << SELECT << "user_id" << FROM << "users" << WHERE << "username" << EQUALS << username.GetRaw();
-	auto res = query.Exec();
-
-	if (!res || res.RowCount() != 1)
-		throw std::exception("Unable to find the user on the database");
-
-	const auto user_id = res[0][0].GetInt64();
-	//const PublicKeyBytes identityPublicKey = res[0][1].GetByteArray();
-	//const Uuid usergroupUuid = connection.server.usergroupsManager->GetUsergroupOfUser(username).uuid;
-	*/
-	auto userPtr = std::make_shared<User>(0, username, &connection, &connection.server);
+	auto userPtr = std::make_shared<User>(dat, &connection, &connection.server);
 	AddConnectedUser(userPtr.get());
 
 	return userPtr;
@@ -88,7 +77,7 @@ bool UsersManager::DoesUserExist(const Username& username) const
 		return false;
 }
 
-void UsersManager::RegisterNewUser(const Username& username, const std::vector<byte>& encryptedTemporaryPassword)
+void UsersManager::RegisterNewUser(const Username& username, const std::vector<byte>& encryptedTemporaryPassword, const Uuid& usergroup)
 {
 	SECURITY_ASSERT(!DoesUserExist(username));
 
@@ -99,6 +88,7 @@ void UsersManager::RegisterNewUser(const Username& username, const std::vector<b
 	dat.GetField("password").SetValue(User::HashPassword(encryptedTemporaryPassword, salt));
 	dat.GetField("password_salt").SetValue(salt);
 	dat.GetField("is_temporary_password").SetValue(true);
+	dat.GetField("usergroup").SetValue(usergroup);
 	dat.SaveToDatabase();
 
 	LOG << "New user " << username.ToStr() << " registered";

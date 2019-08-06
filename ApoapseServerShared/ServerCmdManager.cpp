@@ -8,6 +8,7 @@
 #include "ApoapseServer.h"
 #include "UsersManager.h"
 #include "ApoapseOperation.h"
+#include "UsergroupManager.h"
 
 ServerCmdManager::ServerCmdManager() : CommandsManagerV2(GetCommandDef())
 {
@@ -56,7 +57,14 @@ void ServerCmdManager::OnReceivedCommand(CommandV2& cmd, GenericConnection& netC
 				
 				dataStruct.GetField("status").SetValue("authenticated");
 				dataStruct.GetField("requirePasswordChange").SetValue(connection.GetRelatedUser()->IsUsingTemporaryPassword());
+
+				{
+					auto usergroupsDat = global->apoapseData->ReadListFromDatabase("usergroup", "", "");
+					dataStruct.GetField("usergroups").SetValue(usergroupsDat);
+				}
+
 				dataStruct.GetField("nickname").SetValue(connection.GetRelatedUser()->GetNickname());
+				dataStruct.GetField("usergroup").SetValue(connection.GetRelatedUser()->GetUsergroup().GetUuid());
 			}
 			else
 			{
@@ -75,7 +83,12 @@ void ServerCmdManager::OnReceivedCommand(CommandV2& cmd, GenericConnection& netC
 
 		if (connection.server.usersManager->GetRegisteredUsersCount() == 0)
 		{
-			connection.server.usersManager->RegisterNewUser(username, password);
+			const Uuid adminUsergroup = Uuid::Generate();
+
+			connection.server.usergroupManager->CreateUsergroup(adminUsergroup, "@admin", "CREATE_USER CREATE_USERGROUP");
+			connection.server.usergroupManager->CreateUsergroup(Uuid::Generate(), "@user", "CREATE_USER CREATE_USERGROUP");
+
+			connection.server.usersManager->RegisterNewUser(username, password, adminUsergroup);
 			connection.server.usersManager->SetUserIdentity(username, password, cmd.GetData().GetField("admin_nickname").GetValue<std::string>());
 
 			LOG << "Apoapse setup complete. Disconnecting administrator for first connection.";

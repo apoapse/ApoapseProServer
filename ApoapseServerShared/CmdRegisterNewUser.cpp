@@ -35,7 +35,7 @@ public:
 
 		if (!senderConnection.server.usersManager->DoesUserExist(username))
 		{
-			senderConnection.server.usersManager->RegisterNewUser(username, password);
+//			senderConnection.server.usersManager->RegisterNewUser(username, password);
 		}
 		else
 		{

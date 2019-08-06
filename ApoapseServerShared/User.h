@@ -6,6 +6,8 @@
 #include "ApoapseMetadata.h"
 class ServerConnection;
 class ApoapseServer;
+class Usergroup;
+class DataStructure;
 
 class User : public std::enable_shared_from_this<User>, public INetworkSender
 {
@@ -17,14 +19,16 @@ private:
 	ApoapseServer* server;
 	Username m_username;
 	DbId m_databaseId = 0;
+	const Usergroup* m_usergroup;
 
 	static constexpr UInt32 passwordAlgorithmIterations = 5000;
 
 public:
-	User(DbId databaseId, const Username& username, ServerConnection* connection, ApoapseServer* apoapseServer);
+	User(DataStructure& data, ServerConnection* connection, ApoapseServer* apoapseServer);
 	virtual ~User() override;
 
 	const Username& GetUsername() const;
+	const Usergroup& GetUsergroup() const;
 	
 	// INetworkSender
 	virtual void Send(BytesWrapper bytesPtr, TCPConnection* excludedConnection = nullptr) override;
