@@ -86,7 +86,7 @@ void ServerCmdManager::OnReceivedCommand(CommandV2& cmd, GenericConnection& netC
 			const Uuid adminUsergroup = Uuid::Generate();
 
 			connection.server.usergroupManager->CreateUsergroup(adminUsergroup, "@admin", "CREATE_USER CREATE_USERGROUP");
-			connection.server.usergroupManager->CreateUsergroup(Uuid::Generate(), "@user", "CREATE_USER CREATE_USERGROUP");
+			connection.server.usergroupManager->CreateUsergroup(Uuid::Generate(), "@user", "");
 
 			connection.server.usersManager->RegisterNewUser(username, password, adminUsergroup);
 			connection.server.usersManager->SetUserIdentity(username, password, cmd.GetData().GetField("admin_nickname").GetValue<std::string>());

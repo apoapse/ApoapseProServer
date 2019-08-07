@@ -21,5 +21,5 @@ public:
 	
 private:
 	bool OnConnectedToServer() override;
-	void OnReceivedValidCommand(CommandV2& cmd) override;
+	void OnReceivedCommand(CommandV2& cmd) override;
 };

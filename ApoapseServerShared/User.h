@@ -4,12 +4,13 @@
 #include "CryptographyTypes.hpp"
 #include "Username.h"
 #include "ApoapseMetadata.h"
+#include "IUser.h"
 class ServerConnection;
 class ApoapseServer;
 class Usergroup;
 class DataStructure;
 
-class User : public std::enable_shared_from_this<User>, public INetworkSender
+class User : public std::enable_shared_from_this<User>, public INetworkSender, public IUser
 {
 private:
 	friend ServerConnection;
