@@ -33,7 +33,7 @@ bool ServerCmdManager::OnReceivedCommandPre(CommandV2& cmd, GenericConnection& n
 
 void ServerCmdManager::OnReceivedCommand(CommandV2& cmd, GenericConnection& netConnection)
 {
-	auto& connection = static_cast<ServerConnection&>(netConnection);
+	auto& connection = dynamic_cast<ServerConnection&>(netConnection);
 	auto& data = cmd.GetData();
 
 	if (cmd.name == "login")
@@ -109,7 +109,7 @@ void ServerCmdManager::OnReceivedCommand(CommandV2& cmd, GenericConnection& netC
 
 void ServerCmdManager::Propagate(CommandV2& cmd, GenericConnection& netConnection)
 {
-	//TODO2 Complete server cmd propagation with the read_permission field taken into consideration from the data structure json
+	//TODO Complete server cmd propagation with the read_permission field taken into consideration from the data structure json
 	auto& connection = static_cast<ServerConnection&>(netConnection);
 
 	GenericConnection* propagateToSelf = (cmd.excludeSelfPropagation) ? &connection : nullptr;
