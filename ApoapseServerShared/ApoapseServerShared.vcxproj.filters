@@ -24,12 +24,6 @@
     <ClCompile Include="UT_User.cpp">
       <Filter>UnitTests</Filter>
     </ClCompile>
-    <ClCompile Include="CmdFirstUserConnection.cpp">
-      <Filter>Commands</Filter>
-    </ClCompile>
-    <ClCompile Include="CmdMarkAsRead.cpp">
-      <Filter>Commands</Filter>
-    </ClCompile>
     <ClCompile Include="ServerCmdManager.cpp">
       <Filter>Commands</Filter>
     </ClCompile>

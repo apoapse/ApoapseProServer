@@ -4,7 +4,6 @@
 #include "SQLQuery.h"
 #include "ServerConnection.h"
 #include "ApoapseServer.h"
-#include "ApoapseMetadata.h"
 #include "CommandsManagerV2.h"
 #include "ApoapseOperation.h"
 
