@@ -71,10 +71,7 @@ bool UsersManager::DoesUserExist(const Username& username) const
 	query << SELECT << "username" << FROM << "users" << WHERE << "username" << EQUALS << username.GetRaw();
 	auto res = query.Exec();
 
-	if (res && res.RowCount() == 1)
-		return true;
-	else
-		return false;
+	return (res && res.RowCount() == 1);
 }
 
 void UsersManager::RegisterNewUser(const Username& username, const std::vector<byte>& encryptedTemporaryPassword, const Uuid& usergroup)

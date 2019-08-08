@@ -24,9 +24,6 @@
     <ClCompile Include="UT_User.cpp">
       <Filter>UnitTests</Filter>
     </ClCompile>
-    <ClCompile Include="CmdRegisterNewUser.cpp">
-      <Filter>Commands</Filter>
-    </ClCompile>
     <ClCompile Include="CmdFirstUserConnection.cpp">
       <Filter>Commands</Filter>
     </ClCompile>

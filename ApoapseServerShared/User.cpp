@@ -19,6 +19,7 @@ User::User(DataStructure& data, ServerConnection* connection, ApoapseServer* apo
 
 	m_databaseId = data.GetDbId();
 	m_usergroup = &server->usergroupManager->GetUsergroup(data.GetField("usergroup").GetValue<Uuid>());
+	m_isUsingTemporaryPassword = data.GetField("is_temporary_password").GetValue<bool>();
 
 	AddConnection(connection);
 
@@ -93,15 +94,9 @@ void User::Close()
 		connection->Close();
 }
 
-bool User::IsUsingTemporaryPassword() const	// #MVP
+bool User::IsUsingTemporaryPassword() const
 {
-	SQLQuery query(*global->database);
-	query << SELECT << "is_temporary_password" << FROM << "users" << WHERE << "username" << EQUALS << m_username.GetRaw();
-	auto res = query.Exec();
-
-	const int useTemporaryPassword = res[0][0].GetInt32();
-
-	return static_cast<bool>(useTemporaryPassword);
+	return m_isUsingTemporaryPassword;
 }
 
 std::vector<byte> User::GenerateRandomSalt()

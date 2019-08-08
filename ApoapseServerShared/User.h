@@ -1,9 +1,7 @@
 #pragma once
 #include "INetworkSender.h"
 #include <set>
-#include "CryptographyTypes.hpp"
 #include "Username.h"
-#include "ApoapseMetadata.h"
 #include "IUser.h"
 class ServerConnection;
 class ApoapseServer;
@@ -19,7 +17,8 @@ private:
 	std::set<ServerConnection*> m_associatedConnections;
 	ApoapseServer* server;
 	Username m_username;
-	DbId m_databaseId = 0;
+	DbId m_databaseId = -1;
+	bool m_isUsingTemporaryPassword = false;
 	const Usergroup* m_usergroup;
 
 	static constexpr UInt32 passwordAlgorithmIterations = 5000;
@@ -40,7 +39,7 @@ public:
 	virtual void Close() override;
 	// ~INetworkSender
 
-	bool IsUsingTemporaryPassword() const;
+	bool IsUsingTemporaryPassword() const override;
 
 	static std::vector<byte> GenerateRandomSalt();
 	static std::vector<byte> HashPassword(const std::vector<byte>& encryptedPassword, const std::vector<byte>& salt);

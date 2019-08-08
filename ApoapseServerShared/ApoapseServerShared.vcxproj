@@ -149,7 +149,6 @@
     <ClCompile Include="ApoapseServer.cpp" />
     <ClCompile Include="CmdFirstUserConnection.cpp" />
     <ClCompile Include="CmdMarkAsRead.cpp" />
-    <ClCompile Include="CmdRegisterNewUser.cpp" />
     <ClCompile Include="ServerCmdManager.cpp" />
     <ClCompile Include="ServerConnection.cpp" />
     <ClCompile Include="ServerSettings.cpp" />

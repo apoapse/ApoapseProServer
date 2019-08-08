@@ -43,34 +43,40 @@ void ServerCmdManager::OnReceivedCommand(CommandV2& cmd, GenericConnection& netC
 
 		dataStruct.GetField("username").SetValue(username);
 
-		if (connection.server.usersManager->GetRegisteredUsersCount() == 0)
-		{
-			LOG << "No users and usergroups registered: in first setup state";
-
-			dataStruct.GetField("status").SetValue("setup_state");
-		}
-		else
+		if (connection.server.usersManager->GetRegisteredUsersCount() > 0)
 		{
 			if (UsersManager::LoginIsValid(username, data.GetField("password").GetValue<ByteContainer>()))
 			{
 				connection.Authenticate(username);
-				
-				dataStruct.GetField("status").SetValue("authenticated");
-				dataStruct.GetField("requirePasswordChange").SetValue(connection.GetRelatedUser()->IsUsingTemporaryPassword());
 
+				if (connection.GetRelatedUser()->IsUsingTemporaryPassword())
 				{
-					auto usergroupsDat = global->apoapseData->ReadListFromDatabase("usergroup", "", "");
-					dataStruct.GetField("usergroups").SetValue(usergroupsDat);
+					dataStruct.GetField("status").SetValue("requirePasswordChange");
 				}
+				else
+				{
+					dataStruct.GetField("status").SetValue("authenticated");
 
-				dataStruct.GetField("nickname").SetValue(connection.GetRelatedUser()->GetNickname());
-				dataStruct.GetField("usergroup").SetValue(connection.GetRelatedUser()->GetUsergroup().GetUuid());
+					{
+						auto usergroupsDat = global->apoapseData->ReadListFromDatabase("usergroup", "", "");
+						dataStruct.GetField("usergroups").SetValue(usergroupsDat);
+					}
+
+					dataStruct.GetField("nickname").SetValue(connection.GetRelatedUser()->GetNickname());
+					dataStruct.GetField("usergroup").SetValue(connection.GetRelatedUser()->GetUsergroup().GetUuid());
+				}
 			}
 			else
 			{
 				SecurityLog::LogAlert(ApoapseErrorCode::unable_to_authenticate_user, connection);
 				return;
 			}
+		}
+		else
+		{
+			LOG << "No users and usergroups registered: in first setup state";
+
+			dataStruct.GetField("status").SetValue("setup_state");
 		}
 
 		global->cmdManager->CreateCommand("server_info", dataStruct).Send(connection);
@@ -105,12 +111,39 @@ void ServerCmdManager::OnReceivedCommand(CommandV2& cmd, GenericConnection& netC
 	{
 		ApoapseOperation::ExecuteSyncRequest(data.GetField("last_op_time").GetValue<Int64>(), netConnection);
 	}
+
+	else if (cmd.name == "add_user")
+	{
+		const Username username = cmd.GetData().GetField("username").GetValue<Username>();
+		const auto tempPassword = cmd.GetData().GetField("temp_password").GetValue<ByteContainer>();
+		const Uuid usergroup = cmd.GetData().GetField("usergroup").GetValue<Uuid>();
+
+		if (!connection.server.usersManager->DoesUserExist(username))
+		{
+			connection.server.usersManager->RegisterNewUser(username, tempPassword, usergroup);
+		}
+		else
+		{
+			SecurityLog::LogAlert(ApoapseErrorCode::unable_to_register_user, connection);
+		}
+	}
+
+	else if (cmd.name == "set_identity")
+	{
+		const ByteContainer encryptedPassword = cmd.GetData().GetField("password").GetValue<ByteContainer>();
+		const std::string nickname = cmd.GetData().GetField("nickname").GetValue<std::string>();
+
+		connection.server.usersManager->SetUserIdentity(connection.GetRelatedUser()->GetUsername(), encryptedPassword, nickname);
+
+		LOG << "First connection: set identity complete. Disconnecting the user for first connection with the actual password.";
+		connection.Close();
+	}
 }
 
 void ServerCmdManager::Propagate(CommandV2& cmd, GenericConnection& netConnection)
 {
 	//TODO Complete server cmd propagation with the read_permission field taken into consideration from the data structure json
-	auto& connection = static_cast<ServerConnection&>(netConnection);
+	auto& connection = dynamic_cast<ServerConnection&>(netConnection);
 
 	GenericConnection* propagateToSelf = (cmd.excludeSelfPropagation) ? &connection : nullptr;
 	cmd.Send(*connection.server.usersManager, propagateToSelf);
