@@ -140,11 +140,34 @@ void ServerCmdManager::OnReceivedCommand(CommandV2& cmd, GenericConnection& netC
 	}
 }
 
+void ServerCmdManager::OnReceivedCommandPost(CommandV2& cmd, GenericConnection& netConnection)
+{
+	auto& connection = dynamic_cast<ServerConnection&>(netConnection);
+
+	if (cmd.name == "create_room")
+	{
+		// We create the default thread if the room layout is of type "single" 
+		if (cmd.GetData().GetField("threads_layout").GetValue<std::string>() == "single")
+		{
+			auto dat = global->apoapseData->GetStructure("thread");
+			dat.GetField("uuid").SetValue(Uuid::Generate());
+			dat.GetField("parent_room").SetValue(cmd.GetData().GetField("uuid").GetValue<Uuid>());
+			dat.GetField("name").SetValue("default");
+
+			dat.SaveToDatabase();
+
+			auto cmdThread = global->cmdManager->CreateCommand("create_thread", dat);
+			ApoapseOperation::RegisterOperation(cmdThread, connection.GetConnectedUser());
+			Propagate(cmdThread, connection);
+		}
+	}
+}
+
 void ServerCmdManager::Propagate(CommandV2& cmd, GenericConnection& netConnection)
 {
 	//TODO Complete server cmd propagation with the read_permission field taken into consideration from the data structure json
 	auto& connection = dynamic_cast<ServerConnection&>(netConnection);
 
 	GenericConnection* propagateToSelf = (cmd.excludeSelfPropagation) ? &connection : nullptr;
-	cmd.Send(*connection.server.usersManager, propagateToSelf);
+	cmd.Send(*connection.server.usersManager, propagateToSelf);	//We send to all the connected users
 }
