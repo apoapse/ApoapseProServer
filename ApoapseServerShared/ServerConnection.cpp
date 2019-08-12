@@ -4,6 +4,7 @@
 #include "ApoapseServer.h"
 #include "SecurityAlert.h"
 #include "UsersManager.h"
+#include "CommandV2.h"
 
 ServerConnection::ServerConnection(boost::asio::io_service& ioService, ApoapseServer* server, ssl::context& context)
 	: GenericConnection(ioService, context)

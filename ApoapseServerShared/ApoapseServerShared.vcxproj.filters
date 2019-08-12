@@ -27,6 +27,9 @@
     <ClCompile Include="ServerCmdManager.cpp">
       <Filter>Commands</Filter>
     </ClCompile>
+    <ClCompile Include="ServerFileStreamConnection.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ServerEntryPoint.h" />
@@ -50,6 +53,9 @@
     </ClInclude>
     <ClInclude Include="ServerCmdManager.h">
       <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerFileStreamConnection.h">
+      <Filter>Network</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

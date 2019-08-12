@@ -149,6 +149,7 @@
     <ClCompile Include="ApoapseServer.cpp" />
     <ClCompile Include="ServerCmdManager.cpp" />
     <ClCompile Include="ServerConnection.cpp" />
+    <ClCompile Include="ServerFileStreamConnection.cpp" />
     <ClCompile Include="ServerSettings.cpp" />
     <ClCompile Include="ServerSettingsVariables.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -164,6 +165,7 @@
     <ClInclude Include="ServerCmdManager.h" />
     <ClInclude Include="ServerConnection.h" />
     <ClInclude Include="ServerEntryPoint.h" />
+    <ClInclude Include="ServerFileStreamConnection.h" />
     <ClInclude Include="ServerSettings.h" />
     <ClInclude Include="ServerSettingsVariables.h" />
     <ClInclude Include="User.h" />
