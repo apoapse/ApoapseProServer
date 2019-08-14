@@ -178,11 +178,22 @@ void ServerCmdManager::OnReceivedCommandPost(CommandV2& cmd, GenericConnection& 
 
 void ServerCmdManager::Propagate(CommandV2& cmd, GenericConnection& localConnection)
 {
-	//TODO Complete server cmd propagation with the read_permission field taken into consideration from the data structure json
 	auto& connection = dynamic_cast<ServerConnection&>(localConnection);
 
+	INetworkSender* destination = nullptr;
+	{
+		if (cmd.operationOwnership == OperationOwnership::all)
+			destination = connection.server.usersManager;
+
+		else if (cmd.operationOwnership == OperationOwnership::self)
+			destination = &connection;
+
+		else
+			FatalError("Unsupported operation ownership type for propagation");
+	}
+
 	GenericConnection* propagateToSelf = (cmd.excludeSelfPropagation) ? &connection : nullptr;
-	cmd.Send(*connection.server.usersManager, propagateToSelf);	//We send to all the connected users
+	cmd.Send(*destination, propagateToSelf);	//We send to all the connected users
 }
 
 void ServerCmdManager::PropagateToUser(CommandV2& cmd, User& user)
