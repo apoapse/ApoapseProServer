@@ -161,13 +161,31 @@ void ServerCmdManager::OnReceivedCommandPost(CommandV2& cmd, GenericConnection& 
 			Propagate(cmdThread, connection);
 		}
 	}
+
+	else if (cmd.name == "direct_message")
+	{
+		const Username relatedUser = cmd.GetData().GetField("direct_recipient").GetValue<Username>();
+
+		ApoapseOperation::RegisterOperation(cmd, relatedUser, true);
+		
+		if (connection.server.usersManager->IsUserConnected(relatedUser))
+		{
+			User& user = *connection.server.usersManager->GetUserByUsername(relatedUser).lock().get();
+			PropagateToUser(cmd, user);
+		}
+	}
 }
 
-void ServerCmdManager::Propagate(CommandV2& cmd, GenericConnection& netConnection)
+void ServerCmdManager::Propagate(CommandV2& cmd, GenericConnection& localConnection)
 {
 	//TODO Complete server cmd propagation with the read_permission field taken into consideration from the data structure json
-	auto& connection = dynamic_cast<ServerConnection&>(netConnection);
+	auto& connection = dynamic_cast<ServerConnection&>(localConnection);
 
 	GenericConnection* propagateToSelf = (cmd.excludeSelfPropagation) ? &connection : nullptr;
 	cmd.Send(*connection.server.usersManager, propagateToSelf);	//We send to all the connected users
+}
+
+void ServerCmdManager::PropagateToUser(CommandV2& cmd, User& user)
+{
+	cmd.Send(user, nullptr);
 }
