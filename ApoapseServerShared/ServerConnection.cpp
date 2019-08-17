@@ -15,7 +15,7 @@ ServerConnection::ServerConnection(boost::asio::io_service& ioService, ApoapseSe
 
 ServerConnection::~ServerConnection()
 {
-	if (IsAuthenticated())
+	if (ServerConnection::IsAuthenticated())
 	{
 		m_relatedUser.value()->RemoveConnection(this);
 	}
