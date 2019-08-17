@@ -7,6 +7,7 @@
 #include "ServerFileStreamConnection.h"
 #include <boost/thread.hpp>
 #include "ServerSettings.h"
+#include "ThreadUtils.h"
 
 ApoapseServer::ApoapseServer() : m_tlsContext(ssl::context(ssl::context::sslv23))
 {
@@ -24,34 +25,40 @@ ApoapseServer::~ApoapseServer()
 
 void ApoapseServer::SetupMainServer(UInt16 port)
 {
-	m_mainServer = std::make_unique<TCPServer>(m_mainServerIOService, port, TCPServer::Protocol::ip_v6);
-
 	usersManager = new UsersManager;
 	usergroupManager = new UsergroupManager;
-
+	
+	m_mainServer = std::make_unique<TCPServer>(m_mainServerIOService, port, TCPServer::Protocol::ip_v6);
 	m_mainServer->StartAccept<ServerConnection>(this, std::ref(m_tlsContext));
 }
 
 void ApoapseServer::SetupFilesServer(UInt16 port)
 {
 	m_filesServer = std::make_unique<TCPServer>(m_fileServerIOService, port, TCPServer::Protocol::ip_v6);
-
 	m_filesServer->StartAccept<ServerFileStreamConnection>(this, std::ref(m_tlsContext));
-	m_mainServerIOService.run_one();
 }
 
 void ApoapseServer::StartIOServices()
 {
 	boost::thread_group threads;
 
+	// Main server
 	threads.create_thread([this]
 	{
+		ThreadUtils::NameThread("Main server");
 		m_mainServerIOService.run();
 	});
 
+	// File stream server (two thread used)
 	threads.create_thread([this]
 	{
-		m_mainServerIOService.run();
+		ThreadUtils::NameThread("File Stream server #1");
+		m_fileServerIOService.run();
+	});
+	threads.create_thread([this]
+	{
+		ThreadUtils::NameThread("File Stream server #2");
+		m_fileServerIOService.run();
 	});
 	
 	threads.join_all();

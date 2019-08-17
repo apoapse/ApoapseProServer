@@ -11,6 +11,8 @@
 #include "SQLQuery.h"
 #include "UsergroupManager.h"
 #include "DataStructure.h"
+#include "Random.hpp"
+#include "ServerFileStreamConnection.h"
 
 User::User(DataStructure& data, ServerConnection* connection, ApoapseServer* apoapseServer) : server(apoapseServer)
 {
@@ -97,6 +99,20 @@ void User::Close()
 bool User::IsUsingTemporaryPassword() const
 {
 	return m_isUsingTemporaryPassword;
+}
+
+std::vector<byte> User::GenerateFileStreamAuthCode()
+{
+	m_fileStreamAuthCode = Cryptography::GenerateRandomBytes(sha256Length);
+	
+	return m_fileStreamAuthCode.value();
+}
+
+bool User::AuthenticateFileStream(const ByteContainer authCode, ServerFileStreamConnection* fileStream)
+{
+
+	
+	return false;
 }
 
 std::vector<byte> User::GenerateRandomSalt()
