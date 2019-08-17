@@ -24,6 +24,12 @@ private:
 	static constexpr UInt32 passwordAlgorithmIterations = 5000;
 
 public:
+	enum class UserStatus
+	{
+		offine = 0,
+		online = 1
+	};
+	
 	User(DataStructure& data, ServerConnection* connection, ApoapseServer* apoapseServer);
 	virtual ~User() override;
 

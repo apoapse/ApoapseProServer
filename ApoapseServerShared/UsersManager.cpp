@@ -39,6 +39,19 @@ size_t UsersManager::GetRegisteredUsersCount() const
 	return ((res) ? res.RowCount() : 0);
 }
 
+std::vector<User*> UsersManager::GetConnectedUsers() const
+{
+	std::vector<User*> output;
+	output.reserve(m_connectedUsers.size());
+
+	for (const auto& user : m_connectedUsers)
+	{
+		output.push_back(user.second);
+	}
+	
+	return output;
+}
+
 std::shared_ptr<User> UsersManager::CreateUserObject(const Username& username, ServerConnection& connection)
 {
 	DataStructure dat = global->apoapseData->ReadItemFromDatabase("user", "username", username.GetBytes());
@@ -149,12 +162,30 @@ void UsersManager::Close()
 	}
 }
 
+void UsersManager::SendUserStatusChange(const Username& username, User::UserStatus status)
+{
+	DataStructure dat = global->apoapseData->GetStructure("user_status");
+	dat.GetField("user").SetValue(username);
+	dat.GetField("status").SetValue(static_cast<Int64>(status));
+	
+	global->cmdManager->CreateCommand("change_user_status", dat).Send(*this);
+}
+
 void UsersManager::RemoveConnectedUser(User& user)
 {
-	m_connectedUsers.erase(user.GetUsername());
+	const Username username = user.GetUsername();
+	
+	m_connectedUsers.erase(username);
+	SendUserStatusChange(username, User::UserStatus::offine);
 }
 
 void UsersManager::AddConnectedUser(User* user)
 {
-	m_connectedUsers[user->GetUsername()] = user;
+	if (!user)
+		return;
+
+	const Username username = user->GetUsername();
+	
+	SendUserStatusChange(username, User::UserStatus::online);
+	m_connectedUsers[username] = user;
 }

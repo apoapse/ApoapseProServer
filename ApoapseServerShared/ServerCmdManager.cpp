@@ -39,6 +39,8 @@ void ServerCmdManager::OnReceivedCommand(CommandV2& cmd, GenericConnection& netC
 	if (cmd.name == "login")
 	{
 		const Username username = data.GetField("username").GetValue<Username>();
+
+		// Write server info
 		auto dataStruct = global->apoapseData->GetStructure("server_info");
 
 		dataStruct.GetField("username").SetValue(username);
@@ -61,6 +63,21 @@ void ServerCmdManager::OnReceivedCommand(CommandV2& cmd, GenericConnection& netC
 						auto usergroupsDat = global->apoapseData->ReadListFromDatabase("usergroup", "", "");
 						dataStruct.GetField("usergroups").SetValue(usergroupsDat);
 					}
+
+					{
+						std::vector<DataStructure> connectedUsers;
+
+						for (const User* user : connection.server.usersManager->GetConnectedUsers())
+						{
+							auto connectedUserDat = global->apoapseData->GetStructure("connected_user");
+							connectedUserDat.GetField("user").SetValue(user->GetUsername());
+
+							connectedUsers.push_back(connectedUserDat);
+						}
+
+						dataStruct.GetField("connected_users").SetValue(connectedUsers);
+					}
+
 
 					dataStruct.GetField("nickname").SetValue(connection.GetRelatedUser()->GetNickname());
 					dataStruct.GetField("usergroup").SetValue(connection.GetRelatedUser()->GetUsergroup().GetUuid());
