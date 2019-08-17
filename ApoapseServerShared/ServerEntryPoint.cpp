@@ -62,7 +62,9 @@ int ServerMain(const std::vector<std::string>& launchArgs)
 
 	// Starting Apoapse server
 	ApoapseServer server{};
-	server.StartMainServer(global->settings->vars.server_port);
+	server.SetupMainServer(global->settings->vars.server_port);
+	server.SetupFilesServer(global->settings->vars.file_server_port);
+	server.StartIOServices();
 
 	// Make sure the console do not stop right away
 	std::string inputstr;
