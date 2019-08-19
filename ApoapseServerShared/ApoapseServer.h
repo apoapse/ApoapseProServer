@@ -13,7 +13,6 @@ public:
 	UsersManager* usersManager = nullptr;
 	UsergroupManager* usergroupManager = nullptr;
 
-	boost::asio::io_service mainServerIOService;
 	boost::asio::io_service fileServerIOService;
 
 	ApoapseServer();

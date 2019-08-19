@@ -27,8 +27,9 @@ void ApoapseServer::SetupMainServer(UInt16 port)
 {
 	usersManager = new UsersManager;
 	usergroupManager = new UsergroupManager;
-	
-	m_mainServer = std::make_unique<TCPServer>(mainServerIOService, port, TCPServer::Protocol::ip_v6);
+
+	global->mainConnectionIOService = std::make_unique<boost::asio::io_service>();
+	m_mainServer = std::make_unique<TCPServer>(*global->mainConnectionIOService, port, TCPServer::Protocol::ip_v6);
 	m_mainServer->StartAccept<ServerConnection>(this, std::ref(m_tlsContext));
 }
 
@@ -53,11 +54,11 @@ void ApoapseServer::StartIOServices()
 		{
 			{
 				std::stringstream threadName;
-				threadName << "Main connection " << " #" << i + 1;
+				threadName << "Main connection " << "#" << i + 1;
 				ThreadUtils::NameThread(threadName.str());
 			}
 			
-			mainServerIOService.run();
+			global->mainConnectionIOService->run();
 		});
 	}
 
@@ -68,7 +69,7 @@ void ApoapseServer::StartIOServices()
 		{
 			{
 				std::stringstream threadName;
-				threadName << "File Stream server " << " #" << i + 1;
+				threadName << "File Stream server " << "#" << i + 1;
 				ThreadUtils::NameThread(threadName.str());
 			}
 
@@ -77,6 +78,7 @@ void ApoapseServer::StartIOServices()
 	}
 	
 	// Main thread
+	ThreadUtils::NameThread("Apoapse Main Thread");
 	global->mainThread->Run();
 //	threads.join_all();
 }
