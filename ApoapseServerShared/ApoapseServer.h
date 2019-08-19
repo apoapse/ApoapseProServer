@@ -7,13 +7,14 @@ class ApoapseServer
 {
 	std::unique_ptr<TCPServer> m_mainServer;
 	std::unique_ptr<TCPServer> m_filesServer;
-	boost::asio::io_service m_mainServerIOService;
-	boost::asio::io_service m_fileServerIOService;
 	ssl::context m_tlsContext;
 
 public:
-	UsersManager* usersManager;
-	UsergroupManager* usergroupManager;
+	UsersManager* usersManager = nullptr;
+	UsergroupManager* usergroupManager = nullptr;
+
+	boost::asio::io_service mainServerIOService;
+	boost::asio::io_service fileServerIOService;
 
 	ApoapseServer();
  	virtual ~ApoapseServer();

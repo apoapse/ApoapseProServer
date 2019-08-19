@@ -28,13 +28,13 @@ void ApoapseServer::SetupMainServer(UInt16 port)
 	usersManager = new UsersManager;
 	usergroupManager = new UsergroupManager;
 	
-	m_mainServer = std::make_unique<TCPServer>(m_mainServerIOService, port, TCPServer::Protocol::ip_v6);
+	m_mainServer = std::make_unique<TCPServer>(mainServerIOService, port, TCPServer::Protocol::ip_v6);
 	m_mainServer->StartAccept<ServerConnection>(this, std::ref(m_tlsContext));
 }
 
 void ApoapseServer::SetupFilesServer(UInt16 port)
 {
-	m_filesServer = std::make_unique<TCPServer>(m_fileServerIOService, port, TCPServer::Protocol::ip_v6);
+	m_filesServer = std::make_unique<TCPServer>(fileServerIOService, port, TCPServer::Protocol::ip_v6);
 	m_filesServer->StartAccept<ServerFileStreamConnection>(this, std::ref(m_tlsContext));
 }
 
@@ -42,24 +42,41 @@ void ApoapseServer::StartIOServices()
 {
 	boost::thread_group threads;
 
-	// Main server
-	threads.create_thread([this]
-	{
-		ThreadUtils::NameThread("Main server");
-		m_mainServerIOService.run();
-	});
-
-	// File stream server (two thread used)
-	threads.create_thread([this]
-	{
-		ThreadUtils::NameThread("File Stream server #1");
-		m_fileServerIOService.run();
-	});
-	threads.create_thread([this]
-	{
-		ThreadUtils::NameThread("File Stream server #2");
-		m_fileServerIOService.run();
-	});
+	const int cpuThreadCount = std::thread::hardware_concurrency();
+	const int mainConnectionsThreadCount = std::max(std::ceil(((float)cpuThreadCount - 1.0f) / 2.0f), 1.0f);
+	const int fileStreamsThreadCount = std::max(mainConnectionsThreadCount - 1, 1);
 	
-	threads.join_all();
+	// Main connections
+	for (int i = 0; i < mainConnectionsThreadCount; ++i)
+	{
+		threads.create_thread([this, i]
+		{
+			{
+				std::stringstream threadName;
+				threadName << "Main connection " << " #" << i + 1;
+				ThreadUtils::NameThread(threadName.str());
+			}
+			
+			mainServerIOService.run();
+		});
+	}
+
+	// File streams
+	for (int i = 0; i < fileStreamsThreadCount; ++i)
+	{
+		threads.create_thread([this, i]
+		{
+			{
+				std::stringstream threadName;
+				threadName << "File Stream server " << " #" << i + 1;
+				ThreadUtils::NameThread(threadName.str());
+			}
+
+			fileServerIOService.run();
+		});
+	}
+	
+	// Main thread
+	global->mainThread->Run();
+//	threads.join_all();
 }

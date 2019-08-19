@@ -24,7 +24,8 @@ int ServerMain(const std::vector<std::string>& launchArgs)
 	global->isServer = true;
 
 	global->logger = std::make_unique<Logger>("log.txt");
-	global->threadPool = std::make_unique<ThreadPool>("Global thread pool", 2);
+	global->threadPool = std::make_unique<ThreadPool>("Global thread pool", 2, true);
+	global->mainThread = std::make_unique<ThreadPool>("Main thread", 1, false);
 
 	global->settings = new ServerSettings();
 	global->settings->Load("ServerConfig.ini");
