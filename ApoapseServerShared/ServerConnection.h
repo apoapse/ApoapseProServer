@@ -3,10 +3,12 @@
 #include <optional>
 #include "User.h"
 class ApoapseServer;
+class ServerFileStreamConnection;
 
 class ServerConnection : public GenericConnection
 {
 	std::optional<std::shared_ptr<User>> m_relatedUser;
+	ServerFileStreamConnection* m_fileStream = nullptr;
 
 public:
 	ApoapseServer& server;
@@ -15,9 +17,11 @@ public:
 	virtual ~ServerConnection() override;
 
 	bool IsAuthenticated() const override;
-	void Authenticate(const Username& username);
+	User& Authenticate(const Username& username);
 	User* GetRelatedUser() const;
 	std::optional<Username> GetConnectedUser() const override;
+	void SetRelatedFileStream(ServerFileStreamConnection* fileStream);
+	ServerFileStreamConnection* GetFileStream() const;
 	
 private:
 	bool OnConnectedToServer() override;

@@ -5,6 +5,7 @@
 #include "SecurityAlert.h"
 #include "UsersManager.h"
 #include "CommandV2.h"
+#include "ServerFileStreamConnection.h"
 
 ServerConnection::ServerConnection(boost::asio::io_service& ioService, ApoapseServer* server, ssl::context& context)
 	: GenericConnection(ioService, context)
@@ -26,7 +27,7 @@ bool ServerConnection::IsAuthenticated() const
 	return m_relatedUser.has_value();
 }
 
-void ServerConnection::Authenticate(const Username& username)
+User& ServerConnection::Authenticate(const Username& username)
 {
 	ASSERT(!m_relatedUser.has_value());
 
@@ -42,6 +43,8 @@ void ServerConnection::Authenticate(const Username& username)
 		m_relatedUser = server.usersManager->CreateUserObject(username, *this);
 		LOG << "User " << username << " connected";
 	}
+
+	return *m_relatedUser->get();
 }
 
 User* ServerConnection::GetRelatedUser() const
@@ -55,6 +58,16 @@ std::optional<Username> ServerConnection::GetConnectedUser() const
 		return m_relatedUser.value()->GetUsername();
 	else
 		return std::optional<Username>();
+}
+
+void ServerConnection::SetRelatedFileStream(ServerFileStreamConnection* fileStream)
+{
+	m_fileStream = fileStream;
+}
+
+ServerFileStreamConnection* ServerConnection::GetFileStream() const
+{
+	return m_fileStream;
 }
 
 bool ServerConnection::OnConnectedToServer()

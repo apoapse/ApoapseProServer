@@ -9,6 +9,12 @@ class ApoapseServer;
 class Usergroup;
 class DataStructure;
 
+struct FileStreamAuth
+{
+	ServerConnection* caller = nullptr;
+	hash_SHA256 code;
+};
+
 class User : public std::enable_shared_from_this<User>, public INetworkSender, public IUser
 {
 private:
@@ -21,7 +27,7 @@ private:
 	DbId m_databaseId = -1;
 	bool m_isUsingTemporaryPassword = false;
 	const Usergroup* m_usergroup;
-	std::optional<ByteContainer> m_fileStreamAuthCode;
+		std::optional<FileStreamAuth> m_fileStreamAuthCode;
 
 	static constexpr UInt32 passwordAlgorithmIterations = 5000;
 
@@ -48,8 +54,8 @@ public:
 	// ~INetworkSender
 
 	bool IsUsingTemporaryPassword() const override;
-	std::vector<byte> GenerateFileStreamAuthCode();
-	bool AuthenticateFileStream(const ByteContainer authCode, ServerFileStreamConnection* fileStream);
+	FileStreamAuth GenerateFileStreamAuthCode(ServerConnection& caller);
+	bool AuthenticateFileStream(const hash_SHA256& authCode, ServerFileStreamConnection* fileStream);
 
 	static std::vector<byte> GenerateRandomSalt();
 	static std::vector<byte> HashPassword(const std::vector<byte>& encryptedPassword, const std::vector<byte>& salt);

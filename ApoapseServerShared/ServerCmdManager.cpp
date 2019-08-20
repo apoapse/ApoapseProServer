@@ -49,7 +49,7 @@ void ServerCmdManager::OnReceivedCommand(CommandV2& cmd, GenericConnection& netC
 		{
 			if (UsersManager::LoginIsValid(username, data.GetField("password").GetValue<ByteContainer>()))
 			{
-				connection.Authenticate(username);
+				User& relatedUser = connection.Authenticate(username);
 
 				if (connection.GetRelatedUser()->IsUsingTemporaryPassword())
 				{
@@ -58,6 +58,11 @@ void ServerCmdManager::OnReceivedCommand(CommandV2& cmd, GenericConnection& netC
 				else
 				{
 					dataStruct.GetField("status").SetValue("authenticated");
+
+					{
+						FileStreamAuth fileStreamAuth = relatedUser.GenerateFileStreamAuthCode(connection);
+						dataStruct.GetField("file_stream_auth_code").SetValue(ArrayToVector<byte, sha256Length>(fileStreamAuth.code));
+					}
 
 					{
 						auto usergroupsDat = global->apoapseData->ReadListFromDatabase("usergroup", "", "");
@@ -174,7 +179,7 @@ void ServerCmdManager::OnReceivedCommandPost(CommandV2& cmd, GenericConnection& 
 			dat.SaveToDatabase();
 
 			auto cmdThread = global->cmdManager->CreateCommand("create_thread", dat);
-			ApoapseOperation::RegisterOperation(cmdThread, connection.GetConnectedUser());
+			ApoapseOperation::RegisterOperation(cmdThread, connection.GetConnectedUser(), true);
 			Propagate(cmdThread, connection);
 		}
 	}

@@ -3,7 +3,6 @@
 #include "Common.h"
 #include "ServerConnection.h"
 #include "ApoapseServer.h"
-#include "ByteUtils.hpp"
 #include "UsersManager.h"
 #include "Random.hpp"
 #include "Hash.hpp"
@@ -11,7 +10,6 @@
 #include "SQLQuery.h"
 #include "UsergroupManager.h"
 #include "DataStructure.h"
-#include "Random.hpp"
 #include "ServerFileStreamConnection.h"
 
 User::User(DataStructure& data, ServerConnection* connection, ApoapseServer* apoapseServer) : server(apoapseServer)
@@ -101,18 +99,38 @@ bool User::IsUsingTemporaryPassword() const
 	return m_isUsingTemporaryPassword;
 }
 
-std::vector<byte> User::GenerateFileStreamAuthCode()
+FileStreamAuth User::GenerateFileStreamAuthCode(ServerConnection& caller)
 {
-	m_fileStreamAuthCode = Cryptography::GenerateRandomBytes(sha256Length);
+	FileStreamAuth auth;
+	auth.code = VectorToArray<byte, sha256Length>(Cryptography::GenerateRandomBytes(sha256Length));
+	auth.caller = &caller;
+
+	m_fileStreamAuthCode = auth;
 	
 	return m_fileStreamAuthCode.value();
 }
 
-bool User::AuthenticateFileStream(const ByteContainer authCode, ServerFileStreamConnection* fileStream)
+bool User::AuthenticateFileStream(const hash_SHA256& authCode, ServerFileStreamConnection* fileStream)
 {
-
+	if (!m_fileStreamAuthCode.has_value())
+	{
+		return false;
+	}
 	
-	return false;
+	if (m_fileStreamAuthCode.value().code == authCode && m_fileStreamAuthCode.value().caller != nullptr)
+	{
+		LOG << "File stream connection authenticated for user " << GetUsername().ToStr();
+
+		m_fileStreamAuthCode.value().caller->SetRelatedFileStream(fileStream);
+		fileStream->SetMainConnection(m_fileStreamAuthCode.value().caller);
+		m_fileStreamAuthCode.reset();
+		
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 std::vector<byte> User::GenerateRandomSalt()
