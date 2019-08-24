@@ -5,6 +5,15 @@
 #include "ApoapseServer.h"
 #include <filesystem>
 #include "UsersManager.h"
+#include "ServerConnection.h"
+/*
+Attachment::Attachment(DataStructure& data)
+{
+	uuid = data.GetField("uuid").GetValue<Uuid>();
+	parentThread = data.GetField("parent_thread").GetValue<Uuid>();
+	fileName = data.GetField("name").GetValue<std::string>();
+	fileSize = data.GetField("file_size").GetValue<Int64>();
+}*/
 
 ServerFileStreamConnection::ServerFileStreamConnection(boost::asio::io_service& ioService, ApoapseServer* server, boost::asio::ssl::context& context)
 	: FileStreamConnection(ioService, context)
@@ -22,15 +31,12 @@ void ServerFileStreamConnection::SetMainConnection(ServerConnection* serverConne
 	m_mainConnection = serverConnection;
 }
 
-void ServerFileStreamConnection::OnFileDownloadCompleted()
-{
-	LOG_DEBUG << "Download completed";
-}
-
 void ServerFileStreamConnection::ErrorDisconnectAll()
 {
 	LOG_DEBUG << "ErrorDisconnectAll";
 	
+	GetMainConnection()->Close();
+	Close();
 }
 
 void ServerFileStreamConnection::Authenticate(const Username& username, const hash_SHA256& authCode)
@@ -40,24 +46,18 @@ void ServerFileStreamConnection::Authenticate(const Username& username, const ha
 		auto user = server.usersManager->GetUserByUsername(username);
 		user.lock()->AuthenticateFileStream(authCode, this);
 	});
-
-	//std::uintmax_t size = std::filesystem::file_size("_test_img.jpg");
-	//SendFile("_test_img.jpg", size);
 }
 
-std::string ServerFileStreamConnection::GetDownloadFilePath(UInt64 fileSize)
+void ServerFileStreamConnection::OnSocketConnected()
 {
-	LOG_DEBUG << "GetDownloadFilePath";
-	return "_testfile.mkv";
 }
 
-void ServerFileStreamConnection::OnFileSentSuccessfully()
+void ServerFileStreamConnection::OnFileDownloadCompleted(const AttachmentFile& file)
 {
-	LOG_DEBUG << "OnFileSentSuccessfully";
-	
+	LOG_DEBUG << "OnFileDownloadCompleted " << file.fileName;
 }
 
-void ServerFileStreamConnection::OnConnectedToServer()
+void ServerFileStreamConnection::OnFileSentSuccessfully(const AttachmentFile& file)
 {
-	LOG_DEBUG << "OnConnectedToServer";
+	LOG_DEBUG << "OnFileSentSuccessfully " << file.fileName;
 }

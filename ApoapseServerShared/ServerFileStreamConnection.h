@@ -1,7 +1,21 @@
 #pragma once
 #include "FileStreamConnection.h"
+#include <deque>
+#include "Uuid.h"
 class ApoapseServer;
 class ServerConnection;
+/*
+struct Attachment
+{
+	Uuid uuid;
+	Uuid parentThread;
+	std::string fileName;
+	size_t fileSize = 0;
+
+	Attachment() = default;
+	Attachment(DataStructure& data);
+};
+*/
 
 class ServerFileStreamConnection : public FileStreamConnection
 {
@@ -16,10 +30,9 @@ public:
 	void SetMainConnection(ServerConnection* serverConnection);
 	
 protected:
-	void OnFileDownloadCompleted() override;
 	void ErrorDisconnectAll() override;
 	void Authenticate(const Username& username, const hash_SHA256& authCode) override;
-	std::string GetDownloadFilePath(UInt64 fileSize) override;
-	void OnFileSentSuccessfully() override;
-	void OnConnectedToServer() override;
+	void OnSocketConnected() override;
+	void OnFileDownloadCompleted(const AttachmentFile& file) override;
+	void OnFileSentSuccessfully(const AttachmentFile& file) override;
 };

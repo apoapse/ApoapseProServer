@@ -123,6 +123,7 @@ bool User::AuthenticateFileStream(const hash_SHA256& authCode, ServerFileStreamC
 
 		m_fileStreamAuthCode.value().caller->SetRelatedFileStream(fileStream);
 		fileStream->SetMainConnection(m_fileStreamAuthCode.value().caller);
+		fileStream->SetAuthenticated();
 		m_fileStreamAuthCode.reset();
 		
 		return true;

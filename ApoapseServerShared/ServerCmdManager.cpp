@@ -9,6 +9,8 @@
 #include "UsersManager.h"
 #include "ApoapseOperation.h"
 #include "UsergroupManager.h"
+#include "ServerFileStreamConnection.h"
+#include "ByteUtils.hpp"
 
 ServerCmdManager::ServerCmdManager() : CommandsManagerV2(GetCommandDef())
 {
@@ -159,6 +161,20 @@ void ServerCmdManager::OnReceivedCommand(CommandV2& cmd, GenericConnection& netC
 
 		LOG << "First connection: set identity complete. Disconnecting the user for first connection with the actual password.";
 		connection.Close();
+	}
+
+	else if (cmd.name == "upload_attachment")
+	{
+		const Uuid uuid = cmd.GetData().GetField("uuid").GetValue<Uuid>();
+		
+		AttachmentFile file;
+		file.fileName = cmd.GetData().GetField("name").GetValue<std::string>();
+		file.fileSize = cmd.GetData().GetField("file_size").GetValue<Int64>();
+		file.filePath = "attachments/" + BytesToHexString(uuid.GetBytes()) + ".dat";	//todo todo
+		connection.GetFileStream()->PushFileToReceive(file);
+
+		auto dat = global->apoapseData->GetStructure("empty");
+		global->cmdManager->CreateCommand("ready_to_receive_file", dat).Send(connection);
 	}
 }
 
