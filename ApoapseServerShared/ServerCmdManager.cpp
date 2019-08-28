@@ -170,7 +170,7 @@ void ServerCmdManager::OnReceivedCommand(CommandV2& cmd, GenericConnection& netC
 		AttachmentFile file;
 		file.fileName = cmd.GetData().GetField("name").GetValue<std::string>();
 		file.fileSize = cmd.GetData().GetField("file_size").GetValue<Int64>();
-		file.filePath = "attachments/" + BytesToHexString(uuid.GetBytes()) + ".dat";	//todo todo
+		file.filePath = "server_userfiles/" + BytesToHexString(uuid.GetBytes()) + ".dat";
 		connection.GetFileStream()->PushFileToReceive(file);
 
 		auto dat = global->apoapseData->GetStructure("empty");
