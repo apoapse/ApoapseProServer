@@ -17,6 +17,22 @@ ServerCmdManager::ServerCmdManager() : CommandsManagerV2(GetCommandDef())
 	
 }
 
+bool ServerCmdManager::OnSendCommandPre(CommandV2& cmd)
+{
+	if (cmd.name == "new_message")
+	{
+		const Uuid msgUuid = cmd.GetData().GetField("uuid").GetValue<Uuid>();
+
+		if (!cmd.GetData().GetField("attachments").HasValue())
+		{
+			auto dbDat = global->apoapseData->ReadListFromDatabase("attachment", "parent_message", msgUuid);
+			cmd.GetData().GetField("attachments").SetValue(dbDat);
+		}
+	}
+	
+	return true;
+}
+
 bool ServerCmdManager::OnReceivedCommandPre(CommandV2& cmd, GenericConnection& netConnection)
 {
 	auto& data = cmd.GetData();
@@ -163,18 +179,31 @@ void ServerCmdManager::OnReceivedCommand(CommandV2& cmd, GenericConnection& netC
 		connection.Close();
 	}
 
-	else if (cmd.name == "upload_attachment")
+	else if (cmd.name == "new_message")
 	{
-		const Uuid uuid = cmd.GetData().GetField("uuid").GetValue<Uuid>();
-		
-		AttachmentFile file;
-		file.fileName = cmd.GetData().GetField("name").GetValue<std::string>();
-		file.fileSize = cmd.GetData().GetField("file_size").GetValue<Int64>();
-		file.filePath = "server_userfiles/" + BytesToHexString(uuid.GetBytes()) + ".dat";
-		connection.GetFileStream()->PushFileToReceive(file);
+		const Uuid msgUuid = cmd.GetData().GetField("uuid").GetValue<Uuid>();
+		auto attachmentsDat = cmd.GetData().GetField("attachments").GetDataArray();
 
-		auto dat = global->apoapseData->GetStructure("empty");
-		global->cmdManager->CreateCommand("ready_to_receive_file", dat).Send(connection);
+		if (!attachmentsDat.empty())
+		{
+			for (DataStructure& dat : attachmentsDat)
+			{
+				dat.GetField("parent_message").SetValue(msgUuid);
+				dat.GetField("is_downloaded").SetValue(false);
+				dat.SaveToDatabase();
+				
+				AttachmentFile file;
+				file.uuid = dat.GetField("uuid").GetValue<Uuid>();
+				file.relatedMessage = msgUuid;
+				file.fileName = dat.GetField("name").GetValue<std::string>();
+				file.fileSize = dat.GetField("file_size").GetValue<Int64>();
+				file.filePath = "server_userfiles/" + BytesToHexString(file.uuid.GetBytes()) + ".dat";
+				connection.GetFileStream()->PushFileToReceive(file);
+			}
+
+			auto dat = global->apoapseData->GetStructure("empty");
+			global->cmdManager->CreateCommand("ready_to_receive_file", dat).Send(connection);
+		}
 	}
 }
 

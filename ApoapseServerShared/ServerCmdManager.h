@@ -9,9 +9,10 @@ public:
 	ServerCmdManager();
 
 	// Inherited via CommandsManagerV2
-	virtual bool OnReceivedCommandPre(CommandV2& cmd, GenericConnection& netConnection) override;
-	virtual void OnReceivedCommand(CommandV2& cmd, GenericConnection& netConnection) override;
-	virtual void OnReceivedCommandPost(CommandV2& cmd, GenericConnection& netConnection) override;
-	virtual void Propagate(CommandV2& cmd, GenericConnection& localConnection) override;
+	bool OnSendCommandPre(CommandV2& cmd) override;
+	bool OnReceivedCommandPre(CommandV2& cmd, GenericConnection& netConnection) override;
+	void OnReceivedCommand(CommandV2& cmd, GenericConnection& netConnection) override;
+	void OnReceivedCommandPost(CommandV2& cmd, GenericConnection& netConnection) override;
+	void Propagate(CommandV2& cmd, GenericConnection& localConnection) override;
 	void PropagateToUser(CommandV2& cmd, User& user);
 };
