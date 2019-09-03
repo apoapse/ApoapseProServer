@@ -178,33 +178,6 @@ void ServerCmdManager::OnReceivedCommand(CommandV2& cmd, GenericConnection& netC
 		LOG << "First connection: set identity complete. Disconnecting the user for first connection with the actual password.";
 		connection.Close();
 	}
-
-	else if (cmd.name == "new_message")
-	{
-		const Uuid msgUuid = cmd.GetData().GetField("uuid").GetValue<Uuid>();
-		auto attachmentsDat = cmd.GetData().GetField("attachments").GetDataArray();
-
-		if (!attachmentsDat.empty())
-		{
-			for (DataStructure& dat : attachmentsDat)
-			{
-				dat.GetField("parent_message").SetValue(msgUuid);
-				dat.GetField("is_downloaded").SetValue(false);
-				dat.SaveToDatabase();
-				
-				AttachmentFile file;
-				file.uuid = dat.GetField("uuid").GetValue<Uuid>();
-				file.relatedMessage = msgUuid;
-				file.fileName = dat.GetField("name").GetValue<std::string>();
-				file.fileSize = dat.GetField("file_size").GetValue<Int64>();
-				file.filePath = "server_userfiles/" + BytesToHexString(file.uuid.GetBytes()) + ".dat";
-				connection.GetFileStream()->PushFileToReceive(file);
-			}
-
-			auto dat = global->apoapseData->GetStructure("empty");
-			global->cmdManager->CreateCommand("ready_to_receive_file", dat).Send(connection);
-		}
-	}
 }
 
 void ServerCmdManager::OnReceivedCommandPost(CommandV2& cmd, GenericConnection& netConnection)
@@ -239,6 +212,33 @@ void ServerCmdManager::OnReceivedCommandPost(CommandV2& cmd, GenericConnection& 
 		{
 			User& user = *connection.server.usersManager->GetUserByUsername(relatedUser).lock().get();
 			PropagateToUser(cmd, user);
+		}
+	}
+	
+	if (cmd.name == "new_message" || cmd.name == "direct_message")
+	{
+		const Uuid msgUuid = cmd.GetData().GetField("uuid").GetValue<Uuid>();
+		auto attachmentsDat = cmd.GetData().GetField("attachments").GetDataArray();
+
+		if (!attachmentsDat.empty())
+		{
+			for (DataStructure& dat : attachmentsDat)
+			{
+				dat.GetField("parent_message").SetValue(msgUuid);
+				dat.GetField("is_downloaded").SetValue(false);
+				dat.SaveToDatabase();
+				
+				AttachmentFile file;
+				file.uuid = dat.GetField("uuid").GetValue<Uuid>();
+				file.relatedMessage = msgUuid;
+				file.fileName = dat.GetField("name").GetValue<std::string>();
+				file.fileSize = dat.GetField("file_size").GetValue<Int64>();
+				file.filePath = "server_userfiles/" + BytesToHexString(file.uuid.GetBytes()) + ".dat";
+				connection.GetFileStream()->PushFileToReceive(file);
+			}
+
+			auto dat = global->apoapseData->GetStructure("empty");
+			global->cmdManager->CreateCommand("ready_to_receive_file", dat).Send(connection);
 		}
 	}
 }
