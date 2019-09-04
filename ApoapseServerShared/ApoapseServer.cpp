@@ -46,10 +46,8 @@ void ApoapseServer::StartIOServices()
 	boost::thread_group threads;
 
 	const int cpuThreadCount = std::thread::hardware_concurrency();
-	//const int mainConnectionsThreadCount = std::max(std::ceil(((float)cpuThreadCount - 1.0f) / 2.0f), 1.0f);
-	const int mainConnectionsThreadCount = 1;
-	//const int fileStreamsThreadCount = std::max(mainConnectionsThreadCount - 1, 1);
-	const int fileStreamsThreadCount = 1;
+	const int mainConnectionsThreadCount = std::max(std::ceil(((float)cpuThreadCount - 1.0f) / 2.0f), 1.0f);
+	const int fileStreamsThreadCount = std::max(mainConnectionsThreadCount - 1, 1);
 	
 	// Main connections
 	for (int i = 0; i < mainConnectionsThreadCount; ++i)
