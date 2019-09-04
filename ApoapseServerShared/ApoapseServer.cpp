@@ -8,10 +8,12 @@
 #include <boost/thread.hpp>
 #include "ServerSettings.h"
 #include "ThreadUtils.h"
+#include "TCPServerNoTLS.h"
 
 ApoapseServer::ApoapseServer() : m_tlsContext(ssl::context(ssl::context::sslv23))
 {
 	m_tlsContext.set_options(boost::asio::ssl::context::default_workarounds | boost::asio::ssl::context::no_sslv2 | boost::asio::ssl::context::single_dh_use);
+	m_tlsContext.set_default_verify_paths();
 	m_tlsContext.use_certificate_chain_file("user.crt");
 	m_tlsContext.use_private_key_file("user.key", boost::asio::ssl::context::pem);
 	m_tlsContext.use_tmp_dh_file("dh2048.pem");
@@ -35,8 +37,8 @@ void ApoapseServer::SetupMainServer(UInt16 port)
 
 void ApoapseServer::SetupFilesServer(UInt16 port)
 {
-	m_filesServer = std::make_unique<TCPServer>(fileServerIOService, port, TCPServer::Protocol::ip_v6);
-	m_filesServer->StartAccept<ServerFileStreamConnection>(this, std::ref(m_tlsContext));
+	m_filesServer = std::make_unique<TCPServerNoTLS>(fileServerIOService, port, TCPServerNoTLS::Protocol::ip_v6);
+	m_filesServer->StartAccept<ServerFileStreamConnection>(this/*, std::ref(m_tlsContext)*/);
 }
 
 void ApoapseServer::StartIOServices()
@@ -44,8 +46,10 @@ void ApoapseServer::StartIOServices()
 	boost::thread_group threads;
 
 	const int cpuThreadCount = std::thread::hardware_concurrency();
-	const int mainConnectionsThreadCount = std::max(std::ceil(((float)cpuThreadCount - 1.0f) / 2.0f), 1.0f);
-	const int fileStreamsThreadCount = std::max(mainConnectionsThreadCount - 1, 1);
+	//const int mainConnectionsThreadCount = std::max(std::ceil(((float)cpuThreadCount - 1.0f) / 2.0f), 1.0f);
+	const int mainConnectionsThreadCount = 1;
+	//const int fileStreamsThreadCount = std::max(mainConnectionsThreadCount - 1, 1);
+	const int fileStreamsThreadCount = 1;
 	
 	// Main connections
 	for (int i = 0; i < mainConnectionsThreadCount; ++i)

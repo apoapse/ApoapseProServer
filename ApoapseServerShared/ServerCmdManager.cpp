@@ -11,6 +11,7 @@
 #include "UsergroupManager.h"
 #include "ServerFileStreamConnection.h"
 #include "ByteUtils.hpp"
+#include <filesystem>
 
 ServerCmdManager::ServerCmdManager() : CommandsManagerV2(GetCommandDef())
 {
@@ -178,6 +179,21 @@ void ServerCmdManager::OnReceivedCommand(CommandV2& cmd, GenericConnection& netC
 		LOG << "First connection: set identity complete. Disconnecting the user for first connection with the actual password.";
 		connection.Close();
 	}
+
+	else if (cmd.name == "attachment_download")
+	{
+		const Uuid uuid = cmd.GetData().GetField("uuid").GetValue<Uuid>();
+		DataStructure dat = global->apoapseData->ReadItemFromDatabase("attachment", "uuid", uuid);
+
+		if (!dat.GetField("is_downloaded").GetValue<bool>())
+		{
+			LOG << LogSeverity::error << "The client in requesting to download a file that has not be uploaded on the server";
+			return;
+		}
+		
+		AttachmentFile file(dat, GenerateAttachmentPath(uuid));
+		connection.GetFileStream()->PushFileToSend(file);
+	}
 }
 
 void ServerCmdManager::OnReceivedCommandPost(CommandV2& cmd, GenericConnection& netConnection)
@@ -227,13 +243,10 @@ void ServerCmdManager::OnReceivedCommandPost(CommandV2& cmd, GenericConnection& 
 				dat.GetField("parent_message").SetValue(msgUuid);
 				dat.GetField("is_downloaded").SetValue(false);
 				dat.SaveToDatabase();
+
+				const Uuid uuid = dat.GetField("uuid").GetValue<Uuid>();
 				
-				AttachmentFile file;
-				file.uuid = dat.GetField("uuid").GetValue<Uuid>();
-				file.relatedMessage = msgUuid;
-				file.fileName = dat.GetField("name").GetValue<std::string>();
-				file.fileSize = dat.GetField("file_size").GetValue<Int64>();
-				file.filePath = "server_userfiles/" + BytesToHexString(file.uuid.GetBytes()) + ".dat";
+				AttachmentFile file(dat, GenerateAttachmentPath(uuid));
 				connection.GetFileStream()->PushFileToReceive(file);
 			}
 
@@ -266,4 +279,10 @@ void ServerCmdManager::Propagate(CommandV2& cmd, GenericConnection& localConnect
 void ServerCmdManager::PropagateToUser(CommandV2& cmd, User& user)
 {
 	cmd.Send(user, nullptr);
+}
+
+std::string ServerCmdManager::GenerateAttachmentPath(const Uuid& fileUuid)
+{
+	const std::string filePath = "server_userfiles/" + BytesToHexString(fileUuid.GetBytes()) + ".dat";
+	return filePath;
 }

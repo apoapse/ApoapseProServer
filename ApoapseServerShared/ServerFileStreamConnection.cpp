@@ -15,8 +15,8 @@ Attachment::Attachment(DataStructure& data)
 	fileSize = data.GetField("file_size").GetValue<Int64>();
 }*/
 
-ServerFileStreamConnection::ServerFileStreamConnection(boost::asio::io_service& ioService, ApoapseServer* server, boost::asio::ssl::context& context)
-	: FileStreamConnection(ioService, context)
+ServerFileStreamConnection::ServerFileStreamConnection(boost::asio::io_service& ioService, ApoapseServer* server/*, boost::asio::ssl::context& context*/)
+	: FileStreamConnection(ioService/*, context*/)
 	, server(*server)
 {
 }
@@ -55,9 +55,16 @@ void ServerFileStreamConnection::OnSocketConnected()
 void ServerFileStreamConnection::OnFileDownloadCompleted(const AttachmentFile& file)
 {
 	LOG_DEBUG << "OnFileDownloadCompleted " << file.fileName;
+
+	global->mainThread->PushTask([file]()
+	{
+		auto dat = global->apoapseData->ReadItemFromDatabase("attachment", "uuid", file.uuid);
+		dat.GetField("is_downloaded").SetValue(true);
+		dat.SaveToDatabase();
+	});
 }
 
 void ServerFileStreamConnection::OnFileSentSuccessfully(const AttachmentFile& file)
 {
-	LOG_DEBUG << "OnFileSentSuccessfully " << file.fileName;
+	LOG << "File sent successfully " << file.fileName;
 }

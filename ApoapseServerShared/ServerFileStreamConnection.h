@@ -24,7 +24,7 @@ class ServerFileStreamConnection : public FileStreamConnection
 public:
 	ApoapseServer& server;
 	
-	ServerFileStreamConnection(boost::asio::io_service& ioService, ApoapseServer* server, ssl::context& context);
+	ServerFileStreamConnection(boost::asio::io_service& ioService, ApoapseServer* server/*, ssl::context& context*/);
 
 	ServerConnection* GetMainConnection() const;
 	void SetMainConnection(ServerConnection* serverConnection);

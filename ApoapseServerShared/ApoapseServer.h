@@ -1,12 +1,13 @@
 #pragma once
 #include "TCPServer.h"
+#include "TCPServerNoTLS.h"
 class UsersManager;
 class UsergroupManager;
 
 class ApoapseServer
 {
 	std::unique_ptr<TCPServer> m_mainServer;
-	std::unique_ptr<TCPServer> m_filesServer;
+	std::unique_ptr<TCPServerNoTLS> m_filesServer;
 	ssl::context m_tlsContext;
 
 public:

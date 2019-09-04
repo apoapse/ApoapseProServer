@@ -15,4 +15,7 @@ public:
 	void OnReceivedCommandPost(CommandV2& cmd, GenericConnection& netConnection) override;
 	void Propagate(CommandV2& cmd, GenericConnection& localConnection) override;
 	void PropagateToUser(CommandV2& cmd, User& user);
+
+private:
+	static std::string GenerateAttachmentPath(const Uuid& fileUuid);
 };
