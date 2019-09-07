@@ -234,7 +234,7 @@ void ServerCmdManager::OnReceivedCommandPost(CommandV2& cmd, GenericConnection& 
 	if (cmd.name == "new_message" || cmd.name == "direct_message")
 	{
 		const Uuid msgUuid = cmd.GetData().GetField("uuid").GetValue<Uuid>();
-		auto attachmentsDat = cmd.GetData().GetField("attachments").GetDataArray();
+		auto& attachmentsDat = cmd.GetData().GetField("attachments").GetDataArray();
 
 		if (!attachmentsDat.empty())
 		{
