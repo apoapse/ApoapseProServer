@@ -14,7 +14,7 @@ UNIT_TEST("User:HashAndComparePassword")
 
 	const auto hashedPassword = User::HashPassword(testPassword, salt);
 
-	UnitTest::Assert(User::ComparePasswords(testPassword, hashedPassword, salt));
+	CHECK(User::ComparePasswords(testPassword, hashedPassword, salt));
 } UNIT_TEST_END
 
 UNIT_TEST("User:HashAndComparePassword:WrongPassword")
@@ -23,7 +23,7 @@ UNIT_TEST("User:HashAndComparePassword:WrongPassword")
 	const auto testPassword = Cryptography::GenerateRandomBytes(sha256Length);
 	const auto randomStoredPassword = Cryptography::GenerateRandomBytes(sha512Length);
 
-	UnitTest::Assert(!User::ComparePasswords(testPassword, randomStoredPassword, salt));
+	CHECK(!User::ComparePasswords(testPassword, randomStoredPassword, salt));
 } UNIT_TEST_END
 
 UNIT_TEST("User:HashAndComparePassword:WrongSalt")
@@ -34,7 +34,7 @@ UNIT_TEST("User:HashAndComparePassword:WrongSalt")
 
 	const auto hashedPassword = User::HashPassword(testPassword, salt);
 
-	UnitTest::Assert(!User::ComparePasswords(testPassword, hashedPassword, salt2));
+	CHECK(!User::ComparePasswords(testPassword, hashedPassword, salt2));
 } UNIT_TEST_END
 
 #endif	// UNIT_TESTS
