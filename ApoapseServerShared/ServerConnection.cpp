@@ -20,6 +20,9 @@ ServerConnection::~ServerConnection()
 	{
 		m_relatedUser.value()->RemoveConnection(this);
 	}
+
+	if (m_fileStream)
+		m_fileStream->SetMainConnection(nullptr);
 }
 
 bool ServerConnection::IsAuthenticated() const

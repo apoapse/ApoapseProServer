@@ -34,8 +34,10 @@ void ServerFileStreamConnection::SetMainConnection(ServerConnection* serverConne
 void ServerFileStreamConnection::ErrorDisconnectAll()
 {
 	LOG_DEBUG << "ErrorDisconnectAll";
+
+	if (m_mainConnection && m_mainConnection->IsConnected())
+		GetMainConnection()->Close();
 	
-	GetMainConnection()->Close();
 	Close();
 }
 
