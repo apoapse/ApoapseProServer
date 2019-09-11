@@ -21,7 +21,7 @@ ServerCmdManager::ServerCmdManager() : CommandsManagerV2(GetCommandDef())
 
 bool ServerCmdManager::OnSendCommandPre(CommandV2& cmd)
 {
-	if (cmd.name == "new_message")
+	if (cmd.name == "new_message" || cmd.name == "direct_message")
 	{
 		const Uuid msgUuid = cmd.GetData().GetField("uuid").GetValue<Uuid>();
 
