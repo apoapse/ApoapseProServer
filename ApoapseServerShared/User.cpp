@@ -166,3 +166,8 @@ std::string User::GetNickname() const
 
 	return res[0][0].GetText();
 }
+
+std::string User::GetAvatarFilePath(const Username& username)
+{
+	return "server_userfiles/av_" + username.ToStr().substr(0, 24) + ".dat";
+}

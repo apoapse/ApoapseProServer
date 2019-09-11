@@ -63,6 +63,8 @@ public:
 	static bool IsEncryptedPasswordValid(const std::vector<byte>& encryptedPassword);
 	std::string GetNickname() const;
 
+	static std::string GetAvatarFilePath(const Username& username);
+
 private:
  	void RemoveConnection(ServerConnection* connection);
 	void AddConnection(ServerConnection* connection);

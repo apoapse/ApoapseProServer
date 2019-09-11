@@ -12,6 +12,7 @@
 #include "ServerFileStreamConnection.h"
 #include "ByteUtils.hpp"
 #include <filesystem>
+#include "FileUtils.h"
 
 ServerCmdManager::ServerCmdManager() : CommandsManagerV2(GetCommandDef())
 {
@@ -28,6 +29,18 @@ bool ServerCmdManager::OnSendCommandPre(CommandV2& cmd)
 		{
 			auto dbDat = global->apoapseData->ReadListFromDatabase("attachment", "parent_message", msgUuid);
 			cmd.GetData().GetField("attachments").SetValue(dbDat);
+		}
+	}
+	
+	else if (cmd.name == "user")
+	{
+		const auto username = cmd.GetData().GetField("username").GetValue<Username>();
+		const std::string filePath = User::GetAvatarFilePath(username);
+		
+		if (std::filesystem::exists(filePath))
+		{
+			const std::vector<byte> avatarData = FileUtils::ReadFile(filePath);
+			cmd.GetData().GetField("avatar").SetValue(avatarData);
 		}
 	}
 	
@@ -173,6 +186,13 @@ void ServerCmdManager::OnReceivedCommand(CommandV2& cmd, GenericConnection& netC
 	{
 		const ByteContainer encryptedPassword = cmd.GetData().GetField("password").GetValue<ByteContainer>();
 		const std::string nickname = cmd.GetData().GetField("nickname").GetValue<std::string>();
+
+		if (cmd.GetData().GetField("avatar").HasValue())
+		{
+			const ByteContainer avatarData = cmd.GetData().GetField("avatar").GetValue<ByteContainer>();
+
+			FileUtils::SaveBytesToFile(User::GetAvatarFilePath(connection.GetRelatedUser()->GetUsername()), avatarData);
+		}
 
 		connection.server.usersManager->SetUserIdentity(connection.GetRelatedUser()->GetUsername(), encryptedPassword, nickname);
 
