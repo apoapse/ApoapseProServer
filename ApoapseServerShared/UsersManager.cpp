@@ -119,7 +119,7 @@ DbId UsersManager::SetUserIdentity(const Username& username, const std::vector<b
 	dat.SaveToDatabase();
 
 	auto cmd = global->cmdManager->CreateCommand("user", dat);
-	ApoapseOperation::RegisterOperation(cmd, username);
+	ApoapseOperation::RegisterOperation(cmd, username, true);
 	cmd.Send(*this);
 
 	return -1;
