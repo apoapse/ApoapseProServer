@@ -94,6 +94,12 @@ void User::Close()
 		connection->Close();
 }
 
+void User::RequestClose()
+{
+	for (auto* connection : m_associatedConnections)
+		connection->RequestClose();
+}
+
 bool User::IsUsingTemporaryPassword() const
 {
 	return m_isUsingTemporaryPassword;

@@ -16,6 +16,8 @@ public:
 	ServerConnection(boost::asio::io_service& ioService, ApoapseServer* server, ssl::context& context);
 	virtual ~ServerConnection() override;
 
+	virtual void Close() override;
+
 	bool IsAuthenticated() const override;
 	User& Authenticate(const Username& username);
 	User* GetRelatedUser() const;

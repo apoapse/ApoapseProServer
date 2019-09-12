@@ -2,7 +2,7 @@
 #include "ServerConnection.h"
 #include "Common.h"
 #include "ApoapseServer.h"
-#include "SecurityAlert.h"
+#include "ApoapseError.h"
 #include "UsersManager.h"
 #include "CommandV2.h"
 #include "ServerFileStreamConnection.h"
@@ -23,6 +23,14 @@ ServerConnection::~ServerConnection()
 
 	if (m_fileStream)
 		m_fileStream->SetMainConnection(nullptr);
+}
+
+void ServerConnection::Close() // #TODO FIXME
+{
+	TCPConnection::Close();
+
+	if (m_fileStream)
+		m_fileStream->Close();
 }
 
 bool ServerConnection::IsAuthenticated() const
@@ -83,5 +91,5 @@ void ServerConnection::OnReceivedCommand(CommandV2& cmd)
 	if (cmd.IsValid(GetRelatedUser()))
 		global->cmdManager->OnReceivedCmdInternal(cmd, *this, GetRelatedUser());
 	else
-		SecurityLog::LogAlert(ApoapseErrorCode::invalid_cmd, *this);
+		ApoapseError(ApoapseErrors::invalid_cmd, this);
 }

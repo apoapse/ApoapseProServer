@@ -51,6 +51,7 @@ public:
 
 	virtual std::string GetEndpointStr() const override;
 	virtual void Close() override;
+	void RequestClose() override;
 	// ~INetworkSender
 
 	bool IsUsingTemporaryPassword() const override;

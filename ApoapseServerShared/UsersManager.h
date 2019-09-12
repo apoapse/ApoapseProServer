@@ -38,6 +38,7 @@ public:
 
 	virtual std::string GetEndpointStr() const override;
 	virtual void Close() override;
+	void RequestClose() override;
 	//~ INetworkSender
 
 	void SendUserStatusChange(const Username& username, User::UserStatus status);

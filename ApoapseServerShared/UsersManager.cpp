@@ -162,6 +162,14 @@ void UsersManager::Close()
 	}
 }
 
+void UsersManager::RequestClose()
+{
+	for (const auto& user : m_connectedUsers)
+	{
+		user.second->RequestClose();
+	}
+}
+
 void UsersManager::SendUserStatusChange(const Username& username, User::UserStatus status)
 {
 	DataStructure dat = global->apoapseData->GetStructure("user_status");

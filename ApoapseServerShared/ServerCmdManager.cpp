@@ -3,7 +3,7 @@
 #include "ServerCmdManager.h"
 #include "ServerConnection.h"
 #include "CommandsDef.hpp"
-#include <SecurityAlert.h>
+#include "ApoapseError.h"
 #include "GlobalVarDefines.hpp"
 #include "ApoapseServer.h"
 #include "UsersManager.h"
@@ -55,7 +55,7 @@ bool ServerCmdManager::OnReceivedCommandPre(CommandV2& cmd, GenericConnection& n
 	{
 		if (data.GetField("protocol_version").GetValue<Int64>() != protocolVersion)
 		{
-			SecurityLog::LogAlert(ApoapseErrorCode::protocol_version_not_supported, netConnection);
+			ApoapseError(ApoapseErrors::protocol_version_not_supported, &netConnection);
 			return false;
 		}
 	}
@@ -122,7 +122,7 @@ void ServerCmdManager::OnReceivedCommand(CommandV2& cmd, GenericConnection& netC
 			}
 			else
 			{
-				SecurityLog::LogAlert(ApoapseErrorCode::unable_to_authenticate_user, connection);
+				ApoapseError(ApoapseErrors::unable_to_authenticate_user, &netConnection);
 				return;
 			}
 		}
@@ -178,7 +178,7 @@ void ServerCmdManager::OnReceivedCommand(CommandV2& cmd, GenericConnection& netC
 		}
 		else
 		{
-			SecurityLog::LogAlert(ApoapseErrorCode::unable_to_register_user, connection);
+			ApoapseError(ApoapseErrors::unable_to_register_user, &netConnection);
 		}
 	}
 
