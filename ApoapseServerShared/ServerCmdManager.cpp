@@ -149,7 +149,6 @@ void ServerCmdManager::OnReceivedCommand(CommandV2& cmd, GenericConnection& netC
 			connection.server.usergroupManager->CreateUsergroup(Uuid::Generate(), "@user", "");
 
 			connection.server.usersManager->RegisterNewUser(username, password, adminUsergroup);
-			connection.server.usersManager->SetUserIdentity(username, password, cmd.GetData().GetField("admin_nickname").GetValue<std::string>());
 
 			LOG << "Apoapse setup complete. Disconnecting administrator for first connection.";
 			connection.Close();
