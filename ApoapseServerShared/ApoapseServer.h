@@ -15,6 +15,7 @@ public:
 	UsergroupManager* usergroupManager = nullptr;
 
 	boost::asio::io_service fileServerIOService;
+	boost::asio::io_service mainServerIOService;
 
 	ApoapseServer();
  	virtual ~ApoapseServer();
