@@ -1,6 +1,8 @@
 #pragma once
 #include "TCPServer.h"
 #include "TCPServerNoTLS.h"
+#include "DataStructure.h"
+#include "DatabaseSettings.h"
 class UsersManager;
 class UsergroupManager;
 
@@ -13,6 +15,7 @@ class ApoapseServer
 public:
 	UsersManager* usersManager = nullptr;
 	UsergroupManager* usergroupManager = nullptr;
+	DatabaseSettings serverSettings;
 
 	boost::asio::io_service fileServerIOService;
 	boost::asio::io_service mainServerIOService;

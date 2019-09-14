@@ -9,6 +9,7 @@
 #include "ServerSettings.h"
 #include "ThreadUtils.h"
 #include "TCPServerNoTLS.h"
+#include "SQLUtils.hpp"
 
 ApoapseServer::ApoapseServer() : m_tlsContext(ssl::context(ssl::context::sslv23))
 {
@@ -27,6 +28,19 @@ ApoapseServer::~ApoapseServer()
 
 void ApoapseServer::SetupMainServer(UInt16 port)
 {
+	{
+		if (SQLUtils::CountRows("server_settings") == 0)
+		{
+			SQLQuery query(*global->database);
+			query << INSERT_INTO << "server_settings" << VALUES  << "(NULL, NULL)";
+			query.Exec();
+
+			LOG << "server_settings table empty, row created";
+		}
+
+		serverSettings = DatabaseSettings("server_setting");
+	}
+	
 	usersManager = new UsersManager;
 	usergroupManager = new UsergroupManager;
 

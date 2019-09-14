@@ -133,6 +133,8 @@ void ServerCmdManager::OnReceivedCommand(CommandV2& cmd, GenericConnection& netC
 			dataStruct.GetField("status").SetValue("setup_state");
 		}
 
+		// Send cmds
+		global->cmdManager->CreateCommand("server_settings", connection.server.serverSettings.GetDataStructure()).Send(connection);
 		global->cmdManager->CreateCommand("server_info", dataStruct).Send(connection);
 	}
 
@@ -140,6 +142,9 @@ void ServerCmdManager::OnReceivedCommand(CommandV2& cmd, GenericConnection& netC
 	{
 		const auto username = cmd.GetData().GetField("admin_username").GetValue<Username>();
 		const auto password = cmd.GetData().GetField("admin_password").GetValue<ByteContainer>();
+
+		const std::string serverName = cmd.GetData().GetField("server_name").GetValue<std::string>();
+		connection.server.serverSettings.SetValue("server_name", serverName);
 
 		if (connection.server.usersManager->GetRegisteredUsersCount() == 0)
 		{
