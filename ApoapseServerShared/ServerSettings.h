@@ -33,7 +33,7 @@ class ServerSettings
 			if (parsedValueOptional.is_initialized())
 				*m_variableAddress = parsedValueOptional.value();
 			else
-				LOG << "The variable " << varName << " is not set in the config file or is from a wrong type. Using the default value." << LogSeverity::verbose;
+				LOG << "The variable " << varName << " is not set in the config file or is from a wrong type. Using the default value." << LogSeverity::warning;
 		}
 	};
 

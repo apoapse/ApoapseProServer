@@ -13,10 +13,10 @@
 
 ApoapseServer::ApoapseServer() : m_tlsContext(ssl::context(ssl::context::sslv23))
 {
-	m_tlsContext.set_options(boost::asio::ssl::context::default_workarounds | boost::asio::ssl::context::no_sslv2 | boost::asio::ssl::context::single_dh_use);
+	m_tlsContext.set_options(ssl::context::default_workarounds | ssl::context::no_sslv2 | ssl::context::no_tlsv1_1 | ssl::context::no_tlsv1 | ssl::context::single_dh_use/* | ssl::context::no_compression*/);
 	m_tlsContext.set_default_verify_paths();
-	m_tlsContext.use_certificate_chain_file("user.crt");
-	m_tlsContext.use_private_key_file("user.key", boost::asio::ssl::context::pem);
+	m_tlsContext.use_certificate_chain_file("server.crt");
+	m_tlsContext.use_private_key_file("server.key", boost::asio::ssl::context::pem);
 	m_tlsContext.use_tmp_dh_file("dh2048.pem");
 }
 

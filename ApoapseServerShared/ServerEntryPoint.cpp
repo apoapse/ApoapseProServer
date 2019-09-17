@@ -10,11 +10,12 @@
 #include "DatabaseIntegrityPatcher.h"
 #include "DataStructures.hpp"
 #include "ServerCmdManager.h"
+#include "ApoapseOpenSSL.h"
+#include <filesystem>
 
 #ifdef UNIT_TESTS
 #include "UnitTestsManager.h"
 #endif // UNIT_TESTS
-#include <Uuid.h>
 
 int ServerMain(const std::vector<std::string>& launchArgs)
 {
@@ -32,6 +33,12 @@ int ServerMain(const std::vector<std::string>& launchArgs)
 
 	global->apoapseData = std::make_unique<ApoapseData>(GetDataStructures());
 	global->cmdManager = std::make_unique<ServerCmdManager>();
+
+	if (!std::filesystem::exists("server.key") || !std::filesystem::exists("dh2048.pem"))
+	{
+		LOG << "The TLS keys are missing. Trying to auto-generate them using OpenSLL...";
+		ApoapseOpenSSL::GenerateAllKeys();
+	}
 
 	// Database
 	boost::shared_ptr<IDatabase> databaseSharedPtr = LibraryLoader::LoadLibrary<IDatabase>("DatabaseImpl.sqlite");
