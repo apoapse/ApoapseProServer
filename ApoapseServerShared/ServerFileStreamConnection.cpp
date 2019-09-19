@@ -15,8 +15,8 @@ Attachment::Attachment(DataStructure& data)
 	fileSize = data.GetField("file_size").GetValue<Int64>();
 }*/
 
-ServerFileStreamConnection::ServerFileStreamConnection(boost::asio::io_service& ioService, ApoapseServer* server/*, boost::asio::ssl::context& context*/)
-	: FileStreamConnection(ioService/*, context*/)
+ServerFileStreamConnection::ServerFileStreamConnection(boost::asio::io_service& ioService, ApoapseServer* server, boost::asio::ssl::context& context)
+	: FileStreamConnection(ioService, context)
 	, server(*server)
 {
 }

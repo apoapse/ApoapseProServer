@@ -50,8 +50,8 @@ void ApoapseServer::SetupMainServer(UInt16 port)
 
 void ApoapseServer::SetupFilesServer(UInt16 port)
 {
-	m_filesServer = std::make_unique<TCPServerNoTLS>(fileServerIOService, port, TCPServerNoTLS::Protocol::ip_v6);
-	m_filesServer->StartAccept<ServerFileStreamConnection>(this/*, std::ref(m_tlsContext)*/);
+	m_filesServer = std::make_unique<TCPServer>(fileServerIOService, port, TCPServer::Protocol::ip_v6);
+	m_filesServer->StartAccept<ServerFileStreamConnection>(this, std::ref(m_tlsContext));
 }
 
 void ApoapseServer::StartIOServices()
