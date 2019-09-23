@@ -138,6 +138,11 @@ void ServerCmdManager::OnReceivedCommand(CommandV2& cmd, GenericConnection& netC
 		global->cmdManager->CreateCommand("server_info", dataStruct).Send(connection);
 	}
 
+	else if (cmd.name == "version")
+	{
+		netConnection.Send(std::make_shared<std::string>(std::to_string(serverVersion)));
+	}
+
 	else if (cmd.name == "install")
 	{
 		const auto username = cmd.GetData().GetField("admin_username").GetValue<Username>();
