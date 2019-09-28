@@ -213,6 +213,12 @@ void ServerCmdManager::OnReceivedCommand(CommandV2& cmd, GenericConnection& netC
 	{
 		const Uuid uuid = cmd.GetData().GetField("uuid").GetValue<Uuid>();
 		DataStructure dat = global->apoapseData->ReadItemFromDatabase("attachment", "uuid", uuid);
+		
+		const Uuid parentMsg = dat.GetField("parent_message").GetValue<Uuid>();
+		DataStructure relatedMessage = global->apoapseData->ReadItemFromDatabase("message", "uuid", parentMsg);
+
+		if (!ApoapsePermissions::IsUserAllowedToReadMessage(connection.GetRelatedUser()->GetUsername(), relatedMessage))
+			ApoapseError(ApoapseErrors::access_denied, &netConnection);
 
 		if (!dat.GetField("is_downloaded").GetValue<bool>())
 		{

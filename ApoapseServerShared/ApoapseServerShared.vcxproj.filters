@@ -30,6 +30,9 @@
     <ClCompile Include="ServerFileStreamConnection.cpp">
       <Filter>Network</Filter>
     </ClCompile>
+    <ClCompile Include="Permissions.cpp">
+      <Filter>ApoapseSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ServerEntryPoint.h" />
@@ -57,6 +60,9 @@
     <ClInclude Include="ServerFileStreamConnection.h">
       <Filter>Network</Filter>
     </ClInclude>
+    <ClInclude Include="Permissions.h">
+      <Filter>ApoapseSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Settings">
@@ -73,6 +79,9 @@
     </Filter>
     <Filter Include="UnitTests">
       <UniqueIdentifier>{971bdf56-2bf0-4203-a8aa-97d576166450}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ApoapseSystem">
+      <UniqueIdentifier>{c4bff27f-565a-4b76-8051-017d25fe6e99}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

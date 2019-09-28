@@ -150,6 +150,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ApoapseServer.cpp" />
+    <ClCompile Include="Permissions.cpp" />
     <ClCompile Include="ServerCmdManager.cpp" />
     <ClCompile Include="ServerConnection.cpp" />
     <ClCompile Include="ServerFileStreamConnection.cpp" />
@@ -166,6 +167,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ApoapseServer.h" />
+    <ClInclude Include="Permissions.h" />
     <ClInclude Include="ServerCmdManager.h" />
     <ClInclude Include="ServerConnection.h" />
     <ClInclude Include="ServerEntryPoint.h" />
