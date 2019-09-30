@@ -13,6 +13,7 @@
 #include "ByteUtils.hpp"
 #include <filesystem>
 #include "FileUtils.h"
+#include "Permissions.h"
 
 ServerCmdManager::ServerCmdManager() : CommandsManagerV2(GetCommandDef())
 {
@@ -27,8 +28,13 @@ bool ServerCmdManager::OnSendCommandPre(CommandV2& cmd)
 
 		if (!cmd.GetData().GetField("attachments").HasValue())
 		{
-			auto dbDat = global->apoapseData->ReadListFromDatabase("attachment", "parent_message", msgUuid);
-			cmd.GetData().GetField("attachments").SetValue(dbDat);
+			auto attDat = global->apoapseData->ReadListFromDatabase("attachment", "parent_message", msgUuid);
+			for (auto& dat : attDat)
+			{
+				dat.GetField("is_available").SetValue(dat.GetField("is_downloaded").GetValue<bool>());
+			}
+			
+			cmd.GetData().GetField("attachments").SetValue(attDat);
 		}
 	}
 	

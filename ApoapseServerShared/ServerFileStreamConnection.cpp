@@ -6,6 +6,10 @@
 #include <filesystem>
 #include "UsersManager.h"
 #include "ServerConnection.h"
+#include "ApoapseOperation.h"
+#include "CommandV2.h"
+#include "UsersManager.h"
+
 /*
 Attachment::Attachment(DataStructure& data)
 {
@@ -58,11 +62,35 @@ void ServerFileStreamConnection::OnFileDownloadCompleted(const AttachmentFile& f
 {
 	LOG_DEBUG << "OnFileDownloadCompleted " << file.fileName;
 
-	global->mainThread->PushTask([file]()
+	global->mainThread->PushTask([file, this]()
 	{
 		auto dat = global->apoapseData->ReadItemFromDatabase("attachment", "uuid", file.uuid);
 		dat.GetField("is_downloaded").SetValue(true);
 		dat.SaveToDatabase();
+
+		const Uuid parentMsg = dat.GetField("parent_message").GetValue<Uuid>();
+		DataStructure relatedMessage = global->apoapseData->ReadItemFromDatabase("message", "uuid", parentMsg);
+		
+		DataStructure cmdDat = global->apoapseData->GetStructure("attachment_uuid");
+		cmdDat.GetField("uuid").SetValue(dat.GetField("uuid").GetValue<Uuid>());
+		CommandV2 cmd = global->cmdManager->CreateCommand("attachment_available", cmdDat);
+		
+		if (relatedMessage.GetField("direct_recipient").HasValue())
+		{
+			const Username recipient = relatedMessage.GetField("direct_recipient").GetValue<Username>();
+			
+			ApoapseOperation::RegisterOperation("attachment_available", m_mainConnection->GetRelatedUser()->GetUsername(), dat.GetDbId(), OperationOwnership::self);
+			ApoapseOperation::RegisterOperation("attachment_available", recipient, dat.GetDbId(), OperationOwnership::self);
+
+			cmd.Send(*m_mainConnection);
+			if (server.usersManager->IsUserConnected(recipient))
+				cmd.Send(*server.usersManager->GetUserByUsername(recipient).lock());
+		}
+		else
+		{
+			ApoapseOperation::RegisterOperation("attachment_available", m_mainConnection->GetRelatedUser()->GetUsername(), dat.GetDbId(), OperationOwnership::all);
+			cmd.Send(*server.usersManager);
+		}
 	});
 }
 
