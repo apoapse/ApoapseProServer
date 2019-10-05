@@ -21,7 +21,7 @@ std::weak_ptr<User> UsersManager::GetUserByUsername(const Username& username) co
 	}
 	catch (const std::exception&)
 	{
-		throw std::exception("The requested user does not exist");
+		throw std::runtime_error("The requested user does not exist");
 	}
 }
 

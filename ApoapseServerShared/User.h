@@ -41,8 +41,8 @@ public:
 	User(DataStructure& data, ServerConnection* connection, ApoapseServer* apoapseServer);
 	virtual ~User() override;
 
-	const Username& GetUsername() const;
-	const Usergroup& GetUsergroup() const;
+	const Username& GetUsername() const override;
+	const Usergroup& GetUsergroup() const override;
 	
 	// INetworkSender
 	virtual void Send(BytesWrapper bytesPtr, TCPConnection* excludedConnection = nullptr) override;

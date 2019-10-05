@@ -1,0 +1,1 @@
+clang++   -fdeclspec   -lstdc++fs CMakeFiles/ServerConsole.dir/main.cpp.o  -o ServerConsole -Wl,-rpath,/mnt/c/Apoapse/DEV/BinLinux /mnt/c/Apoapse/DEV/BinLinux/libApoapseClientShared.so 
