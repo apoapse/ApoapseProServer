@@ -103,7 +103,7 @@ void UsersManager::RegisterNewUser(const Username& username, const std::vector<b
 	LOG << "New user " << username.ToStr() << " registered";
 }
 
-DbId UsersManager::SetUserIdentity(const Username& username, const std::vector<byte>& encryptedPassword, const std::string& nickname/*, const PublicKeyBytes& identityKey, const EncryptedPrivateKeyBytes& identityPrivateKey, const IV& identityIV*/)
+DbId UsersManager::SetUserIdentity(const Username& username, const std::vector<byte>& encryptedPassword, const std::string& nickname, bool sendNewUserCmd/* = false, const PublicKeyBytes& identityKey, const EncryptedPrivateKeyBytes& identityPrivateKey, const IV& identityIV*/)
 {
 	SECURITY_ASSERT(DoesUserExist(username));
 
@@ -120,7 +120,9 @@ DbId UsersManager::SetUserIdentity(const Username& username, const std::vector<b
 
 	auto cmd = global->cmdManager->CreateCommand("user", dat);
 	ApoapseOperation::RegisterOperation(cmd, username, true);
-	cmd.Send(*this);
+
+	if (sendNewUserCmd)
+		cmd.Send(*this);
 
 	return -1;
 }

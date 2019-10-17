@@ -209,7 +209,7 @@ void ServerCmdManager::OnReceivedCommand(CommandV2& cmd, GenericConnection& netC
 			FileUtils::SaveBytesToFile(User::GetAvatarFilePath(connection.GetRelatedUser()->GetUsername()), avatarData);
 		}
 
-		connection.server.usersManager->SetUserIdentity(connection.GetRelatedUser()->GetUsername(), encryptedPassword, nickname);
+		connection.server.usersManager->SetUserIdentity(connection.GetRelatedUser()->GetUsername(), encryptedPassword, nickname, false);
 
 		LOG << "First connection: set identity complete. Disconnecting the user for first connection with the actual password.";
 		connection.Close();
