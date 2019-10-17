@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.4)
 project(ServerConsole LANGUAGES CXX)
 set(CMAKE_CXX_COMPILER "clang++")
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lstdc++fs")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdeclspec")
 
 include_directories("../../ApoapseCore/Code/")
