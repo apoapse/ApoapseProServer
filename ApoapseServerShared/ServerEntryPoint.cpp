@@ -43,6 +43,8 @@ int ServerMain(const std::vector<std::string>& launchArgs)
 	// Database
 	boost::shared_ptr<IDatabase> databaseSharedPtr = LibraryLoader::LoadLibrary<IDatabase>("DatabaseImpl.sqlite");
 	global->database = databaseSharedPtr.get();
+	databaseSharedPtr->Initialize();
+	
 	const char* dbParams[1];
 	dbParams[0] = "server_database.db";
 	if (databaseSharedPtr->Open(dbParams, 1))
