@@ -47,7 +47,7 @@ void ServerFileStreamConnection::ErrorDisconnectAll()
 
 void ServerFileStreamConnection::Authenticate(const Username& username, const hash_SHA256& authCode)
 {
-	global->mainThread->PushTask([this, &username, &authCode]()
+	global->mainThread->PushTask([this, username, authCode]()
 	{
 		auto user = server.usersManager->GetUserByUsername(username);
 		user.lock()->AuthenticateFileStream(authCode, this);

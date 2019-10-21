@@ -27,7 +27,7 @@ private:
 	DbId m_databaseId = -1;
 	bool m_isUsingTemporaryPassword = false;
 	const Usergroup* m_usergroup;
-		std::optional<FileStreamAuth> m_fileStreamAuthCode;
+	std::optional<FileStreamAuth> m_fileStreamAuthCode;
 
 	static constexpr UInt32 passwordAlgorithmIterations = 5000;
 
