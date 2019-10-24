@@ -21,8 +21,8 @@ ServerConnection::~ServerConnection()
 		m_relatedUser.value()->RemoveConnection(this);
 	}
 
-	if (m_fileStream)
-		m_fileStream->SetMainConnection(nullptr);
+	//if (m_fileStream)
+	//	m_fileStream->SetMainConnection(nullptr);
 }
 
 void ServerConnection::Close() // #TODO FIXME
