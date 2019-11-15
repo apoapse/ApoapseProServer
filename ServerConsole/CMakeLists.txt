@@ -19,6 +19,6 @@ source_group("Sources" FILES ${SRC_FILES})
 
 add_executable(${PROJECT_NAME} ${SRC_FILES} ${HEADERS_FILES})
 
-target_link_libraries(ServerConsole "/mnt/c/Apoapse/DEV/BinLinux/libApoapseClientShared.so")
+target_link_libraries(ServerConsole "/mnt/c/Apoapse/DEV/BinLinux/libApoapseServerShared.so")
 
 set_property(TARGET ServerConsole PROPERTY CXX_STANDARD 17)
