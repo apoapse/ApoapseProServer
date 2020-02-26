@@ -88,8 +88,11 @@ bool ServerConnection::OnConnectedToServer()
 
 void ServerConnection::OnReceivedCommand(CommandV2& cmd)
 {
-	if (cmd.IsValid(GetRelatedUser()))
-		global->cmdManager->OnReceivedCmdInternal(cmd, *this, GetRelatedUser());
-	else
-		ApoapseError(ApoapseErrors::invalid_cmd, this);
+	global->mainThread->PushTask([this, &cmd]()
+	{
+		if (cmd.IsValid(GetRelatedUser()))
+			global->cmdManager->OnReceivedCmdInternal(cmd, *this, GetRelatedUser());
+		else
+			ApoapseError(ApoapseErrors::invalid_cmd, this);
+	});
 }

@@ -1,3 +1,0 @@
-/mnt/c/Apoapse/DEV/ApoapseServer/ServerConsole/CMakeFiles/rebuild_cache.dir
-/mnt/c/Apoapse/DEV/ApoapseServer/ServerConsole/CMakeFiles/ServerConsole.dir
-/mnt/c/Apoapse/DEV/ApoapseServer/ServerConsole/CMakeFiles/edit_cache.dir

@@ -49,8 +49,15 @@ void ServerFileStreamConnection::Authenticate(const Username& username, const ha
 {
 	global->mainThread->PushTask([this, username, authCode]()
 	{
-		auto user = server.usersManager->GetUserByUsername(username);
-		user.lock()->AuthenticateFileStream(authCode, this);
+		if (server.usersManager->IsUserConnected(username))
+		{
+			auto user = server.usersManager->GetUserByUsername(username);
+			user.lock()->AuthenticateFileStream(authCode, this);
+		}
+		else
+		{
+			LOG << LogSeverity::error << "Unable to authenticate as the user is not connected";
+		}
 	});
 }
 
