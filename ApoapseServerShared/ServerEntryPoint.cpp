@@ -14,7 +14,7 @@
 #include <filesystem>
 
 #ifdef UNIT_TESTS
-#include "UnitTestsManager.h"
+#include "UnitTest.hpp"
 #endif // UNIT_TESTS
 
 // UNIX STACK TRACE
@@ -93,7 +93,7 @@ int ServerMain(const std::vector<std::string>& launchArgs)
 #ifdef UNIT_TESTS
 	if (std::find(launchArgs.begin(), launchArgs.end(), "-run_unit_tests") != launchArgs.end())
 	{
-		UnitTestsManager::GetInstance().RunTests();
+		UnitTestsManager::GetInstance().RunTests(std::cout);
 		return 0;
 	}
 #endif // UNIT_TESTS

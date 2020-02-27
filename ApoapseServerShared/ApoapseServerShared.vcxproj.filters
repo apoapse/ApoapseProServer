@@ -63,6 +63,8 @@
     <ClInclude Include="Permissions.h">
       <Filter>ApoapseSystem</Filter>
     </ClInclude>
+    <ClInclude Include="CommandsDef.hpp" />
+    <ClInclude Include="DataStructures.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Settings">

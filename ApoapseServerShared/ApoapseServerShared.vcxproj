@@ -72,15 +72,15 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>..\..\Bin\$(Configuration)_$(Platform)\</OutDir>
     <IntDir>..\..\vs_build\$(ProjectName)\$(Configuration)_$(Platform)\</IntDir>
-    <IncludePath>$(SolutionDir)..\ApoapseCore\ThirdParty\magic_enum\include\;$(SolutionDir)..\ApoapseCore\ThirdParty\cryptopp\;C:\OpenSSL-Win64-3\include;$(SolutionDir)..\ApoapseCore\ThirdParty\boost_1_71_0\;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)..\ApoapseProtocol\ThirdParty\magic_enum\include\;$(SolutionDir)..\ApoapseProtocol\ThirdParty\openssl\include;$(SolutionDir)..\ApoapseProtocol\ThirdParty\cryptopp\;$(SolutionDir)..\ApoapseProtocol\ThirdParty\boost\;$(VC_IncludePath);$(SolutionDir)..\ApoapseProtocol\ThirdParty\Apoapse-Very-Simple-Unit-Test-framework\;$(WindowsSDK_IncludePath)</IncludePath>
     <SourcePath>$(VC_SourcePath);</SourcePath>
-    <LibraryPath>C:\boost_1_71_0\lib64-msvc-14.2;C:\OpenSSL-Win64\lib;$(SolutionDir)..\ApoapseCore\ThirdParty\cryptopp\cryptopp\x64\Output\Debug;$(OutDir);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)..\ApoapseProtocol\ThirdParty\openssl\lib\;$(SolutionDir)..\ApoapseProtocol\ThirdParty\boost\lib64\;$(SolutionDir)..\ApoapseProtocol\ThirdParty\cryptopp\cryptopp\x64\Output\Debug\;$(OutDir);$(LibraryPath)</LibraryPath>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>..\..\Bin\$(Configuration)_$(Platform)\</OutDir>
     <IntDir>..\..\vs_build\$(ProjectName)\$(Configuration)_$(Platform)\</IntDir>
-    <IncludePath>$(SolutionDir)..\ApoapseCore\ThirdParty\magic_enum\include\;$(SolutionDir)..\ApoapseCore\ThirdParty\cryptopp\;C:\OpenSSL-Win64-3\include;$(SolutionDir)..\ApoapseCore\ThirdParty\boost_1_71_0\;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)..\ApoapseProtocol\ThirdParty\magic_enum\include\;$(SolutionDir)..\ApoapseCore\ThirdParty\cryptopp\;C:\OpenSSL-Win64-3\include;$(SolutionDir)..\ApoapseCore\ThirdParty\boost_1_71_0\;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <SourcePath>$(VC_SourcePath);</SourcePath>
     <LibraryPath>C:\boost_1_71_0\lib64-msvc-14.2;C:\OpenSSL-Win64-3\lib;$(SolutionDir)..\ApoapseCore\ThirdParty\cryptopp\cryptopp\x64\Output\Release;$(OutDir);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
@@ -99,13 +99,13 @@
       <ExceptionHandling>Sync</ExceptionHandling>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <AdditionalIncludeDirectories>..\..\ApoapseCore\Code\;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\ApoapseProtocol\Code\;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>ENABLE_SECURITY_ASSERTS;APOAPSE_SERVER;DYN_LIBRARY;UNIT_TESTS;_WIN32_WINNT=0x0501;_SCL_SECURE_NO_WARNINGS;DEBUG;_MBCS;_SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING;_SILENCE_CXX17_OLD_ALLOCATOR_MEMBERS_DEPRECATION_WARNING;_SILENCE_CXX17_UNCAUGHT_EXCEPTION_DEPRECATION_WARNING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <AdditionalDependencies>libssl.lib;libcrypto.lib;openssl.lib;cryptlib.lib;ApoapseCore.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(TargetDir)..\;C:\OpenSSL-Win64-3\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(TargetDir)..\;</AdditionalLibraryDirectories>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>false</OptimizeReferences>
       <AdditionalOptions>/WHOLEARCHIVE:ApoapseCore.lib %(AdditionalOptions)</AdditionalOptions>
@@ -134,7 +134,7 @@
       <ExceptionHandling>Sync</ExceptionHandling>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <AdditionalIncludeDirectories>..\..\ApoapseCore\Code\;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\ApoapseProtocol\Code\;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>ENABLE_SECURITY_ASSERTS;APOAPSE_SERVER;DYN_LIBRARY;UNIT_TESTS;_WIN32_WINNT=0x0501;_SCL_SECURE_NO_WARNINGS;_MBCS;_SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING;_SILENCE_CXX17_OLD_ALLOCATOR_MEMBERS_DEPRECATION_WARNING;_SILENCE_CXX17_UNCAUGHT_EXCEPTION_DEPRECATION_WARNING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>
       </MultiProcessorCompilation>
@@ -167,6 +167,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ApoapseServer.h" />
+    <ClInclude Include="CommandsDef.hpp" />
+    <ClInclude Include="DataStructures.hpp" />
     <ClInclude Include="Permissions.h" />
     <ClInclude Include="ServerCmdManager.h" />
     <ClInclude Include="ServerConnection.h" />
