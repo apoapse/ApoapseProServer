@@ -80,9 +80,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>..\..\Bin\$(Configuration)_$(Platform)\</OutDir>
     <IntDir>..\..\vs_build\$(ProjectName)\$(Configuration)_$(Platform)\</IntDir>
-    <IncludePath>$(SolutionDir)..\ApoapseProtocol\ThirdParty\magic_enum\include\;$(SolutionDir)..\ApoapseCore\ThirdParty\cryptopp\;C:\OpenSSL-Win64-3\include;$(SolutionDir)..\ApoapseCore\ThirdParty\boost_1_71_0\;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)..\ApoapseProtocol\ThirdParty\magic_enum\include\;$(SolutionDir)..\ApoapseProtocol\ThirdParty\openssl\include;$(SolutionDir)..\ApoapseProtocol\ThirdParty\cryptopp\;$(SolutionDir)..\ApoapseProtocol\ThirdParty\boost\;$(VC_IncludePath);$(SolutionDir)..\ApoapseProtocol\ThirdParty\Apoapse-Very-Simple-Unit-Test-framework\;$(WindowsSDK_IncludePath)</IncludePath>
     <SourcePath>$(VC_SourcePath);</SourcePath>
-    <LibraryPath>C:\boost_1_71_0\lib64-msvc-14.2;C:\OpenSSL-Win64-3\lib;$(SolutionDir)..\ApoapseCore\ThirdParty\cryptopp\cryptopp\x64\Output\Release;$(OutDir);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)..\ApoapseProtocol\ThirdParty\openssl\lib\;$(SolutionDir)..\ApoapseProtocol\ThirdParty\boost\lib64\;$(SolutionDir)..\ApoapseProtocol\ThirdParty\cryptopp\cryptopp\x64\Output\Release\;$(OutDir);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

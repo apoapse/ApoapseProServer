@@ -87,7 +87,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
-    <IncludePath>$(SolutionDir)..\ApoapseCore\ThirdParty\boost_1_71_0\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)..\ApoapseProtocol\ThirdParty\boost\;$(IncludePath)</IncludePath>
     <IntDir>..\..\vs_build\$(ProjectName)\$(Configuration)_$(Platform)\</IntDir>
     <OutDir>..\..\Bin\$(Configuration)_$(Platform)\</OutDir>
   </PropertyGroup>
@@ -155,7 +155,7 @@
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(SolutionDir)vs_build\$(Configuration)\$(PlatformTarget)\$(ProjectName).pch</PrecompiledHeaderOutputFile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories>$(SolutionDir)ApoapseServerShared\;..\..\ApoapseCore\Code\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)ApoapseServerShared\;..\..\ApoapseProtocol\Code\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/Zm250 %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>_MBCS;_ENABLE_ATOMIC_ALIGNMENT_FIX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
