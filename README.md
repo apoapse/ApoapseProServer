@@ -1,5 +1,5 @@
 # Apoapse Pro Server
-The Apoapse server is part of the Apoapse Pro messaging platform offering a secure and decentralized collaborative space for communicating and sharing files. When
+The Apoapse server is part of the Apoapse Pro messaging platform offering a secure and decentralized collaborative space for communicating and sharing files.
 
 ## How to build
 To compile the Apoapse Pro, you first need to compile the [Apoapse Protocol](https://github.com/apoapse/ApoapseProtocol) as a static library that must be linked into the ApoapseServerShared dynamic library.
