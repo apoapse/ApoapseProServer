@@ -2,7 +2,7 @@
 The Apoapse server is part of the Apoapse Pro messaging platform offering a secure and decentralized collaborative space for communicating and sharing files.
 
 ## How to build
-To compile the Apoapse Pro, you first need to compile the [Apoapse Protocol](https://github.com/apoapse/ApoapseProtocol) as a static library that must be linked into the ApoapseServerShared dynamic library.
+To compile the Apoapse Pro Server, you first need to compile the [Apoapse Protocol](https://github.com/apoapse/ApoapseProtocol) as a static library that must be linked into the ApoapseServerShared dynamic library.
 As such, you first need to obtain and compile the Apoapse Protocol following the [instructions on the Apoapse Protocol repository](https://github.com/apoapse/ApoapseProtocol).
 With most of the third party libraries shared between these two repositories, both repositories must be placed into a same folder, alongside each other.
 You can then compile the server using CMake or Visual Studio solution provided.
